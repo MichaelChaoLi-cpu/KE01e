@@ -1,0 +1,2414 @@
+doc_type: actionbrief
+version: 1.0.0
+datasetDictionary:
+  jma_hourly_rainfall:
+    datasetSourceName: JMA historical hourly rainfall station collection
+    datasetDescription: Hourly rainfall observations used to construct historical accumulation-window quantiles
+      and rainfall scenarios.
+    datasetAttribute: table
+    datasetProvider: Japan Meteorological Agency (JMA)
+    datasetGenerationInfo: Official station observations concatenated from station-time chunks for the Kumamoto
+      study stations.
+    datasetPeriod: 2016-01-01 through 2025-12-31
+    datasetScale: 526,056 station-hour records
+    datasetSpatialResolution: Rain-gauge station
+    datasetTemporalResolution: Hourly
+    datasetPreprocessingInfo: Parsed timestamps in Asia/Tokyo, converted rainfall and quality fields, deduplicated
+      station-hour records, and did not interpolate rainfall spatially.
+  gsi_dem10b_tiles:
+    datasetSourceName: GSI DEM10B elevation tile collection
+    datasetDescription: Terrain elevation tiles and mosaic used to derive slope, curvature, and upslope road exposure.
+    datasetAttribute: raster
+    datasetProvider: Geospatial Information Authority of Japan (GSI)
+    datasetGenerationInfo: Official DEM10B web tiles decoded with the published elevation rule and mosaicked for
+      Kumamoto.
+    datasetPeriod: Reference terrain acquired for the 2026 analysis
+    datasetScale: 3,304 available tiles from 3,904 scheduled tiles; 196,402,616 valid elevation pixels
+    datasetSpatialResolution: Approximately 10 m terrain pixels
+    datasetTemporalResolution: Static terrain reference
+    datasetPreprocessingInfo: Decoded RGB elevations, retained missing tiles explicitly, generated a georeferenced
+      mosaic, and recorded tile-level quality statistics.
+  designated_shelters_preprocessed:
+    datasetSourceName: Designated shelters
+    datasetDescription: Mapped designated shelters used as basic-service destinations.
+    datasetAttribute: table
+    datasetProvider: National and Kumamoto local-government evacuation-facility open data
+    datasetGenerationInfo: Official designation points copied from the audited KE01c asset.
+    datasetPeriod: Pre-event designation snapshot
+    datasetScale: 1,315 shelter records
+    datasetSpatialResolution: Individual mapped facility point
+    datasetTemporalResolution: Static designation snapshot
+    datasetPreprocessingInfo: Assigned readable English variables, validated data types and geometry, preserved
+      missing values, and retained source provenance without imputation.
+  earthquake_damage_evidence_reference_preprocessed:
+    datasetSourceName: Official 2026 earthquake damage evidence registry
+    datasetDescription: Official damage statements retained only as event-context evidence.
+    datasetAttribute: table
+    datasetProvider: FDMA, Kumamoto Prefecture, and Kumamoto City
+    datasetGenerationInfo: Official reports were compiled into a record-level registry in the audited KE01c asset.
+    datasetPeriod: 2026-07-28 to 2026-08-02 event window
+    datasetScale: 9 evidence records
+    datasetSpatialResolution: Reported place, municipality, or service area
+    datasetTemporalResolution: Irregular official event snapshots
+    datasetPreprocessingInfo: Assigned readable English variables, validated data types and geometry, preserved
+      missing values, and retained source provenance without imputation.
+  emergency_evacuation_sites_preprocessed:
+    datasetSourceName: Emergency evacuation sites
+    datasetDescription: Mapped evacuation sites with earthquake and large-scale-fire designations.
+    datasetAttribute: table
+    datasetProvider: National and Kumamoto local-government evacuation-facility open data
+    datasetGenerationInfo: Official site points copied from the audited KE01c asset.
+    datasetPeriod: Pre-event designation snapshot
+    datasetScale: 1,713 site records
+    datasetSpatialResolution: Individual mapped facility point
+    datasetTemporalResolution: Static designation snapshot
+    datasetPreprocessingInfo: Assigned readable English variables, validated data types and geometry, preserved
+      missing values, and retained source provenance without imputation.
+  emergency_water_points_preprocessed:
+    datasetSourceName: Current emergency water points
+    datasetDescription: Announced water-point names, schedules, limits, and resolved locations used in service routing.
+    datasetAttribute: table
+    datasetProvider: Yatsushiro City, Uki City, and Hikawa Town official emergency notices
+    datasetGenerationInfo: Official event notices were extracted with record-level provenance and deterministic
+      facility matching.
+    datasetPeriod: 2026-07-29 to 2026-08-08
+    datasetScale: 36 announced water points; 10 resolved locations
+    datasetSpatialResolution: Individual announced facility point when resolved
+    datasetTemporalResolution: Event schedule snapshots
+    datasetPreprocessingInfo: Preserved unresolved locations, retained only resolved points for routing, and reported
+      resulting service estimates as a lower bound.
+  gsi_airphoto_interpreted_landslides:
+    datasetSourceName: GSI 2016 air-photo-interpreted landslides
+    datasetDescription: Interpreted landslide points used as incomplete presence evidence for spatial validation.
+    datasetAttribute: other
+    datasetProvider: Geospatial Information Authority of Japan (GSI)
+    datasetGenerationInfo: Official KML placemarks were parsed into point records with size classes and source provenance.
+    datasetPeriod: 2016 Kumamoto earthquake inventory; observation date 2016-07-28
+    datasetScale: 1,044 interpreted landslide points
+    datasetSpatialResolution: Mapped landslide point
+    datasetTemporalResolution: Single interpreted inventory
+    datasetPreprocessingInfo: Parsed KML points, assigned stable inventory identifiers, retained source size classes,
+      and did not create absence labels.
+  kumamoto_administrative_areas_preprocessed:
+    datasetSourceName: MLIT National Land Numerical Information N03 administrative areas
+    datasetDescription: Municipality and ward polygons used for spatial linkage, threshold assignment, and reporting.
+    datasetAttribute: table
+    datasetProvider: Ministry of Land, Infrastructure, Transport and Tourism (MLIT)
+    datasetGenerationInfo: Official N03 boundaries copied from the audited KE01b asset.
+    datasetPeriod: 2025-01-01 boundary reference
+    datasetScale: 49 municipality or ward records
+    datasetSpatialResolution: Municipality or ward polygon
+    datasetTemporalResolution: Single boundary reference date
+    datasetPreprocessingInfo: Assigned readable English variables, validated data types and geometry, preserved
+      missing values, and retained source provenance without imputation.
+  kumamoto_emergency_transport_roads_2024_preprocessed:
+    datasetSourceName: MLIT National Land Numerical Information N10 emergency transport roads
+    datasetDescription: Official emergency-route lines used to define gateway targets and network strata.
+    datasetAttribute: table
+    datasetProvider: Ministry of Land, Infrastructure, Transport and Tourism (MLIT)
+    datasetGenerationInfo: Official N10 route features copied from the audited KE01b asset.
+    datasetPeriod: 2024 reference
+    datasetScale: 264 route features
+    datasetSpatialResolution: Emergency transport route line
+    datasetTemporalResolution: Single reference year
+    datasetPreprocessingInfo: Assigned readable English variables, validated data types and geometry, preserved
+      missing values, and retained source provenance without imputation.
+  kumamoto_evacuation_facilities_2012_preprocessed:
+    datasetSourceName: MLIT National Land Numerical Information evacuation facilities
+    datasetDescription: Evacuation facilities used as reference destinations and location anchors.
+    datasetAttribute: table
+    datasetProvider: Ministry of Land, Infrastructure, Transport and Tourism (MLIT)
+    datasetGenerationInfo: Official facility records copied from the audited KE01b asset.
+    datasetPeriod: 2012 reference
+    datasetScale: 1,969 facility records
+    datasetSpatialResolution: Individual facility point
+    datasetTemporalResolution: Single historical cross-section
+    datasetPreprocessingInfo: Assigned readable English variables, validated data types and geometry, preserved
+      missing values, and retained source provenance without imputation.
+  kumamoto_fire_stations_2012_preprocessed:
+    datasetSourceName: MLIT National Land Numerical Information P17 fire stations
+    datasetDescription: Fire stations, branches, and outposts used as basic emergency-service destinations.
+    datasetAttribute: table
+    datasetProvider: Ministry of Land, Infrastructure, Transport and Tourism (MLIT)
+    datasetGenerationInfo: Official P17 fire-facility points copied from the audited KE01b asset.
+    datasetPeriod: 2012 reference
+    datasetScale: 94 fire-facility records
+    datasetSpatialResolution: Individual fire-facility point
+    datasetTemporalResolution: Single historical cross-section
+    datasetPreprocessingInfo: Assigned readable English variables, validated data types and geometry, preserved
+      missing values, and retained source provenance without imputation.
+  kumamoto_landslide_warning_zones_2025_preprocessed:
+    datasetSourceName: MLIT National Land Numerical Information A33 landslide warning zones
+    datasetDescription: Official warning-zone polygons used as hazard context and model comparators.
+    datasetAttribute: table
+    datasetProvider: Kumamoto Prefecture and MLIT National Land Numerical Information
+    datasetGenerationInfo: Official A33 warning and special-warning polygons copied from the audited KE01b asset.
+    datasetPeriod: 2025 reference
+    datasetScale: 56,424 warning-zone polygons
+    datasetSpatialResolution: Hazard-zone polygon
+    datasetTemporalResolution: Reference-year designation
+    datasetPreprocessingInfo: Assigned readable English variables, validated data types and geometry, preserved
+      missing values, and retained source provenance without imputation.
+  kumamoto_mlit_public_offices_halls_preprocessed:
+    datasetSourceName: MLIT National Land Numerical Information public offices and halls
+    datasetDescription: Public offices and halls used as municipal emergency-service destinations.
+    datasetAttribute: table
+    datasetProvider: Ministry of Land, Infrastructure, Transport and Tourism (MLIT)
+    datasetGenerationInfo: Official public-facility points copied from the audited KE01 asset.
+    datasetPeriod: 2022 reference
+    datasetScale: 1,660 facility records
+    datasetSpatialResolution: Individual facility point
+    datasetTemporalResolution: Single reference year
+    datasetPreprocessingInfo: Assigned readable English variables, validated data types and geometry, preserved
+      missing values, and retained source provenance without imputation.
+  kumamoto_population_disclosure_groups_preprocessed:
+    datasetSourceName: 2020 Population Census disclosure groups
+    datasetDescription: Disclosure-group population and older-age totals used without false fine-grid allocation.
+    datasetAttribute: table
+    datasetProvider: Statistics Bureau of Japan / e-Stat
+    datasetGenerationInfo: Official census disclosure groups copied from the audited KE01b asset.
+    datasetPeriod: 2020 Population Census
+    datasetScale: 36,657 disclosure-group records
+    datasetSpatialResolution: Census disclosure group linked to 125 m cells
+    datasetTemporalResolution: Single census reference year
+    datasetPreprocessingInfo: Retained native disclosure support and did not duplicate suppressed older-population
+      values across fine meshes.
+  kumamoto_population_mesh_125m_preprocessed:
+    datasetSourceName: 2020 Population Census 125 m population mesh
+    datasetDescription: Populated meshes used to construct communities and allocate total population exposure.
+    datasetAttribute: table
+    datasetProvider: Statistics Bureau of Japan / e-Stat
+    datasetGenerationInfo: Official census tabulation joined to the Kumamoto 125 m mesh geography in the audited
+      KE01b asset.
+    datasetPeriod: 2020 Population Census
+    datasetScale: 62,945 populated meshes
+    datasetSpatialResolution: 125 m population mesh
+    datasetTemporalResolution: Single census reference year
+    datasetPreprocessingInfo: Retained native disclosure status, standardized geometry, and preserved aggregated-source
+      mesh links.
+  kumamoto_road_sections_preprocessed:
+    datasetSourceName: Kumamoto junction-to-junction road sections
+    datasetDescription: Road sections used as disruption, intervention, and reader-facing ranking units.
+    datasetAttribute: table
+    datasetProvider: Authors, derived from MLIT N13 road centerlines in KE01b
+    datasetGenerationInfo: Continuous same-level edge chains were aggregated between true network junctions.
+    datasetPeriod: 2024 source network
+    datasetScale: 343,844 road sections
+    datasetSpatialResolution: Junction-to-junction road section
+    datasetTemporalResolution: Static baseline network
+    datasetPreprocessingInfo: Copied the audited KE01b sections immutably and preserved topology, length, travel
+      time, route, and eligibility fields.
+  kumamoto_routable_road_edges_preprocessed:
+    datasetSourceName: Kumamoto grade-aware routable road edges
+    datasetDescription: Routable road edges with topology, length, speed, travel time, hazard, and route attributes.
+    datasetAttribute: table
+    datasetProvider: Authors, derived from MLIT N13 road centerlines in KE01b
+    datasetGenerationInfo: Grade-aware noding and one-metre endpoint snapping created the baseline graph.
+    datasetPeriod: 2024 source network
+    datasetScale: 390,234 routable road edges
+    datasetSpatialResolution: Routable road edge
+    datasetTemporalResolution: Static baseline network
+    datasetPreprocessingInfo: Copied the audited KE01b network immutably, retained disconnected components, and
+      preserved impedance and route attributes.
+  kumamoto_routable_road_nodes_preprocessed:
+    datasetSourceName: Kumamoto grade-aware routable road nodes
+    datasetDescription: Road nodes defining graph topology for connectivity and shortest-path calculations.
+    datasetAttribute: table
+    datasetProvider: Authors, derived from MLIT N13 road centerlines in KE01b
+    datasetGenerationInfo: Nodes were generated by grade-aware noding of retained road centerlines.
+    datasetPeriod: 2024 source network
+    datasetScale: 314,391 road nodes
+    datasetSpatialResolution: Road-network node
+    datasetTemporalResolution: Static baseline network
+    datasetPreprocessingInfo: Copied the audited KE01b nodes immutably and retained component and eligibility attributes.
+  official_threshold_factors:
+    datasetSourceName: MLIT/JMA temporary rainfall-threshold factors
+    datasetDescription: Official 70 and 80 percent threshold-retention settings used for scenario adjustment.
+    datasetAttribute: table
+    datasetProvider: MLIT and Japan Meteorological Agency (JMA)
+    datasetGenerationInfo: Municipality and subarea factors were transcribed from the joint official press release.
+    datasetPeriod: '2026-07-28'
+    datasetScale: 22 municipality or subarea records
+    datasetSpatialResolution: Municipality or declared subarea
+    datasetTemporalResolution: Single operational announcement
+    datasetPreprocessingInfo: Converted percentages to retained fractions, preserved Japanese area labels, and treated
+      factors as scenarios rather than probabilities.
+  road_restriction_edge_matches_preprocessed:
+    datasetSourceName: Road-restriction candidate edge matches
+    datasetDescription: Candidate links between reported restrictions and routable edges for validation.
+    datasetAttribute: table
+    datasetProvider: Authors, derived from MLIT restrictions and the MLIT-based road network
+    datasetGenerationInfo: Restriction geometry and route names were compared with candidate edges using deterministic
+      matching rules.
+    datasetPeriod: 2026-07-29 to 2026-08-07
+    datasetScale: 98,884 candidate-edge rows representing 680 restriction observations
+    datasetSpatialResolution: Restriction observation by candidate road edge
+    datasetTemporalResolution: Repeated event snapshots
+    datasetPreprocessingInfo: Retained match distance, route agreement, candidate count, method, status, and unmatched
+      observations.
+  road_restrictions_preprocessed:
+    datasetSourceName: MLIT 2026 Kumamoto road restrictions
+    datasetDescription: Timestamped road restrictions with cause, status, geometry, detour, and isolation attributes.
+    datasetAttribute: table
+    datasetProvider: Ministry of Land, Infrastructure, Transport and Tourism (MLIT)
+    datasetGenerationInfo: Official emergency road-information snapshots were extracted with record-level provenance.
+    datasetPeriod: 2026-07-29 to 2026-08-07
+    datasetScale: 680 snapshot observations across 15 snapshots
+    datasetSpatialResolution: Reported restricted segment or point by snapshot
+    datasetTemporalResolution: Repeated event snapshots
+    datasetPreprocessingInfo: Assigned readable English variables, validated data types and geometry, preserved
+      missing values, and retained source provenance without imputation.
+  shelters_current_preprocessed:
+    datasetSourceName: Current shelter status records
+    datasetDescription: Current shelter occupancy and utility-status observations used as service context.
+    datasetAttribute: table
+    datasetProvider: Yatsushiro City official shelter status report
+    datasetGenerationInfo: Official event records were extracted with URL, file, retrieval time, and record provenance.
+    datasetPeriod: Snapshot at 2026-08-06 18:00 JST
+    datasetScale: 41 current shelter records
+    datasetSpatialResolution: Individual shelter facility
+    datasetTemporalResolution: Single event snapshot
+    datasetPreprocessingInfo: Assigned readable English variables, validated data types and geometry, preserved
+      missing values, and retained source provenance without imputation.
+variableDictionary:
+  elevation:
+    variableNameInDataset: elevation_m
+    variableNameInArticle: Terrain Elevation (m)
+    variableAttribute: continuous
+    variableUnit: m
+    variableDescription: Terrain Elevation (m) retained from gsi_dem10b_tiles for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: gsi_dem10b_tiles
+    observationNumber: 0
+  station_slug:
+    variableNameInDataset: station_slug
+    variableNameInArticle: Station Slug
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Station Slug retained from jma_hourly_rainfall for the compound-hazard analysis; missing
+      values are preserved.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 526056
+  station_id:
+    variableNameInDataset: station_id
+    variableNameInArticle: JMA Station Identifier
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for jma station identifier, retained for linkage and quality control.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 526056
+  station_name_japanese:
+    variableNameInDataset: station_name_ja
+    variableNameInArticle: Station Name (Japanese)
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Station Name (Japanese) retained from jma_hourly_rainfall for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 526056
+  observation_time:
+    variableNameInDataset: Observation Time
+    variableNameInArticle: Observation Time
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Observation Time retained from earthquake_damage_evidence_reference_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  hourly_rainfall:
+    variableNameInDataset: hourly_rainfall_mm
+    variableNameInArticle: Hourly Rainfall (mm)
+    variableAttribute: continuous
+    variableUnit: mm
+    variableDescription: '\(R_{1h}(s,t)\), hourly rainfall at station \(s\) and time \(t\), measured in millimetres.
+      Analytical role: main explanatory.'
+    variableSource: jma_hourly_rainfall
+    observationNumber: 525820
+  no_phenomenon_flag:
+    variableNameInDataset: no_phenomenon_flag
+    variableNameInArticle: JMA No-Phenomenon Flag
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: JMA No-Phenomenon Flag retained from jma_hourly_rainfall for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 87670
+  quality_flag:
+    variableNameInDataset: quality_flag
+    variableNameInArticle: JMA Rainfall Quality Flag
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: JMA Rainfall Quality Flag retained from jma_hourly_rainfall for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 526056
+  homogeneity_number:
+    variableNameInDataset: homogeneity_number
+    variableNameInArticle: JMA Homogeneity Number
+    variableAttribute: categorical
+    variableUnit: count
+    variableDescription: JMA Homogeneity Number retained from jma_hourly_rainfall for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 526056
+  support_facility_id:
+    variableNameInDataset: Support Facility ID
+    variableNameInArticle: Support Facility ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for support facility id, retained for linkage and quality control.
+    variableSource: kumamoto_mlit_public_offices_halls_preprocessed
+    observationNumber: 1660
+  support_facility_type:
+    variableNameInDataset: Support Facility Type
+    variableNameInArticle: Support Facility Type
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Support Facility Type retained from kumamoto_mlit_public_offices_halls_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_mlit_public_offices_halls_preprocessed
+    observationNumber: 1660
+  source_reference_year:
+    variableNameInDataset: Source Reference Year
+    variableNameInArticle: Source Reference Year
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Source Reference Year retained from kumamoto_mlit_public_offices_halls_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_mlit_public_offices_halls_preprocessed
+    observationNumber: 1660
+  administrative_area_code:
+    variableNameInDataset: Administrative Area Code
+    variableNameInArticle: Administrative Area Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Administrative Area Code retained from kumamoto_mlit_public_offices_halls_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_mlit_public_offices_halls_preprocessed
+    observationNumber: 1660
+  facility_class:
+    variableNameInDataset: Facility Class
+    variableNameInArticle: Facility Class
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Facility Class retained from kumamoto_mlit_public_offices_halls_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_mlit_public_offices_halls_preprocessed
+    observationNumber: 1660
+  facility_name:
+    variableNameInDataset: Facility Name
+    variableNameInArticle: Facility Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Facility Name retained from kumamoto_evacuation_facilities_2012_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  address:
+    variableNameInDataset: Address
+    variableNameInArticle: Address
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Address retained from kumamoto_landslide_warning_zones_2025_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_landslide_warning_zones_2025_preprocessed
+    observationNumber: 56424
+  geometry:
+    variableNameInDataset: geometry
+    variableNameInArticle: Geometry
+    variableAttribute: other
+    variableUnit: spatial geometry
+    variableDescription: Spatial geometry retained for mapping, overlay, network attachment, or geographic aggregation.
+    variableSource: gsi_airphoto_interpreted_landslides
+    observationNumber: 1044
+  municipality_code:
+    variableNameInDataset: Municipality Code
+    variableNameInArticle: Municipality Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Municipality Code retained from kumamoto_fire_stations_2012_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_fire_stations_2012_preprocessed
+    observationNumber: 94
+  prefecture_name:
+    variableNameInDataset: Prefecture Name
+    variableNameInArticle: Prefecture Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Prefecture Name retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 543
+  subprefecture_name:
+    variableNameInDataset: Subprefecture Name
+    variableNameInArticle: Subprefecture Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Subprefecture Name retained from kumamoto_administrative_areas_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_administrative_areas_preprocessed
+    observationNumber: 0
+  district_name:
+    variableNameInDataset: District Name
+    variableNameInArticle: District Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: District Name retained from kumamoto_administrative_areas_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_administrative_areas_preprocessed
+    observationNumber: 31
+  municipality_name:
+    variableNameInDataset: Municipality Name
+    variableNameInArticle: Municipality Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Municipality Name retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 543
+  ward_name:
+    variableNameInDataset: Ward Name
+    variableNameInArticle: Ward Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Ward Name retained from kumamoto_administrative_areas_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_administrative_areas_preprocessed
+    observationNumber: 5
+  municipality_label:
+    variableNameInDataset: Municipality Label
+    variableNameInArticle: Municipality Label
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Municipality Label retained from kumamoto_administrative_areas_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_administrative_areas_preprocessed
+    observationNumber: 49
+  prefecture_code:
+    variableNameInDataset: Prefecture Code
+    variableNameInArticle: Prefecture Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Prefecture Code retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 15
+  emergency_road_class_code:
+    variableNameInDataset: Emergency Road Class Code
+    variableNameInArticle: Emergency Road Class Code
+    variableAttribute: ordinal
+    variableUnit: identifier
+    variableDescription: Emergency Road Class Code retained from kumamoto_emergency_transport_roads_2024_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_emergency_transport_roads_2024_preprocessed
+    observationNumber: 264
+  road_type_code:
+    variableNameInDataset: Road Type Code
+    variableNameInArticle: Road Type Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Road Type Code retained from kumamoto_emergency_transport_roads_2024_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_emergency_transport_roads_2024_preprocessed
+    observationNumber: 264
+  route_name:
+    variableNameInDataset: Route Name
+    variableNameInArticle: Route Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Route Name retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 640
+  route_id:
+    variableNameInDataset: Route ID
+    variableNameInArticle: Route ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for route id, retained for linkage and quality control.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 10478
+  branch_id:
+    variableNameInDataset: Branch ID
+    variableNameInArticle: Branch ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for branch id, retained for linkage and quality control.
+    variableSource: kumamoto_emergency_transport_roads_2024_preprocessed
+    observationNumber: 264
+  source_name:
+    variableNameInDataset: Source Name
+    variableNameInArticle: Source Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Source Name retained from kumamoto_emergency_transport_roads_2024_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_emergency_transport_roads_2024_preprocessed
+    observationNumber: 264
+  source_date:
+    variableNameInDataset: Source Date
+    variableNameInArticle: Source Date
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Source Date retained from kumamoto_emergency_transport_roads_2024_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_emergency_transport_roads_2024_preprocessed
+    observationNumber: 264
+  service_status:
+    variableNameInDataset: Service Status
+    variableNameInArticle: Service Status
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Service Status retained from kumamoto_emergency_transport_roads_2024_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_emergency_transport_roads_2024_preprocessed
+    observationNumber: 264
+  notes:
+    variableNameInDataset: Notes
+    variableNameInArticle: Notes
+    variableAttribute: other
+    variableUnit: not applicable
+    variableDescription: Notes retained from kumamoto_evacuation_facilities_2012_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 117
+  emergency_road_class:
+    variableNameInDataset: Emergency Road Class
+    variableNameInArticle: Emergency Road Class
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Emergency Road Class retained from kumamoto_emergency_transport_roads_2024_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_emergency_transport_roads_2024_preprocessed
+    observationNumber: 264
+  road_type:
+    variableNameInDataset: Road Type
+    variableNameInArticle: Road Type
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Road Type retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 641
+  facility_type:
+    variableNameInDataset: Facility Type
+    variableNameInArticle: Facility Type
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Facility Type retained from kumamoto_evacuation_facilities_2012_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  capacity:
+    variableNameInDataset: Capacity
+    variableNameInArticle: Capacity
+    variableAttribute: count
+    variableUnit: count
+    variableDescription: Capacity retained from kumamoto_evacuation_facilities_2012_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  facility_area_m2:
+    variableNameInDataset: Facility Area m2
+    variableNameInArticle: Facility Area m2
+    variableAttribute: continuous
+    variableUnit: m2
+    variableDescription: Facility Area m2 retained from kumamoto_evacuation_facilities_2012_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  earthquake_hazard:
+    variableNameInDataset: Earthquake Hazard
+    variableNameInArticle: Earthquake Hazard
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Earthquake Hazard retained from kumamoto_evacuation_facilities_2012_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  tsunami_hazard:
+    variableNameInDataset: Tsunami Hazard
+    variableNameInArticle: Tsunami Hazard
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Tsunami Hazard retained from kumamoto_evacuation_facilities_2012_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  flood_hazard:
+    variableNameInDataset: Flood Hazard
+    variableNameInArticle: Flood Hazard
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Flood Hazard retained from kumamoto_evacuation_facilities_2012_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  volcanic_hazard:
+    variableNameInDataset: Volcanic Hazard
+    variableNameInArticle: Volcanic Hazard
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Volcanic Hazard retained from kumamoto_evacuation_facilities_2012_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  other_hazard:
+    variableNameInDataset: Other Hazard
+    variableNameInArticle: Other Hazard
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Other Hazard retained from kumamoto_evacuation_facilities_2012_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  no_hazard_specified:
+    variableNameInDataset: No Hazard Specified
+    variableNameInArticle: No Hazard Specified
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: No Hazard Specified retained from kumamoto_evacuation_facilities_2012_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  location_accuracy_level:
+    variableNameInDataset: Location Accuracy Level
+    variableNameInArticle: Location Accuracy Level
+    variableAttribute: ordinal
+    variableUnit: not applicable
+    variableDescription: Location Accuracy Level retained from kumamoto_evacuation_facilities_2012_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  latitude:
+    variableNameInDataset: latitude
+    variableNameInArticle: Latitude
+    variableAttribute: continuous
+    variableUnit: decimal degrees
+    variableDescription: Latitude retained from gsi_airphoto_interpreted_landslides for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: gsi_airphoto_interpreted_landslides
+    observationNumber: 1044
+  longitude:
+    variableNameInDataset: longitude
+    variableNameInArticle: Longitude
+    variableAttribute: continuous
+    variableUnit: decimal degrees
+    variableDescription: Longitude retained from gsi_airphoto_interpreted_landslides for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: gsi_airphoto_interpreted_landslides
+    observationNumber: 1044
+  source_record_id:
+    variableNameInDataset: Source Record ID
+    variableNameInArticle: Source Record ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for source record id, retained for linkage and quality control.
+    variableSource: kumamoto_evacuation_facilities_2012_preprocessed
+    observationNumber: 1969
+  fire_facility_name:
+    variableNameInDataset: Fire Facility Name
+    variableNameInArticle: Fire Facility Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Fire Facility Name retained from kumamoto_fire_stations_2012_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_fire_stations_2012_preprocessed
+    observationNumber: 94
+  fire_facility_type_code:
+    variableNameInDataset: Fire Facility Type Code
+    variableNameInArticle: Fire Facility Type Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Fire Facility Type Code retained from kumamoto_fire_stations_2012_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_fire_stations_2012_preprocessed
+    observationNumber: 94
+  fire_facility_type:
+    variableNameInDataset: Fire Facility Type
+    variableNameInArticle: Fire Facility Type
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Fire Facility Type retained from kumamoto_fire_stations_2012_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_fire_stations_2012_preprocessed
+    observationNumber: 94
+  candidate_dispatch_base:
+    variableNameInDataset: Candidate Dispatch Base
+    variableNameInArticle: Candidate Dispatch Base
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Candidate Dispatch Base retained from kumamoto_fire_stations_2012_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_fire_stations_2012_preprocessed
+    observationNumber: 94
+  hazard_type_code:
+    variableNameInDataset: Hazard Type Code
+    variableNameInArticle: Hazard Type Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Hazard Type Code retained from kumamoto_landslide_warning_zones_2025_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_landslide_warning_zones_2025_preprocessed
+    observationNumber: 56424
+  warning_zone_class_code:
+    variableNameInDataset: Warning Zone Class Code
+    variableNameInArticle: Warning Zone Class Code
+    variableAttribute: ordinal
+    variableUnit: identifier
+    variableDescription: Warning Zone Class Code retained from kumamoto_landslide_warning_zones_2025_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_landslide_warning_zones_2025_preprocessed
+    observationNumber: 56424
+  zone_id:
+    variableNameInDataset: Zone ID
+    variableNameInArticle: Zone ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for zone id, retained for linkage and quality control.
+    variableSource: kumamoto_landslide_warning_zones_2025_preprocessed
+    observationNumber: 56424
+  zone_name:
+    variableNameInDataset: Zone Name
+    variableNameInArticle: Zone Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Zone Name retained from kumamoto_landslide_warning_zones_2025_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_landslide_warning_zones_2025_preprocessed
+    observationNumber: 56424
+  designation_date:
+    variableNameInDataset: Designation Date
+    variableNameInArticle: Designation Date
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Designation Date retained from kumamoto_landslide_warning_zones_2025_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_landslide_warning_zones_2025_preprocessed
+    observationNumber: 56424
+  special_warning_zone_pending_code:
+    variableNameInDataset: Special Warning Zone Pending Code
+    variableNameInArticle: Special Warning Zone Pending Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Special Warning Zone Pending Code retained from kumamoto_landslide_warning_zones_2025_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_landslide_warning_zones_2025_preprocessed
+    observationNumber: 56424
+  hazard_type:
+    variableNameInDataset: Hazard Type
+    variableNameInArticle: Hazard Type
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Hazard Type retained from kumamoto_landslide_warning_zones_2025_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_landslide_warning_zones_2025_preprocessed
+    observationNumber: 56424
+  warning_zone_class:
+    variableNameInDataset: Warning Zone Class
+    variableNameInArticle: Warning Zone Class
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Warning Zone Class retained from kumamoto_landslide_warning_zones_2025_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_landslide_warning_zones_2025_preprocessed
+    observationNumber: 54499
+  special_warning_zone_pending:
+    variableNameInDataset: Special Warning Zone Pending
+    variableNameInArticle: Special Warning Zone Pending
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Special Warning Zone Pending retained from kumamoto_landslide_warning_zones_2025_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_landslide_warning_zones_2025_preprocessed
+    observationNumber: 56424
+  disclosure_group_code:
+    variableNameInDataset: Disclosure Group Code
+    variableNameInArticle: Disclosure Group Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Disclosure Group Code retained from kumamoto_population_mesh_125m_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 62945
+  disclosure_group_size:
+    variableNameInDataset: Disclosure Group Size
+    variableNameInArticle: Disclosure Group Size
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Disclosure Group Size retained from kumamoto_population_mesh_125m_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 62945
+  suppressed_source_mesh_count:
+    variableNameInDataset: Suppressed Source Mesh Count
+    variableNameInArticle: Suppressed Source Mesh Count
+    variableAttribute: count
+    variableUnit: count
+    variableDescription: Suppressed Source Mesh Count retained from kumamoto_population_disclosure_groups_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36657
+  total_population:
+    variableNameInDataset: Total Population
+    variableNameInArticle: Total Population
+    variableAttribute: count
+    variableUnit: persons
+    variableDescription: '\(N_c\), resident population represented by spatial unit \(c\). Analytical role: outcome
+      weighting.'
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 62945
+  total_households:
+    variableNameInDataset: Total Households
+    variableNameInArticle: Total Households
+    variableAttribute: count
+    variableUnit: households
+    variableDescription: Total Households retained from kumamoto_population_mesh_125m_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 62945
+  general_households:
+    variableNameInDataset: General Households
+    variableNameInArticle: General Households
+    variableAttribute: count
+    variableUnit: households
+    variableDescription: General Households retained from kumamoto_population_mesh_125m_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 62945
+  population_age_65:
+    variableNameInDataset: Population Age 65+
+    variableNameInArticle: Population Age 65+
+    variableAttribute: count
+    variableUnit: persons
+    variableDescription: '\(N_{65+,c}\), residents aged 65 years or older in spatial unit \(c\). Analytical role:
+      outcome weighting.'
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36657
+  population_age_75:
+    variableNameInDataset: Population Age 75+
+    variableNameInArticle: Population Age 75+
+    variableAttribute: count
+    variableUnit: persons
+    variableDescription: '\(N_{75+,c}\), residents aged 75 years or older in spatial unit \(c\). Analytical role:
+      outcome weighting.'
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36657
+  population_age_85:
+    variableNameInDataset: Population Age 85+
+    variableNameInArticle: Population Age 85+
+    variableAttribute: count
+    variableUnit: persons
+    variableDescription: '\(N_{85+,c}\), residents aged 85 years or older in spatial unit \(c\). Analytical role:
+      outcome weighting.'
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36657
+  one_person_households:
+    variableNameInDataset: One-Person Households
+    variableNameInArticle: One-Person Households
+    variableAttribute: count
+    variableUnit: households
+    variableDescription: One-Person Households retained from kumamoto_population_disclosure_groups_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36657
+  households_with_member_age_65:
+    variableNameInDataset: Households with Member Age 65+
+    variableNameInArticle: Households with Member Age 65+
+    variableAttribute: count
+    variableUnit: households
+    variableDescription: Households with Member Age 65+ retained from kumamoto_population_disclosure_groups_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36657
+  older_single_person_households:
+    variableNameInDataset: Older Single-Person Households
+    variableNameInArticle: Older Single-Person Households
+    variableAttribute: count
+    variableUnit: households
+    variableDescription: Older Single-Person Households retained from kumamoto_population_disclosure_groups_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36657
+  older_couple_households:
+    variableNameInDataset: Older Couple Households
+    variableNameInArticle: Older Couple Households
+    variableAttribute: count
+    variableUnit: households
+    variableDescription: Older Couple Households retained from kumamoto_population_disclosure_groups_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36657
+  population_age_65_share:
+    variableNameInDataset: Population Age 65+ Share
+    variableNameInArticle: Population Age 65+ Share
+    variableAttribute: count
+    variableUnit: proportion
+    variableDescription: Population Age 65+ Share retained from kumamoto_population_disclosure_groups_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36657
+  population_age_75_share:
+    variableNameInDataset: Population Age 75+ Share
+    variableNameInArticle: Population Age 75+ Share
+    variableAttribute: count
+    variableUnit: proportion
+    variableDescription: Population Age 75+ Share retained from kumamoto_population_disclosure_groups_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36657
+  population_age_85_share:
+    variableNameInDataset: Population Age 85+ Share
+    variableNameInArticle: Population Age 85+ Share
+    variableAttribute: count
+    variableUnit: proportion
+    variableDescription: Population Age 85+ Share retained from kumamoto_population_disclosure_groups_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36657
+  older_single_person_household_share:
+    variableNameInDataset: Older Single-Person Household Share
+    variableNameInArticle: Older Single-Person Household Share
+    variableAttribute: count
+    variableUnit: proportion
+    variableDescription: Older Single-Person Household Share retained from kumamoto_population_disclosure_groups_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36475
+  older_couple_household_share:
+    variableNameInDataset: Older Couple Household Share
+    variableNameInArticle: Older Couple Household Share
+    variableAttribute: count
+    variableUnit: proportion
+    variableDescription: Older Couple Household Share retained from kumamoto_population_disclosure_groups_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_disclosure_groups_preprocessed
+    observationNumber: 36475
+  mesh_code:
+    variableNameInDataset: Mesh Code
+    variableNameInArticle: Mesh Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Mesh Code retained from kumamoto_population_mesh_125m_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 62945
+  disclosure_status:
+    variableNameInDataset: Disclosure Status
+    variableNameInArticle: Disclosure Status
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Disclosure Status retained from kumamoto_population_mesh_125m_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 62945
+  aggregation_destination_mesh_code:
+    variableNameInDataset: Aggregation Destination Mesh Code
+    variableNameInArticle: Aggregation Destination Mesh Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Aggregation Destination Mesh Code retained from kumamoto_population_mesh_125m_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 26288
+  aggregated_source_mesh_codes:
+    variableNameInDataset: Aggregated Source Mesh Codes
+    variableNameInArticle: Aggregated Source Mesh Codes
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Aggregated Source Mesh Codes retained from kumamoto_population_mesh_125m_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 14667
+  road_edge_id:
+    variableNameInDataset: Road Edge ID
+    variableNameInArticle: Road Edge ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for road edge id, retained for linkage and quality control.
+    variableSource: kumamoto_routable_road_edges_preprocessed
+    observationNumber: 390234
+  road_section_id:
+    variableNameInDataset: Road Section ID
+    variableNameInArticle: Road Section ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for road section id, retained for linkage and quality control.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  from_node_id:
+    variableNameInDataset: From Node ID
+    variableNameInArticle: From Node ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for from node id, retained for linkage and quality control.
+    variableSource: kumamoto_routable_road_edges_preprocessed
+    observationNumber: 390234
+  to_node_id:
+    variableNameInDataset: To Node ID
+    variableNameInArticle: To Node ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for to node id, retained for linkage and quality control.
+    variableSource: kumamoto_routable_road_edges_preprocessed
+    observationNumber: 390234
+  network_component_id:
+    variableNameInDataset: Network Component ID
+    variableNameInArticle: Network Component ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for network component id, retained for linkage and quality control.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  road_length_m:
+    variableNameInDataset: Road Length (m)
+    variableNameInArticle: Road Length (m)
+    variableAttribute: continuous
+    variableUnit: m
+    variableDescription: '\(L_e\), length of road edge \(e\), measured in metres. Analytical role: control.'
+    variableSource: kumamoto_routable_road_edges_preprocessed
+    observationNumber: 390234
+  assumed_speed_km_h:
+    variableNameInDataset: Assumed Speed (km/h)
+    variableNameInArticle: Assumed Speed (km/h)
+    variableAttribute: continuous
+    variableUnit: km/h
+    variableDescription: Assumed Speed (km/h) retained from kumamoto_road_sections_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  baseline_edge_travel_time_min:
+    variableNameInDataset: Baseline Edge Travel Time (min)
+    variableNameInArticle: Baseline Edge Travel Time (min)
+    variableAttribute: continuous
+    variableUnit: minutes
+    variableDescription: '\(T^{base}_e\), undisrupted travel time on road edge \(e\), measured in minutes. Analytical
+      role: control.'
+    variableSource: kumamoto_routable_road_edges_preprocessed
+    observationNumber: 390234
+  hazard_exposure_class:
+    variableNameInDataset: Hazard Exposure Class
+    variableNameInArticle: Hazard Exposure Class
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Hazard Exposure Class retained from kumamoto_road_sections_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  emergency_route_membership:
+    variableNameInDataset: Emergency Route Membership
+    variableNameInArticle: Emergency Route Membership
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Emergency Route Membership retained from kumamoto_road_sections_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  road_available:
+    variableNameInDataset: Road Available
+    variableNameInArticle: Road Available
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Road Available retained from kumamoto_road_sections_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  network_analysis_eligible:
+    variableNameInDataset: Network Analysis Eligible
+    variableNameInArticle: Network Analysis Eligible
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Network Analysis Eligible retained from kumamoto_road_sections_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  road_category:
+    variableNameInDataset: Road Category
+    variableNameInArticle: Road Category
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Road Category retained from kumamoto_road_sections_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  road_state:
+    variableNameInDataset: Road State
+    variableNameInArticle: Road State
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Road State retained from kumamoto_road_sections_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  vertical_level:
+    variableNameInDataset: Vertical Level
+    variableNameInArticle: Vertical Level
+    variableAttribute: ordinal
+    variableUnit: not applicable
+    variableDescription: Vertical Level retained from kumamoto_road_sections_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  width_category:
+    variableNameInDataset: Width Category
+    variableNameInArticle: Width Category
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Width Category retained from kumamoto_road_sections_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  toll_category:
+    variableNameInDataset: Toll Category
+    variableNameInArticle: Toll Category
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Toll Category retained from kumamoto_road_sections_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  secondary_mesh_code:
+    variableNameInDataset: Secondary Mesh Code
+    variableNameInArticle: Secondary Mesh Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Secondary Mesh Code retained from kumamoto_routable_road_edges_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_routable_road_edges_preprocessed
+    observationNumber: 390234
+  network_node_id:
+    variableNameInDataset: Network Node ID
+    variableNameInArticle: Network Node ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for network node id, retained for linkage and quality control.
+    variableSource: kumamoto_routable_road_nodes_preprocessed
+    observationNumber: 314391
+  section_from_node_id:
+    variableNameInDataset: Section From Node ID
+    variableNameInArticle: Section From Node ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for section from node id, retained for linkage and quality control.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  section_to_node_id:
+    variableNameInDataset: Section To Node ID
+    variableNameInArticle: Section To Node ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for section to node id, retained for linkage and quality control.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  road_section_length_m:
+    variableNameInDataset: Road Section Length (m)
+    variableNameInArticle: Road Section Length (m)
+    variableAttribute: continuous
+    variableUnit: m
+    variableDescription: '\(L_s\), length of road section \(s\), measured in metres. Analytical role: control.'
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  road_edge_count:
+    variableNameInDataset: Road Edge Count
+    variableNameInArticle: Road Edge Count
+    variableAttribute: count
+    variableUnit: count
+    variableDescription: Road Edge Count retained from kumamoto_road_sections_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  baseline_section_travel_time_min:
+    variableNameInDataset: Baseline Section Travel Time (min)
+    variableNameInArticle: Baseline Section Travel Time (min)
+    variableAttribute: continuous
+    variableUnit: minutes
+    variableDescription: '\(T^{base}_s\), undisrupted travel time on road section \(s\), measured in minutes. Analytical
+      role: control.'
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  shelter_id:
+    variableNameInDataset: Shelter ID
+    variableNameInArticle: Shelter ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for shelter id, retained for linkage and quality control.
+    variableSource: designated_shelters_preprocessed
+    observationNumber: 1315
+  shelter_name:
+    variableNameInDataset: Shelter Name
+    variableNameInArticle: Shelter Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Shelter Name retained from shelters_current_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: shelters_current_preprocessed
+    observationNumber: 41
+  same_address_as_emergency_evacuation_site:
+    variableNameInDataset: Same Address as Emergency Evacuation Site
+    variableNameInArticle: Same Address as Emergency Evacuation Site
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Same Address as Emergency Evacuation Site retained from designated_shelters_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: designated_shelters_preprocessed
+    observationNumber: 903
+  accepted_persons:
+    variableNameInDataset: Accepted Persons
+    variableNameInArticle: Accepted Persons
+    variableAttribute: categorical
+    variableUnit: persons
+    variableDescription: Accepted Persons retained from designated_shelters_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: designated_shelters_preprocessed
+    observationNumber: 159
+  evidence_id:
+    variableNameInDataset: Evidence ID
+    variableNameInArticle: Evidence ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for evidence id, retained for linkage and quality control.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  event_id:
+    variableNameInDataset: Event ID
+    variableNameInArticle: Event ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for event id, retained for linkage and quality control.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  municipality:
+    variableNameInDataset: Municipality
+    variableNameInArticle: Municipality
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Municipality retained from emergency_water_points_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_water_points_preprocessed
+    observationNumber: 36
+  coordinate_precision:
+    variableNameInDataset: Coordinate Precision
+    variableNameInArticle: Coordinate Precision
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Coordinate Precision retained from earthquake_damage_evidence_reference_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  coordinate_uncertainty_m:
+    variableNameInDataset: Coordinate Uncertainty (m)
+    variableNameInArticle: Coordinate Uncertainty (m)
+    variableAttribute: continuous
+    variableUnit: m
+    variableDescription: Coordinate Uncertainty (m) retained from earthquake_damage_evidence_reference_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 2
+  evidence_tier:
+    variableNameInDataset: Evidence Tier
+    variableNameInArticle: Evidence Tier
+    variableAttribute: ordinal
+    variableUnit: not applicable
+    variableDescription: Evidence Tier retained from earthquake_damage_evidence_reference_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  verification_status:
+    variableNameInDataset: Verification Status
+    variableNameInArticle: Verification Status
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Verification Status retained from earthquake_damage_evidence_reference_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  asset_type:
+    variableNameInDataset: Asset Type
+    variableNameInArticle: Asset Type
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Asset Type retained from earthquake_damage_evidence_reference_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  observed_damage_type:
+    variableNameInDataset: Observed Damage Type
+    variableNameInArticle: Observed Damage Type
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Observed Damage Type retained from earthquake_damage_evidence_reference_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  structural_damage_class:
+    variableNameInDataset: Structural Damage Class
+    variableNameInArticle: Structural Damage Class
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Structural Damage Class retained from earthquake_damage_evidence_reference_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  reported_affected_asset_count:
+    variableNameInDataset: Reported Affected Asset Count
+    variableNameInArticle: Reported Affected Asset Count
+    variableAttribute: count
+    variableUnit: count
+    variableDescription: Reported Affected Asset Count retained from earthquake_damage_evidence_reference_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 8
+  place_description:
+    variableNameInDataset: Place Description
+    variableNameInArticle: Place Description
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Place Description retained from earthquake_damage_evidence_reference_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  source_organization:
+    variableNameInDataset: Source Organization
+    variableNameInArticle: Source Organization
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Source Organization retained from earthquake_damage_evidence_reference_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  source_type:
+    variableNameInDataset: Source Type
+    variableNameInArticle: Source Type
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Source Type retained from earthquake_damage_evidence_reference_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  source_report_number:
+    variableNameInDataset: Source Report Number
+    variableNameInArticle: Source Report Number
+    variableAttribute: categorical
+    variableUnit: count
+    variableDescription: Source Report Number retained from earthquake_damage_evidence_reference_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  source_page:
+    variableNameInDataset: Source Page
+    variableNameInArticle: Source Page
+    variableAttribute: count
+    variableUnit: count
+    variableDescription: Source Page retained from earthquake_damage_evidence_reference_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: earthquake_damage_evidence_reference_preprocessed
+    observationNumber: 9
+  source_url:
+    variableNameInDataset: Source URL
+    variableNameInArticle: Source URL
+    variableAttribute: other
+    variableUnit: not applicable
+    variableDescription: Source URL retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 680
+  evacuation_site_id:
+    variableNameInDataset: Evacuation Site ID
+    variableNameInArticle: Evacuation Site ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for evacuation site id, retained for linkage and quality control.
+    variableSource: emergency_evacuation_sites_preprocessed
+    observationNumber: 1713
+  evacuation_site_name:
+    variableNameInDataset: Evacuation Site Name
+    variableNameInArticle: Evacuation Site Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Evacuation Site Name retained from emergency_evacuation_sites_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_evacuation_sites_preprocessed
+    observationNumber: 1713
+  earthquake_designation:
+    variableNameInDataset: Earthquake Designation
+    variableNameInArticle: Earthquake Designation
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Earthquake Designation retained from emergency_evacuation_sites_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_evacuation_sites_preprocessed
+    observationNumber: 1477
+  large_scale_fire_designation:
+    variableNameInDataset: Large-Scale Fire Designation
+    variableNameInArticle: Large-Scale Fire Designation
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Large-Scale Fire Designation retained from emergency_evacuation_sites_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: emergency_evacuation_sites_preprocessed
+    observationNumber: 1038
+  same_address_as_designated_shelter:
+    variableNameInDataset: Same Address as Designated Shelter
+    variableNameInArticle: Same Address as Designated Shelter
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Same Address as Designated Shelter retained from emergency_evacuation_sites_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: emergency_evacuation_sites_preprocessed
+    observationNumber: 903
+  shelter_number:
+    variableNameInDataset: Shelter Number
+    variableNameInArticle: Shelter Number
+    variableAttribute: categorical
+    variableUnit: count
+    variableDescription: Shelter Number retained from shelters_current_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: shelters_current_preprocessed
+    observationNumber: 41
+  district:
+    variableNameInDataset: District
+    variableNameInArticle: District
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: District retained from shelters_current_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: shelters_current_preprocessed
+    observationNumber: 41
+  maximum_capacity:
+    variableNameInDataset: Maximum Capacity
+    variableNameInArticle: Maximum Capacity
+    variableAttribute: count
+    variableUnit: count
+    variableDescription: Maximum Capacity retained from shelters_current_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: shelters_current_preprocessed
+    observationNumber: 41
+  evacuee_households:
+    variableNameInDataset: Evacuee Households
+    variableNameInArticle: Evacuee Households
+    variableAttribute: count
+    variableUnit: households
+    variableDescription: Evacuee Households retained from shelters_current_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: shelters_current_preprocessed
+    observationNumber: 41
+  evacuee_people:
+    variableNameInDataset: Evacuee People
+    variableNameInArticle: Evacuee People
+    variableAttribute: categorical
+    variableUnit: persons
+    variableDescription: Evacuee People retained from shelters_current_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: shelters_current_preprocessed
+    observationNumber: 41
+  water_status:
+    variableNameInDataset: Water Status
+    variableNameInArticle: Water Status
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Water Status retained from shelters_current_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: shelters_current_preprocessed
+    observationNumber: 41
+  electricity_status:
+    variableNameInDataset: Electricity Status
+    variableNameInArticle: Electricity Status
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Electricity Status retained from shelters_current_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: shelters_current_preprocessed
+    observationNumber: 41
+  air_conditioning_status:
+    variableNameInDataset: Air Conditioning Status
+    variableNameInArticle: Air Conditioning Status
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Air Conditioning Status retained from shelters_current_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: shelters_current_preprocessed
+    observationNumber: 41
+  toilet_count:
+    variableNameInDataset: Toilet Count
+    variableNameInArticle: Toilet Count
+    variableAttribute: count
+    variableUnit: count
+    variableDescription: Toilet Count retained from shelters_current_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: shelters_current_preprocessed
+    observationNumber: 41
+  portable_toilet_count:
+    variableNameInDataset: Portable Toilet Count
+    variableNameInArticle: Portable Toilet Count
+    variableAttribute: count
+    variableUnit: count
+    variableDescription: Portable Toilet Count retained from shelters_current_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: shelters_current_preprocessed
+    observationNumber: 41
+  snapshot_time:
+    variableNameInDataset: Snapshot Time
+    variableNameInArticle: Snapshot Time
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Snapshot Time retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 680
+  source_file:
+    variableNameInDataset: source_file
+    variableNameInArticle: Source File
+    variableAttribute: other
+    variableUnit: not applicable
+    variableDescription: Source File retained from gsi_airphoto_interpreted_landslides for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: gsi_airphoto_interpreted_landslides
+    observationNumber: 1044
+  source_retrieved_at_utc:
+    variableNameInDataset: Source Retrieved At UTC
+    variableNameInArticle: Source Retrieved At UTC
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Source Retrieved At UTC retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 680
+  location_resolution_status:
+    variableNameInDataset: Location Resolution Status
+    variableNameInArticle: Location Resolution Status
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Location Resolution Status retained from emergency_water_points_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_water_points_preprocessed
+    observationNumber: 36
+  water_point_name:
+    variableNameInDataset: Water Point Name
+    variableNameInArticle: Water Point Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Water Point Name retained from emergency_water_points_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_water_points_preprocessed
+    observationNumber: 36
+  valid_from_date:
+    variableNameInDataset: Valid From Date
+    variableNameInArticle: Valid From Date
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Valid From Date retained from emergency_water_points_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_water_points_preprocessed
+    observationNumber: 36
+  valid_to_date:
+    variableNameInDataset: Valid To Date
+    variableNameInArticle: Valid To Date
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Valid To Date retained from emergency_water_points_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_water_points_preprocessed
+    observationNumber: 28
+  opening_time:
+    variableNameInDataset: Opening Time
+    variableNameInArticle: Opening Time
+    variableAttribute: categorical
+    variableUnit: clock time
+    variableDescription: Opening Time retained from emergency_water_points_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_water_points_preprocessed
+    observationNumber: 36
+  closing_time:
+    variableNameInDataset: Closing Time
+    variableNameInArticle: Closing Time
+    variableAttribute: categorical
+    variableUnit: clock time
+    variableDescription: Closing Time retained from emergency_water_points_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_water_points_preprocessed
+    observationNumber: 36
+  allocation_basis:
+    variableNameInDataset: Allocation Basis
+    variableNameInArticle: Allocation Basis
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Allocation Basis retained from emergency_water_points_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_water_points_preprocessed
+    observationNumber: 36
+  allocation_limit_l:
+    variableNameInDataset: Allocation Limit (L)
+    variableNameInArticle: Allocation Limit (L)
+    variableAttribute: continuous
+    variableUnit: litres
+    variableDescription: Allocation Limit (L) retained from emergency_water_points_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_water_points_preprocessed
+    observationNumber: 36
+  water_type:
+    variableNameInDataset: Water Type
+    variableNameInArticle: Water Type
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Water Type retained from emergency_water_points_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: emergency_water_points_preprocessed
+    observationNumber: 36
+  source_status_time:
+    variableNameInDataset: Source Status Time
+    variableNameInArticle: Source Status Time
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Source Status Time retained from emergency_water_points_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: emergency_water_points_preprocessed
+    observationNumber: 36
+  restriction_observation_id:
+    variableNameInDataset: Restriction Observation ID
+    variableNameInArticle: Restriction Observation ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for restriction observation id, retained for linkage and quality control.
+    variableSource: road_restriction_edge_matches_preprocessed
+    observationNumber: 98884
+  restriction_status:
+    variableNameInDataset: Restriction Status
+    variableNameInArticle: Restriction Status
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Restriction Status retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 98
+  restriction_reason:
+    variableNameInDataset: Restriction Reason
+    variableNameInArticle: Restriction Reason
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Restriction Reason retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 638
+  matched_road_edge_id:
+    variableNameInDataset: Matched Road Edge ID
+    variableNameInArticle: Matched Road Edge ID
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for matched road edge id, retained for linkage and quality control.
+    variableSource: road_restriction_edge_matches_preprocessed
+    observationNumber: 98808
+  road_edge_match_distance_m:
+    variableNameInDataset: Road Edge Match Distance (m)
+    variableNameInArticle: Road Edge Match Distance (m)
+    variableAttribute: continuous
+    variableUnit: m
+    variableDescription: Road Edge Match Distance (m) retained from road_restriction_edge_matches_preprocessed for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: road_restriction_edge_matches_preprocessed
+    observationNumber: 98808
+  route_name_agreement:
+    variableNameInDataset: Route Name Agreement
+    variableNameInArticle: Route Name Agreement
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Route Name Agreement retained from road_restriction_edge_matches_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restriction_edge_matches_preprocessed
+    observationNumber: 16266
+  road_edge_match_candidate_count:
+    variableNameInDataset: Road Edge Match Candidate Count
+    variableNameInArticle: Road Edge Match Candidate Count
+    variableAttribute: count
+    variableUnit: count
+    variableDescription: Road Edge Match Candidate Count retained from road_restriction_edge_matches_preprocessed
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: road_restriction_edge_matches_preprocessed
+    observationNumber: 98884
+  road_edge_match_method:
+    variableNameInDataset: Road Edge Match Method
+    variableNameInArticle: Road Edge Match Method
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Road Edge Match Method retained from road_restriction_edge_matches_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: road_restriction_edge_matches_preprocessed
+    observationNumber: 98884
+  road_edge_match_status:
+    variableNameInDataset: Road Edge Match Status
+    variableNameInArticle: Road Edge Match Status
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Road Edge Match Status retained from road_restriction_edge_matches_preprocessed for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: road_restriction_edge_matches_preprocessed
+    observationNumber: 98884
+  feature_index:
+    variableNameInDataset: Feature Index
+    variableNameInArticle: Feature Index
+    variableAttribute: count
+    variableUnit: count
+    variableDescription: Feature Index retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 680
+  start_address:
+    variableNameInDataset: Start Address
+    variableNameInArticle: Start Address
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Start Address retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 543
+  end_address:
+    variableNameInDataset: End Address
+    variableNameInArticle: End Address
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: End Address retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 543
+  restriction_type:
+    variableNameInDataset: Restriction Type
+    variableNameInArticle: Restriction Type
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Restriction Type retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 639
+  restriction_start_time:
+    variableNameInDataset: Restriction Start Time
+    variableNameInArticle: Restriction Start Time
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Restriction Start Time retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 540
+  restriction_start_status:
+    variableNameInDataset: Restriction Start Status
+    variableNameInArticle: Restriction Start Status
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Restriction Start Status retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 540
+  affected_length_km:
+    variableNameInDataset: Affected Length (km)
+    variableNameInArticle: Affected Length (km)
+    variableAttribute: continuous
+    variableUnit: km
+    variableDescription: Affected Length (km) retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 455
+  geometry_type:
+    variableNameInDataset: Geometry Type
+    variableNameInArticle: Geometry Type
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Geometry Type retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 680
+  geometry_json:
+    variableNameInDataset: Geometry JSON
+    variableNameInArticle: Geometry JSON
+    variableAttribute: other
+    variableUnit: spatial geometry
+    variableDescription: Geometry JSON retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 680
+  restriction_record_name:
+    variableNameInDataset: Restriction Record Name
+    variableNameInArticle: Restriction Record Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Restriction Record Name retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 224
+  start_point_name:
+    variableNameInDataset: Start Point Name
+    variableNameInArticle: Start Point Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Start Point Name retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 98
+  end_point_name:
+    variableNameInDataset: End Point Name
+    variableNameInArticle: End Point Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: End Point Name retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 98
+  restriction_direction:
+    variableNameInDataset: Restriction Direction
+    variableNameInArticle: Restriction Direction
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Restriction Direction retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 74
+  restricted_length_km:
+    variableNameInDataset: Restricted Length (km)
+    variableNameInArticle: Restricted Length (km)
+    variableAttribute: continuous
+    variableUnit: km
+    variableDescription: Restricted Length (km) retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 74
+  regional_bureau_code:
+    variableNameInDataset: Regional Bureau Code
+    variableNameInArticle: Regional Bureau Code
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Regional Bureau Code retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 15
+  regional_bureau_name:
+    variableNameInDataset: Regional Bureau Name
+    variableNameInArticle: Regional Bureau Name
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Regional Bureau Name retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 15
+  restriction_change_time:
+    variableNameInDataset: Restriction Change Time
+    variableNameInArticle: Restriction Change Time
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Restriction Change Time retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 15
+  restriction_change_status:
+    variableNameInDataset: Restriction Change Status
+    variableNameInArticle: Restriction Change Status
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Restriction Change Status retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 15
+  detour_available:
+    variableNameInDataset: Detour Available
+    variableNameInArticle: Detour Available
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Detour Available retained from road_restrictions_preprocessed for the compound-hazard analysis;
+      missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 15
+  isolated_settlement_present:
+    variableNameInDataset: Isolated Settlement Present
+    variableNameInArticle: Isolated Settlement Present
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Isolated Settlement Present retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 15
+  personal_injury_present:
+    variableNameInDataset: Personal Injury Present
+    variableNameInArticle: Personal Injury Present
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Personal Injury Present retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 15
+  property_damage_present:
+    variableNameInDataset: Property Damage Present
+    variableNameInArticle: Property Damage Present
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Property Damage Present retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 15
+  power_outage_present:
+    variableNameInDataset: Power Outage Present
+    variableNameInArticle: Power Outage Present
+    variableAttribute: boolean
+    variableUnit: binary indicator
+    variableDescription: Power Outage Present retained from road_restrictions_preprocessed for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: road_restrictions_preprocessed
+    observationNumber: 15
+  landslide_inventory_id:
+    variableNameInDataset: landslide_inventory_id
+    variableNameInArticle: Landslide Inventory Identifier
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Stable identifier for landslide inventory identifier, retained for linkage and quality
+      control.
+    variableSource: gsi_airphoto_interpreted_landslides
+    observationNumber: 1044
+  landslide_size_class:
+    variableNameInDataset: landslide_size_class
+    variableNameInArticle: Interpreted Landslide Size Class
+    variableAttribute: ordinal
+    variableUnit: not applicable
+    variableDescription: Interpreted Landslide Size Class retained from gsi_airphoto_interpreted_landslides for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: gsi_airphoto_interpreted_landslides
+    observationNumber: 1044
+  observation_date:
+    variableNameInDataset: observation_date
+    variableNameInArticle: Inventory Observation Date
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Inventory Observation Date retained from gsi_airphoto_interpreted_landslides for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: gsi_airphoto_interpreted_landslides
+    observationNumber: 1044
+  temporary_threshold_group:
+    variableNameInDataset: temporary_threshold_group
+    variableNameInArticle: Official Temporary Rainfall Threshold Group
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Official Temporary Rainfall Threshold Group retained from official_threshold_factors for
+      the compound-hazard analysis; missing values are preserved.
+    variableSource: official_threshold_factors
+    observationNumber: 22
+  rainfall_threshold_retention_factor:
+    variableNameInDataset: baseline_fraction
+    variableNameInArticle: Post-Earthquake Rainfall Threshold Retention Factor
+    variableAttribute: continuous
+    variableUnit: proportion
+    variableDescription: Post-Earthquake Rainfall Threshold Retention Factor retained from official_threshold_factors
+      for the compound-hazard analysis; missing values are preserved.
+    variableSource: official_threshold_factors
+    observationNumber: 22
+  municipality_or_subarea_japanese:
+    variableNameInDataset: municipality_or_subarea
+    variableNameInArticle: Municipality or Subarea Name (Japanese)
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Municipality or Subarea Name (Japanese) retained from official_threshold_factors for the
+      compound-hazard analysis; missing values are preserved.
+    variableSource: official_threshold_factors
+    observationNumber: 22
+  source:
+    variableNameInDataset: source
+    variableNameInArticle: Official Threshold Source
+    variableAttribute: categorical
+    variableUnit: not applicable
+    variableDescription: Official Threshold Source retained from official_threshold_factors for the compound-hazard
+      analysis; missing values are preserved.
+    variableSource: official_threshold_factors
+    observationNumber: 22
+  cumulative_rainfall:
+    variableNameInDataset: derived::cumulative_rainfall
+    variableNameInArticle: Rolling Cumulative Rainfall (mm)
+    variableAttribute: continuous
+    variableUnit: mm
+    variableDescription: Rolling rainfall accumulated over the declared 3, 24, or 72 hour window.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 526056
+  rainfall_scenario:
+    variableNameInDataset: derived::rainfall_scenario
+    variableNameInArticle: Rainfall Severity Scenario
+    variableAttribute: ordinal
+    variableUnit: scenario category
+    variableDescription: Moderate, Heavy, or Extreme rainfall scenario defined from historical station quantiles.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 3
+  terrain_slope:
+    variableNameInDataset: derived::terrain_slope
+    variableNameInArticle: Terrain Slope (degrees)
+    variableAttribute: continuous
+    variableUnit: degrees
+    variableDescription: Terrain slope derived from the native elevation surface.
+    variableSource: gsi_dem10b_tiles
+    observationNumber: 196402616
+  terrain_curvature:
+    variableNameInDataset: derived::terrain_curvature
+    variableNameInArticle: Terrain Curvature
+    variableAttribute: continuous
+    variableUnit: dimensionless
+    variableDescription: Terrain curvature derived from the native elevation surface.
+    variableSource: gsi_dem10b_tiles
+    observationNumber: 196402616
+  landslide_disruption_score:
+    variableNameInDataset: derived::landslide_disruption_score
+    variableNameInArticle: Official-Threshold-Adjusted Landslide Disruption Score
+    variableAttribute: continuous
+    variableUnit: dimensionless score
+    variableDescription: Validation-selected scenario score combining terrain, warning-zone exposure, and rainfall-threshold
+      loading; not an occurrence probability.
+    variableSource: gsi_dem10b_tiles
+    observationNumber: 196402616
+  road_disruption_score:
+    variableNameInDataset: derived::road_disruption_score
+    variableNameInArticle: Scenario Road Disruption Score
+    variableAttribute: continuous
+    variableUnit: dimensionless score
+    variableDescription: Directional upslope aggregation of slope disruption for each road section; not a closure
+      probability.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+  community_id:
+    variableNameInDataset: derived::community_id
+    variableNameInArticle: Road-Connected Population Community Identifier
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Identifier assigned to a road-connected cluster of populated meshes during analysis.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 0
+  community_isolation_frequency:
+    variableNameInDataset: derived::community_isolation_frequency
+    variableNameInArticle: Monte Carlo Community Isolation Frequency
+    variableAttribute: continuous
+    variableUnit: proportion of draws
+    variableDescription: Fraction of disruption draws in which a community loses access to the declared external-road
+      target.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 0
+  isolated_population:
+    variableNameInDataset: derived::isolated_population
+    variableNameInArticle: Expected Isolated Population
+    variableAttribute: continuous
+    variableUnit: persons
+    variableDescription: Expected population isolated under a declared disruption scenario.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 0
+  service_reachability_loss:
+    variableNameInDataset: derived::service_reachability_loss
+    variableNameInArticle: Basic Service Reachability Loss
+    variableAttribute: continuous
+    variableUnit: proportion of draws
+    variableDescription: Simulated loss of access to a declared basic-service class among baseline-reachable communities.
+    variableSource: designated_shelters_preprocessed
+    observationNumber: 0
+  excess_travel_time:
+    variableNameInDataset: derived::excess_travel_time
+    variableNameInArticle: Disruption-Induced Excess Travel Time (min)
+    variableAttribute: continuous
+    variableUnit: minutes
+    variableDescription: Disruption-induced increase in full-network shortest travel time for routes that remain
+      reachable.
+    variableSource: kumamoto_routable_road_edges_preprocessed
+    observationNumber: 0
+  intervention_type:
+    variableNameInDataset: derived::intervention_type
+    variableNameInArticle: Scenario Intervention Type
+    variableAttribute: categorical
+    variableUnit: action category
+    variableDescription: 'Assigned road-access action: reinforcement, clearance pre-positioning, or alternative-route
+      protection.'
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 3
+  intervention_cost:
+    variableNameInDataset: derived::intervention_cost
+    variableNameInArticle: Scenario Intervention Cost
+    variableAttribute: continuous
+    variableUnit: planning cost units
+    variableDescription: Scenario planning cost used as a portfolio budget constraint; not an observed engineering
+      cost.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 0
+  avoided_isolation:
+    variableNameInDataset: derived::avoided_isolation
+    variableNameInArticle: Population-Weighted Avoided Isolation
+    variableAttribute: continuous
+    variableUnit: population-weighted persons
+    variableDescription: Difference in population-weighted isolation between baseline and intervention simulations.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 0
+  protected_population:
+    variableNameInDataset: derived::protected_population
+    variableNameInArticle: Expected Population Protected by Intervention
+    variableAttribute: continuous
+    variableUnit: persons
+    variableDescription: Expected population protected by an eligible road-access intervention.
+    variableSource: kumamoto_population_mesh_125m_preprocessed
+    observationNumber: 0
+  priority_score:
+    variableNameInDataset: derived::priority_score
+    variableNameInArticle: Robust Intervention Priority Score
+    variableAttribute: continuous
+    variableUnit: protected persons per cost unit
+    variableDescription: Median marginal protected population per planning cost across action and sensitivity settings.
+    variableSource: kumamoto_road_sections_preprocessed
+    observationNumber: 343844
+figureDictionary:
+  fig_compound_hazard_decision_pathway:
+    figureId: fig_compound_hazard_decision_pathway
+    figurePath: data/results/figures/Figure_compound_hazard_decision_pathway.png
+    figureCaption: Compound-hazard pathway from rainfall to intervention priorities
+    figureAim: Links official post-earthquake threshold adjustment and rainfall exposure to slope disruption, road
+      failure, community isolation, service loss, and intervention choice across the central question and all supporting
+      questions.
+    figureExplanation: Explains the ordered evidence chain and the validation gates separating scenario inputs,
+      slope and road disruption, network consequences, and decision screening.
+    figureSuitableSection: 'Introduction: Conceptual Framework'
+  fig_terrain_landslide_evidence_and_emergency_network_context:
+    figureId: fig_terrain_landslide_evidence_and_emergency_network_context
+    figurePath: data/results/figures/Figure_terrain_landslide_evidence_and_emergency_network_context.png
+    figureCaption: Terrain, landslides, warnings, roads, and emergency services
+    figureAim: Establishes the spatial evidence base for terrain, interpreted landslides, warning zones, roads,
+      emergency routes, shelters, and water points.
+    figureExplanation: Maps elevation, interpreted 2016 landslides, official warning zones, emergency roads, shelters,
+      and resolved water points with common geographic framing.
+    figureSuitableSection: 'Methods: Study Area and Data'
+  fig_rainfall_history_and_official_threshold_adjustment:
+    figureId: fig_rainfall_history_and_official_threshold_adjustment
+    figurePath: data/results/figures/Figure_rainfall_history_and_official_threshold_adjustment.png
+    figureCaption: Historical rainfall and post-earthquake threshold scenarios
+    figureAim: Shows station rainfall history, cumulative rainfall, Moderate, Heavy, and Extreme scenarios, and
+      official 70 percent and 80 percent threshold retention settings for the threshold-adjustment question.
+    figureExplanation: Shows station histories, empirical accumulation-window quantiles, official spatial threshold
+      factors, and their effect on relative rainfall loading.
+    figureSuitableSection: 'Methods: Rainfall Scenarios'
+  fig_official_threshold_adjusted_landslide_disruption_score:
+    figureId: fig_official_threshold_adjusted_landslide_disruption_score
+    figurePath: data/results/figures/Figure_official_threshold_adjusted_landslide_disruption_score.png
+    figureCaption: Validated landslide disruption scores across rainfall scenarios
+    figureAim: Compares baseline and rainfall-scenario slope disruption scores while retaining score-based language
+      unless event labels support probability calibration.
+    figureExplanation: Displays the validation-selected transparent score under baseline, Moderate, Heavy, and Extreme
+      rainfall while retaining score-based interpretation.
+    figureSuitableSection: 'Results: Slope Disruption'
+  fig_road_disruption_exposure_and_observed_restriction_evidence:
+    figureId: fig_road_disruption_exposure_and_observed_restriction_evidence
+    figurePath: data/results/figures/Figure_road_disruption_exposure_and_observed_restriction_evidence.png
+    figureCaption: Road disruption scores and observed restriction evidence
+    figureAim: Maps road disruption exposure under rainfall scenarios and compares it with observed rockfall, slope-collapse,
+      and sediment-inflow restriction evidence.
+    figureExplanation: Maps directional upslope road scores and compares their rankings with independently reported
+      landslide-related restriction evidence.
+    figureSuitableSection: 'Results: Road Disruption'
+  fig_community_isolation_frequency_and_exposed_population:
+    figureId: fig_community_isolation_frequency_and_exposed_population
+    figurePath: data/results/figures/Figure_community_isolation_frequency_and_exposed_population.png
+    figureCaption: Community isolation frequency and exposed population
+    figureAim: Shows community isolation frequency and affected total and older populations under each disruption
+      scenario.
+    figureExplanation: Shows simulated community isolation, total and older population exposure, convergence, target-definition
+      sensitivity, and ordered rainfall effects.
+    figureSuitableSection: 'Results: Community Isolation'
+  fig_basic_service_reachability_loss:
+    figureId: fig_basic_service_reachability_loss
+    figurePath: data/results/figures/Figure_basic_service_reachability_loss.png
+    figureCaption: Basic-service reachability loss under road disruption
+    figureAim: Shows loss of reachability to shelters, water points, fire services, and municipal facilities, together
+      with excess travel time where routes remain available.
+    figureExplanation: Maps service-loss frequency and reports full-network excess travel time, with emergency-water
+      results explicitly bounded by resolved locations.
+    figureSuitableSection: 'Results: Service Consequences'
+  fig_intervention_priorities_and_budgeted_benefits:
+    figureId: fig_intervention_priorities_and_budgeted_benefits
+    figurePath: data/results/figures/Figure_intervention_priorities_and_budgeted_benefits.png
+    figureCaption: Intervention priorities and benefits across planning budgets
+    figureAim: Identifies priority roads and communities and shows how protected population and avoided isolation
+      change with intervention budget and sensitivity assumptions.
+    figureExplanation: Maps consequence-aware road priorities and compares protected population across budgets,
+      sensitivity settings, and four baseline portfolios.
+    figureSuitableSection: 'Results: Intervention Priorities'
+tableDictionary:
+  table_analytical_data_coverage_and_quality:
+    tableId: table_analytical_data_coverage_and_quality
+    tablePath: data/results/tables/Table_analytical_data_coverage_and_quality.xlsx
+    tableCaption: Analytical data coverage and quality
+    tableAim: Documents completeness, temporal coverage, spatial support, and interpretation limits for each analytical
+      layer.
+    tableExplanation: Documents record counts, support, temporal coverage, missingness, location completeness, analytical
+      role, and interpretation limits for every input layer.
+    tableSuitableSection: 'Methods: Data Quality'
+  table_rainfall_and_threshold_scenarios:
+    tableId: table_rainfall_and_threshold_scenarios
+    tablePath: data/results/tables/Table_rainfall_and_threshold_scenarios.xlsx
+    tableCaption: Rainfall and official threshold scenarios
+    tableAim: Defines the combinations of Moderate, Heavy, and Extreme rainfall with baseline, 70 percent, and 80
+      percent threshold-retention settings.
+    tableExplanation: Defines all rainfall quantiles, accumulation-window values, antecedent rainfall summaries,
+      threshold-retention settings, and scenario interpretation boundaries.
+    tableSuitableSection: 'Methods: Rainfall Scenarios'
+  table_hazard_and_road_disruption_validation:
+    tableId: table_hazard_and_road_disruption_validation
+    tablePath: data/results/tables/Table_hazard_and_road_disruption_validation.xlsx
+    tableCaption: Hazard and road-disruption validation
+    tableAim: Compares the full specification, warning-zone baseline, and simplified scenario models using spatial
+      validation and observed restriction evidence.
+    tableExplanation: Reports spatial hazard validation and observed road-restriction ranking performance for selected
+      and comparator specifications.
+    tableSuitableSection: 'Results: Validation'
+  table_municipality_isolation_and_service_loss_summary:
+    tableId: table_municipality_isolation_and_service_loss_summary
+    tablePath: data/results/tables/Table_municipality_isolation_and_service_loss_summary.xlsx
+    tableCaption: Municipality isolation and service-loss summary
+    tableAim: Summarizes community isolation, exposed population, older population, and service loss for each administrative
+      unit and scenario.
+    tableExplanation: Aggregates eligible population, ordered isolation outcomes, service-loss populations, and
+      full-network excess time to municipalities and wards.
+    tableSuitableSection: 'Results: Geographic Heterogeneity'
+  table_priority_road_sections:
+    tableId: table_priority_road_sections
+    tablePath: data/results/tables/Table_priority_road_sections.xlsx
+    tableCaption: Top thirty priority road sections
+    tableAim: Lists the 30 road sections with the largest consequence-aware intervention relevance.
+    tableExplanation: Lists reader-facing road priorities, consequence burden, intervention assignment, planning
+      cost, and robust priority score without internal road identifiers.
+    tableSuitableSection: 'Results: Intervention Priorities'
+  table_high_isolation_risk_communities:
+    tableId: table_high_isolation_risk_communities
+    tablePath: data/results/tables/Table_high_isolation_risk_communities.xlsx
+    tableCaption: Top thirty high-isolation-risk communities
+    tableAim: Lists the 30 communities with the highest Heavy-scenario population and older-population isolation
+      burden.
+    tableExplanation: Lists population clusters with their locations, gateway counts, ordered isolation frequencies,
+      affected populations, and principal service loss.
+    tableSuitableSection: 'Results: Community Isolation'
+  table_intervention_portfolios_and_robustness:
+    tableId: table_intervention_portfolios_and_robustness
+    tablePath: data/results/tables/Table_intervention_portfolios_and_robustness.xlsx
+    tableCaption: Intervention portfolios and comparator robustness
+    tableAim: Compares budget-feasible intervention portfolios and their protective benefits across sensitivity
+      settings.
+    tableExplanation: Reports budget-feasible portfolios, action mix, protected populations, overlap, cost efficiency,
+      and four baseline comparisons.
+    tableSuitableSection: 'Results: Intervention Robustness'
+analysisStructureBrief:
+  overview: Seven linked analytical levels translate official rainfall-threshold scenarios and terrain evidence
+    into directional road disruption, community isolation, basic-service loss, and budget-constrained intervention
+    priorities, with validation and interpretation limits at every transition.
+  levels:
+  - levelName: Analytical coverage and baseline quality
+    levelAim: Establish valid spatial support, topology, population reconciliation, and service attachment before
+      scenario modelling.
+    inputs:
+    - Geometry
+    - Observation Time
+    - Station ID
+    - Road Section ID
+    - Network Node ID
+    - Mesh Code
+    - Total Population
+    - Location Resolution Status
+    modelOrMethod: Deterministic coverage, missingness, geometry, temporal-range, population-reconciliation, baseline-connectivity,
+      and service-attachment checks.
+    outputs:
+    - Analytical Data Coverage and Quality
+    - Terrain, Landslide Evidence, and Emergency Network Context
+    interpretation: Only layers passing their declared quality gates enter the scenario chain; unresolved locations
+      and baseline-disconnected cases remain explicit rather than being treated as failures.
+  - levelName: Rainfall and threshold scenario construction
+    levelAim: Translate historical station rainfall and official post-earthquake factors into ordered scenario loading.
+    inputs:
+    - Observation Time
+    - Hourly Rainfall
+    - Station ID
+    - Rainfall Threshold Retention Factor
+    - Municipality or Subarea (Japanese)
+    modelOrMethod: Rolling rainfall is R_h(s,t)=sum_{u=t-h+1}^{t} R_1h(s,u). Moderate, Heavy, and Extreme use station
+      quantiles 0.75, 0.90, and 0.99; relative loading divides the weighted window quantiles by the retained official
+      threshold.
+    outputs:
+    - Rainfall History and Official Threshold Adjustment
+    - Rainfall and Threshold Scenarios
+    interpretation: Scenarios measure relative rainfall loading at station support; they do not interpolate fine-grid
+      rainfall or identify a causal earthquake effect.
+  - levelName: Terrain and landslide disruption scoring
+    levelAim: Construct a stable, interpretable slope-disruption ranking from terrain, warning zones, and scenario
+      rainfall.
+    inputs:
+    - Elevation
+    - Terrain Slope
+    - Terrain Curvature
+    - Hazard Type
+    - Rainfall Scenario
+    - Rainfall Threshold Retention Factor
+    - Landslide Inventory ID
+    modelOrMethod: The score follows H_i^(r,f)=logit^-1(theta_0+theta_z Z_i+theta_s S_i+theta_c C_i+theta_w W_i+theta_r
+      X_i^(r,f)). A fitted score is retained only when the pre-specified spatial stability rule passes; otherwise
+      the transparent standardized scenario score is selected.
+    outputs:
+    - Official-Threshold-Adjusted Landslide Disruption Score
+    - Hazard and Road-Disruption Validation
+    interpretation: The selected result is a spatially validated disruption ranking against incomplete presence
+      evidence, not a landslide occurrence probability.
+  - levelName: Directional slope-to-road translation
+    levelAim: Identify road sections exposed to hazardous terrain located above and aligned toward the road.
+    inputs:
+    - Landslide Disruption Score
+    - Elevation
+    - Geometry
+    - Road Section ID
+    - Road Category
+    - Emergency Route Membership
+    - Restriction Reason
+    - Matched Road Edge ID
+    modelOrMethod: For road e, D_e^(r,f)=1-product_{i in U_e}(1-H_i^(r,f) q_ie), where U_e requires positive relief
+      and downhill alignment and q_ie decreases with distance.
+    outputs:
+    - Road Disruption Exposure and Observed Restriction Evidence
+    - Hazard and Road-Disruption Validation
+    interpretation: Observed restrictions support relative screening performance, but the road score is not an empirically
+      calibrated closure probability.
+  - levelName: Community isolation simulation
+    levelAim: Estimate how ordered road-closure scenarios disconnect populated communities from external-road gateways.
+    inputs:
+    - Road Disruption Score
+    - Community ID
+    - Network Component ID
+    - Total Population
+    - Population Age 65+
+    - Emergency Route Membership
+    modelOrMethod: Closure propensity is p_e,b^(r,f)=g_b(D_e^(r,f)); Community Isolation Frequency is P_hat_iso,c=(1/M)
+      sum_m I_c,m with M=1000 central draws and common random numbers across ordered rainfall scenarios.
+    outputs:
+    - Community Isolation Frequency and Exposed Population
+    - High-Isolation-Risk Communities
+    - Municipality Isolation and Service-Loss Summary
+    interpretation: Frequencies are conditional on the declared closure mapping and external target; 500, 1,000,
+      and 2,000 draw convergence plus alternative targets and mappings bound sensitivity.
+  - levelName: Basic-service consequence estimation
+    levelAim: Measure service disconnection and travel-time penalties among communities that are reachable at baseline.
+    inputs:
+    - Community ID
+    - Shelter ID
+    - Water Point Name
+    - Fire Facility Name
+    - Facility Name
+    - Baseline Edge Travel Time (min)
+    - Total Population
+    modelOrMethod: Service loss is the simulated frequency that nearest-service travel time becomes infinite. Excess
+      time is Delta T_c,k=T_c,k^disrupted-T_c,k^baseline using 100 full weighted-network rerouting draws.
+    outputs:
+    - Basic Service Reachability Loss
+    - Municipality Isolation and Service-Loss Summary
+    interpretation: Baseline-unreachable cases are non-evaluable; emergency-water results are a resolved-point lower
+      bound because only 10 of 36 announced points have usable coordinates.
+  - levelName: Robust intervention screening
+    levelAim: Rank feasible road-access actions by population protection under budget and parameter uncertainty.
+    inputs:
+    - Road Disruption Score
+    - Community Isolation Frequency
+    - Total Population
+    - Population Age 65+
+    - Intervention Type
+    - Intervention Cost
+    modelOrMethod: Population-weighted avoided isolation is A_b(x)=sum_c N_c[P_hat_iso,c^base-P_hat_iso,c^int(x)]
+      subject to sum_e,a Cost_e,a,b x_e,a<=B. Priority Q_e is the median marginal protected population per cost
+      across actions and sensitivities.
+    outputs:
+    - Intervention Priorities and Budgeted Benefits
+    - Priority Road Sections
+    - Intervention Portfolios and Robustness
+    interpretation: Results are scenario screening priorities, not engineering optima; assumed effects and planning
+      costs are compared with hazard-only, emergency-route-only, road-class-only, and equal-cost consequence baselines.
