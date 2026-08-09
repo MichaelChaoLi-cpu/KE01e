@@ -1,0 +1,667 @@
+#!/usr/bin/env python3
+"""Hazard and Road-Disruption Validation.
+
+Plan: Compare the full hazard specification, simplified hazard comparators,
+scenario road scores, and road baselines using spatial validation and reliable
+observed restriction evidence.
+Framework: AnaSOP Sections 5-7 require spatially blocked presence-background
+validation and ranking correspondence, not calibrated occurrence or closure
+probabilities.
+"""
+from __future__ import annotations
+
+import os
+from pathlib import Path
+
+os.environ.pop("PROJ_LIB", None)
+os.environ.pop("PROJ_DATA", None)
+
+import numpy as np
+from openpyxl import load_workbook
+from openpyxl.formatting.rule import ColorScaleRule
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
+from openpyxl.worksheet.page import PageMargins
+from openpyxl.worksheet.table import Table, TableStyleInfo
+import pandas as pd
+from rasterio.features import rasterize
+from rasterio.transform import from_bounds
+from scipy.special import expit
+from scipy.stats import spearmanr
+import shapely
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import GroupKFold
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+import figure_official_threshold_adjusted_landslide_disruption_score as terrain_score
+import figure_road_disruption_exposure_and_observed_restriction_evidence as road_validation
+
+
+ROOT = Path(__file__).resolve().parents[2]
+PROCESSED = ROOT / "data/processed"
+ADMIN_PATH = PROCESSED / "administrative_areas_preprocessed.parquet"
+WARNING_PATH = PROCESSED / "landslide_warning_zones_preprocessed.parquet"
+LANDSLIDE_PATH = PROCESSED / "gsi_2016_landslide_inventory_preprocessed.parquet"
+RAIN_PATH = PROCESSED / "jma_hourly_rainfall_preprocessed.parquet"
+THRESHOLD_PATH = PROCESSED / "official_threshold_factors_preprocessed.parquet"
+ROAD_PATH = PROCESSED / "road_sections_preprocessed.parquet"
+EDGE_PATH = PROCESSED / "road_edges_preprocessed.parquet"
+MATCH_PATH = PROCESSED / "road_restriction_edge_matches_preprocessed.parquet"
+OUT = ROOT / "data/results/tables/Table_hazard_and_road_disruption_validation.xlsx"
+TABLE_TITLE = "Hazard and Road-Disruption Validation"
+HAZARD_SHEET = "Hazard Validation"
+ROAD_SHEET = "Road Validation"
+DISPLAY_WIDTH = road_validation.DISPLAY_WIDTH
+RANDOM_SEED = 20260809
+
+
+def decode_geometry(series: pd.Series) -> np.ndarray:
+    """Decode project-standard WKB and reject missing geometries."""
+    geometry = shapely.from_wkb(series.to_numpy())
+    valid = ~shapely.is_missing(geometry) & ~shapely.is_empty(geometry)
+    if not valid.all():
+        raise RuntimeError("Validation input contains missing or empty geometry.")
+    return geometry
+
+
+def logistic_model() -> object:
+    """Return the declared balanced logistic ranking model."""
+    return make_pipeline(
+        StandardScaler(),
+        LogisticRegression(
+            C=1.0,
+            class_weight="balanced",
+            max_iter=1000,
+            random_state=RANDOM_SEED,
+        ),
+    )
+
+
+def prepare_context() -> dict[str, object]:
+    """Prepare the common grid, features, calibration sample, and spatial blocks."""
+    admin = pd.read_parquet(ADMIN_PATH, columns=["Municipality Name", "Geometry"])
+    admin_geometry = decode_geometry(admin.pop("Geometry"))
+    admin_union = shapely.union_all(admin_geometry)
+    min_x, min_y, max_x, max_y = shapely.bounds(admin_union)
+    pad_x = (max_x - min_x) * 0.025
+    pad_y = (max_y - min_y) * 0.025
+    extent = (min_x - pad_x, max_x + pad_x, min_y - pad_y, max_y + pad_y)
+    west, east, south, north = extent
+    display_height = max(650, round(DISPLAY_WIDTH * (north - south) / (east - west)))
+    shape = (display_height, DISPLAY_WIDTH)
+    transform = from_bounds(west, south, east, north, DISPLAY_WIDTH, display_height)
+
+    native_features, aggregated_transform, source_crs = terrain_score.native_terrain_features()
+    features = {
+        name: terrain_score.reproject_feature(
+            array,
+            aggregated_transform,
+            source_crs,
+            shape,
+            transform,
+        )
+        for name, array in native_features.items()
+    }
+    admin_mask = rasterize(
+        [(admin_union, 1)],
+        out_shape=shape,
+        transform=transform,
+        fill=0,
+        all_touched=True,
+        dtype="uint8",
+    ).astype(bool)
+    warning = pd.read_parquet(WARNING_PATH, columns=["Geometry"])
+    warning_geometry = decode_geometry(warning["Geometry"])
+    features["Warning-Zone Exposure"] = rasterize(
+        ((geometry, 1) for geometry in warning_geometry),
+        out_shape=shape,
+        transform=transform,
+        fill=0,
+        all_touched=True,
+        dtype="uint8",
+    ).astype("float32")
+
+    curvature_scale = np.nanpercentile(np.abs(features["Terrain Curvature"]), 99.5)
+    if not np.isfinite(curvature_scale) or curvature_scale <= 0:
+        raise RuntimeError("Terrain curvature could not be scaled.")
+    features["Terrain Curvature"] = np.clip(
+        features["Terrain Curvature"], -curvature_scale, curvature_scale
+    )
+    valid = admin_mask.copy()
+    for name in terrain_score.FEATURE_NAMES:
+        valid &= np.isfinite(features[name])
+
+    landslides = pd.read_parquet(LANDSLIDE_PATH, columns=["Geometry"])
+    landslide_geometry = decode_geometry(landslides["Geometry"])
+    landslide_geometry = landslide_geometry[
+        shapely.intersects(landslide_geometry, admin_union)
+    ]
+    coordinates = shapely.get_coordinates(landslide_geometry)
+    row, column, inside = terrain_score.grid_indices(coordinates, extent, shape)
+    cell_pairs = np.unique(np.column_stack([row[inside], column[inside]]), axis=0)
+    cell_pairs = cell_pairs[valid[cell_pairs[:, 0], cell_pairs[:, 1]]]
+    if len(cell_pairs) < 200:
+        raise RuntimeError("Too few unique valid landslide cells for validation.")
+
+    presence_flat = np.ravel_multi_index((cell_pairs[:, 0], cell_pairs[:, 1]), shape)
+    available_flat = np.flatnonzero(valid.ravel())
+    background_pool = np.setdiff1d(available_flat, presence_flat, assume_unique=False)
+    random = np.random.default_rng(RANDOM_SEED)
+    background_count = min(len(background_pool), len(presence_flat) * 10)
+    background_flat = random.choice(background_pool, size=background_count, replace=False)
+    sampled_flat = np.concatenate([presence_flat, background_flat])
+    sampled_row, sampled_column = np.unravel_index(sampled_flat, shape)
+    full_matrix = np.column_stack(
+        [features[name][sampled_row, sampled_column] for name in terrain_score.FEATURE_NAMES]
+    )
+    outcome = np.concatenate(
+        [np.ones(len(presence_flat), dtype=int), np.zeros(len(background_flat), dtype=int)]
+    )
+    groups = terrain_score.spatial_groups(sampled_row, sampled_column, extent, shape)
+
+    return {
+        "admin": admin,
+        "admin_geometry": admin_geometry,
+        "admin_union": admin_union,
+        "extent": extent,
+        "shape": shape,
+        "transform": transform,
+        "features": features,
+        "valid": valid,
+        "landslide_geometry": landslide_geometry,
+        "sampled_row": sampled_row,
+        "sampled_column": sampled_column,
+        "matrix": full_matrix,
+        "outcome": outcome,
+        "groups": groups,
+        "presence_count": len(presence_flat),
+        "background_count": len(background_flat),
+    }
+
+
+def validate_hazard_specification(
+    matrix: np.ndarray,
+    outcome: np.ndarray,
+    groups: np.ndarray,
+    feature_indices: list[int],
+    fixed_weights: dict[str, float] | None = None,
+) -> tuple[dict[str, object], np.ndarray]:
+    """Return spatial validation metrics and a full-sample ranking score."""
+    selected = matrix[:, feature_indices]
+    splitter = GroupKFold(n_splits=5)
+    auc_values: list[float] = []
+    out_of_fold = np.full(len(outcome), np.nan, dtype=float)
+    for train, test in splitter.split(selected, outcome, groups):
+        if len(np.unique(outcome[test])) < 2:
+            continue
+        if fixed_weights is None:
+            model = logistic_model()
+        else:
+            weights = {
+                terrain_score.FEATURE_NAMES[index]: fixed_weights[terrain_score.FEATURE_NAMES[index]]
+                for index in feature_indices
+            }
+            model = terrain_score.TransparentStandardizedScore(weights)
+        if fixed_weights is None:
+            model.fit(selected[train], outcome[train])
+        else:
+            model.fit(selected[train])
+        fold_scores = model.decision_function(selected[test])
+        out_of_fold[test] = fold_scores
+        auc_values.append(float(roc_auc_score(outcome[test], fold_scores)))
+    evaluable = np.isfinite(out_of_fold)
+    if len(auc_values) < 4 or not evaluable.all():
+        raise RuntimeError("Spatial validation did not produce complete out-of-fold scores.")
+    threshold = float(np.quantile(out_of_fold, 0.75))
+    capture = float(np.mean(out_of_fold[outcome == 1] >= threshold))
+
+    if fixed_weights is None:
+        fitted = logistic_model()
+    else:
+        weights = {
+            terrain_score.FEATURE_NAMES[index]: fixed_weights[terrain_score.FEATURE_NAMES[index]]
+            for index in feature_indices
+        }
+        fitted = terrain_score.TransparentStandardizedScore(weights)
+    if fixed_weights is None:
+        fitted.fit(selected, outcome)
+    else:
+        fitted.fit(selected)
+    full_scores = np.asarray(fitted.decision_function(selected), dtype=float)
+    metrics = {
+        "Spatial Folds": len(auc_values),
+        "Mean Spatial AUC": float(np.mean(auc_values)),
+        "Spatial AUC Range": f"{np.min(auc_values):.3f}–{np.max(auc_values):.3f}",
+        "Held-Out Inventory Capture at Top Quartile": capture,
+    }
+    return metrics, full_scores
+
+
+def build_selected_score_grids(context: dict[str, object]) -> tuple[dict[str, np.ndarray], str]:
+    """Reproduce the selected terrain-score model and threshold-adjusted scenarios."""
+    features = context["features"]
+    valid = context["valid"]
+    extent = context["extent"]
+    shape = context["shape"]
+    model, _, _, _, model_mode = terrain_score.fit_presence_background_model(
+        features,
+        valid,
+        context["landslide_geometry"],
+        extent,
+    )
+    valid_row, valid_column = np.nonzero(valid)
+    matrix = np.column_stack(
+        [features[name][valid_row, valid_column] for name in terrain_score.FEATURE_NAMES]
+    )
+    terrain_logit = np.full(shape, np.nan, dtype="float32")
+    terrain_logit[valid] = model.decision_function(matrix).astype("float32")
+
+    rain = pd.read_parquet(
+        RAIN_PATH, columns=["Station ID", "Observation Time", "Hourly Rainfall"]
+    )
+    rain = rain.loc[rain["Hourly Rainfall"].notna()].copy()
+    scenario_loads = terrain_score.wet_window_scenario_loads(rain)
+    threshold = pd.read_parquet(THRESHOLD_PATH)
+    factors, _ = terrain_score.threshold_categories(context["admin"], threshold)
+    factor_grid = rasterize(
+        (
+            (geometry, float(factor))
+            for geometry, factor in zip(context["admin_geometry"], factors)
+        ),
+        out_shape=shape,
+        transform=context["transform"],
+        fill=1.0,
+        all_touched=True,
+        dtype="float32",
+    )
+    factor_grid[~valid] = np.nan
+
+    score_grids: dict[str, np.ndarray] = {}
+    for scenario in ("Moderate", "Heavy", "Extreme"):
+        rainfall_loading = scenario_loads[scenario] / factor_grid
+        score = expit(terrain_logit + rainfall_loading - 1.0).astype("float32")
+        score[~valid] = np.nan
+        score_grids[scenario] = score
+    return score_grids, model_mode
+
+
+def restriction_evidence(roads: pd.DataFrame) -> pd.DataFrame:
+    """Return reliable landslide-related restriction-edge evidence with section IDs."""
+    matches = pd.read_parquet(
+        MATCH_PATH,
+        columns=[
+            "Restriction Observation ID",
+            "Snapshot Time",
+            "Restriction Reason",
+            "Matched Road Edge ID",
+            "Road Edge Match Distance (m)",
+            "Road Edge Match Status",
+        ],
+    )
+    reliable = (
+        matches["Restriction Reason"]
+        .astype("string")
+        .str.contains(road_validation.LANDSLIDE_REASON_PATTERN, na=False)
+        & matches["Road Edge Match Status"].eq("matched_primary")
+        & matches["Road Edge Match Distance (m)"].le(50)
+    )
+    evidence = matches.loc[reliable].drop_duplicates(
+        ["Restriction Observation ID", "Snapshot Time", "Matched Road Edge ID"]
+    )
+    edges = pd.read_parquet(EDGE_PATH, columns=["Road Edge ID", "Road Section ID"])
+    evidence_edges = evidence.merge(
+        edges,
+        left_on="Matched Road Edge ID",
+        right_on="Road Edge ID",
+        how="inner",
+        validate="many_to_one",
+    ).drop_duplicates(["Road Edge ID", "Restriction Reason"])
+    eligible_sections = set(roads["Road Section ID"])
+    return evidence_edges.loc[evidence_edges["Road Section ID"].isin(eligible_sections)].copy()
+
+
+def road_metrics(
+    scores: np.ndarray,
+    roads: pd.DataFrame,
+    evidence: pd.DataFrame,
+    reference: np.ndarray,
+) -> dict[str, object]:
+    """Compute evidence-percentile correspondence and ranking stability."""
+    lookup = pd.Series(scores, index=roads["Road Section ID"])
+    evidence_scores = evidence["Road Section ID"].map(lookup).dropna().to_numpy(dtype=float)
+    valid_scores = scores[np.isfinite(scores)]
+    if not len(evidence_scores) or not len(valid_scores):
+        raise RuntimeError("Road validation has no evaluable scores.")
+    ordered = np.sort(valid_scores)
+    percentiles = np.searchsorted(ordered, evidence_scores, side="right") / len(ordered)
+    correlation = float(spearmanr(scores, reference, nan_policy="omit").statistic)
+    return {
+        "Restriction Evidence Count": int(len(evidence_scores)),
+        "Median Restriction Score Percentile": float(np.median(percentiles)),
+        "Restriction Top-Quartile Hit Rate": float(
+            np.mean(evidence_scores >= np.quantile(valid_scores, 0.75))
+        ),
+        "Rank Correlation vs Full": correlation,
+    }
+
+
+def build_table() -> pd.DataFrame:
+    """Build the planned 10-row hazard and road validation table."""
+    context = prepare_context()
+    matrix = context["matrix"]
+    outcome = context["outcome"]
+    groups = context["groups"]
+    sample_label = f"{context['presence_count']:,} / {context['background_count']:,}"
+
+    hazard_specs = [
+        ("Full terrain + warning-zone logistic", [0, 1, 2, 3], None, "Fitted comparator; rejected by spatial stability rule"),
+        ("Terrain-only logistic", [0, 1, 2], None, "Simplified comparator only"),
+        ("Elevation + warning-zone logistic", [0, 3], None, "Required pre-specified comparator"),
+        ("Warning-zone-only logistic", [3], None, "Official-zone comparator only"),
+        ("Fixed standardized terrain score", [0, 1, 2, 3], terrain_score.FALLBACK_WEIGHTS, "Selected transparent scenario ranking"),
+    ]
+    hazard_rows: list[dict[str, object]] = []
+    reference_scores: np.ndarray | None = None
+    for specification, indices, fixed_weights, interpretation in hazard_specs:
+        metrics, specification_scores = validate_hazard_specification(
+            matrix, outcome, groups, indices, fixed_weights
+        )
+        if reference_scores is None:
+            reference_scores = specification_scores
+        rank_correlation = float(
+            spearmanr(specification_scores, reference_scores, nan_policy="omit").statistic
+        )
+        hazard_rows.append(
+            {
+                "Specification": specification,
+                "Validation Target": "2016 inventory / sampled background",
+                "Validation Sample": sample_label,
+                **metrics,
+                "Restriction Evidence Count": None,
+                "Median Restriction Score Percentile": None,
+                "Restriction Top-Quartile Hit Rate": None,
+                "Rank Correlation vs Full": rank_correlation,
+                "Permitted Interpretation": interpretation,
+            }
+        )
+
+    score_grids, model_mode = build_selected_score_grids(context)
+    roads = pd.read_parquet(
+        ROAD_PATH,
+        columns=[
+            "Road Section ID",
+            "Road Section Length (m)",
+            "Network Analysis Eligible",
+            "Geometry",
+        ],
+    )
+    roads = roads.loc[roads["Network Analysis Eligible"]].reset_index(drop=True)
+    road_geometry = decode_geometry(roads.pop("Geometry"))
+    road_scores = road_validation.road_scores(
+        road_geometry,
+        score_grids,
+        context["extent"],
+        context["features"]["Elevation"],
+    )
+    evidence = restriction_evidence(roads)
+    heavy_reference = road_scores["Heavy"]
+    warning_road_score = road_validation.road_scores(
+        road_geometry,
+        {"Warning-zone baseline": context["features"]["Warning-Zone Exposure"]},
+        context["extent"],
+        context["features"]["Elevation"],
+    )["Warning-zone baseline"]
+    road_specs = [
+        ("Road score — Moderate rainfall", road_scores["Moderate"], "Relative ranking; not closure probability"),
+        ("Road score — Heavy rainfall", road_scores["Heavy"], "Primary ranking; not closure probability"),
+        ("Road score — Extreme rainfall", road_scores["Extreme"], "Relative ranking; not closure probability"),
+        ("Road warning-zone exposure baseline", warning_road_score, "Official-zone road comparator only"),
+        ("Road-length baseline", roads["Road Section Length (m)"].to_numpy(dtype=float), "Length-only diagnostic comparator"),
+    ]
+    road_rows: list[dict[str, object]] = []
+    for specification, scores, interpretation in road_specs:
+        road_rows.append(
+            {
+                "Specification": specification,
+                "Validation Target": f"Reliable restriction edges; {model_mode}",
+                "Validation Sample": f"{len(evidence):,} matched edges",
+                "Spatial Folds": None,
+                "Mean Spatial AUC": None,
+                "Spatial AUC Range": None,
+                "Held-Out Inventory Capture at Top Quartile": None,
+                **road_metrics(scores, roads, evidence, heavy_reference),
+                "Permitted Interpretation": interpretation,
+            }
+        )
+
+    table = pd.DataFrame(hazard_rows + road_rows)
+    columns = [
+        "Specification",
+        "Validation Target",
+        "Validation Sample",
+        "Spatial Folds",
+        "Mean Spatial AUC",
+        "Spatial AUC Range",
+        "Held-Out Inventory Capture at Top Quartile",
+        "Restriction Evidence Count",
+        "Median Restriction Score Percentile",
+        "Restriction Top-Quartile Hit Rate",
+        "Rank Correlation vs Full",
+        "Permitted Interpretation",
+    ]
+    table = table.loc[:, columns]
+    if table.shape != (10, 12):
+        raise RuntimeError(f"Expected a 10 × 12 table, found {table.shape}.")
+    return table
+
+
+def split_tables(table: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Separate non-comparable hazard and road validation metrics."""
+    hazard = table.iloc[:5].loc[
+        :,
+        [
+            "Specification",
+            "Validation Sample",
+            "Spatial Folds",
+            "Mean Spatial AUC",
+            "Spatial AUC Range",
+            "Held-Out Inventory Capture at Top Quartile",
+            "Rank Correlation vs Full",
+            "Permitted Interpretation",
+        ],
+    ].copy()
+    road = table.iloc[5:].loc[
+        :,
+        [
+            "Specification",
+            "Restriction Evidence Count",
+            "Median Restriction Score Percentile",
+            "Restriction Top-Quartile Hit Rate",
+            "Rank Correlation vs Full",
+            "Permitted Interpretation",
+        ],
+    ].copy()
+    road = road.rename(columns={"Rank Correlation vs Full": "Rank Correlation vs Heavy"})
+    if hazard.shape != (5, 8) or road.shape != (5, 6):
+        raise RuntimeError(
+            f"Unexpected split-table shapes: hazard={hazard.shape}, road={road.shape}."
+        )
+    return hazard, road
+
+
+def configure_sheet(
+    worksheet: object,
+    sheet_title: str,
+    widths: dict[str, float],
+    table_name: str,
+    first_column_color: str,
+    percent_columns: tuple[int, ...],
+    correlation_column: int,
+) -> None:
+    """Apply shared scientific-table styling to one validation worksheet."""
+    last_column = worksheet.cell(1, worksheet.max_column).column_letter
+    worksheet.insert_rows(1)
+    worksheet.merge_cells(f"A1:{last_column}1")
+    worksheet["A1"] = sheet_title
+    worksheet.sheet_view.showGridLines = False
+    worksheet.freeze_panes = "A3"
+    worksheet.auto_filter.ref = f"A2:{last_column}{worksheet.max_row}"
+    worksheet.sheet_view.zoomScale = 95
+    worksheet.print_area = f"A1:{last_column}{worksheet.max_row}"
+    worksheet.print_title_rows = "1:2"
+    worksheet.page_setup.orientation = "landscape"
+    worksheet.page_setup.paperSize = worksheet.PAPERSIZE_A3
+    worksheet.page_setup.fitToWidth = 1
+    worksheet.page_setup.fitToHeight = 1
+    worksheet.sheet_properties.pageSetUpPr.fitToPage = True
+    worksheet.page_margins = PageMargins(
+        left=0.25, right=0.25, top=0.35, bottom=0.35, header=0.10, footer=0.10
+    )
+
+    header_fill = PatternFill("solid", fgColor="17365D")
+    header_font = Font(name="Aptos", size=10, bold=True, color="FFFFFF")
+    title_fill = PatternFill("solid", fgColor="D9EAF7")
+    title_font = Font(name="Aptos Display", size=14, bold=True, color="17365D")
+    body_font = Font(name="Aptos", size=9.5, color="172033")
+    subtle_border = Border(bottom=Side(style="thin", color="D0D5DD"))
+    group_fill = PatternFill("solid", fgColor=first_column_color)
+    worksheet["A1"].fill = title_fill
+    worksheet["A1"].font = title_font
+    worksheet["A1"].alignment = Alignment(horizontal="left", vertical="center")
+    worksheet.row_dimensions[1].height = 30
+    for cell in worksheet[2]:
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    worksheet.row_dimensions[2].height = 39
+
+    for row in worksheet.iter_rows(min_row=3, max_row=worksheet.max_row):
+        for cell in row:
+            cell.font = body_font
+            cell.alignment = Alignment(vertical="top", wrap_text=True)
+            cell.border = subtle_border
+        row[0].fill = group_fill
+        for column in percent_columns:
+            row[column - 1].number_format = "0.0%"
+        row[correlation_column - 1].number_format = "0.000"
+        for cell in row[1:-1]:
+            cell.alignment = Alignment(horizontal="right", vertical="top", wrap_text=True)
+        worksheet.row_dimensions[row[0].row].height = 38
+
+    for column, width in widths.items():
+        worksheet.column_dimensions[column].width = width
+    for column_index in (*percent_columns, correlation_column):
+        column = worksheet.cell(2, column_index).column_letter
+        worksheet.conditional_formatting.add(
+            f"{column}3:{column}{worksheet.max_row}",
+            ColorScaleRule(
+                start_type="min",
+                start_color="F8696B",
+                mid_type="percentile",
+                mid_value=50,
+                mid_color="FFEB84",
+                end_type="max",
+                end_color="63BE7B",
+            ),
+        )
+
+    excel_table = Table(
+        displayName=table_name,
+        ref=f"A2:{last_column}{worksheet.max_row}",
+    )
+    excel_table.tableStyleInfo = TableStyleInfo(
+        name="TableStyleMedium2",
+        showFirstColumn=False,
+        showLastColumn=False,
+        showRowStripes=True,
+        showColumnStripes=False,
+    )
+    worksheet.add_table(excel_table)
+
+
+def style_workbook(path: Path) -> None:
+    """Style the two metric-specific validation worksheets."""
+    workbook = load_workbook(path)
+    configure_sheet(
+        workbook[HAZARD_SHEET],
+        sheet_title=f"{TABLE_TITLE} — Hazard Validation",
+        widths={"A": 34, "B": 20, "C": 13, "D": 17, "E": 18, "F": 27, "G": 20, "H": 43},
+        table_name="HazardValidation",
+        first_column_color="E4EEF7",
+        percent_columns=(4, 6),
+        correlation_column=7,
+    )
+    configure_sheet(
+        workbook[ROAD_SHEET],
+        sheet_title=f"{TABLE_TITLE} — Road-Disruption Validation",
+        widths={"A": 36, "B": 20, "C": 26, "D": 25, "E": 23, "F": 45},
+        table_name="RoadValidation",
+        first_column_color="FCE8D7",
+        percent_columns=(3, 4),
+        correlation_column=5,
+    )
+    workbook.save(path)
+
+
+def verify_workbook(path: Path) -> None:
+    """Verify both worksheets and reject spreadsheet errors."""
+    workbook = load_workbook(path, data_only=False)
+    if workbook.sheetnames != [HAZARD_SHEET, ROAD_SHEET]:
+        raise RuntimeError(f"Unexpected workbook sheets: {workbook.sheetnames}")
+    expected_shapes = {HAZARD_SHEET: (7, 8), ROAD_SHEET: (7, 6)}
+    error_tokens = {"#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A"}
+    for sheet_name, (rows, columns) in expected_shapes.items():
+        worksheet = workbook[sheet_name]
+        if worksheet.max_row != rows or worksheet.max_column != columns:
+            raise RuntimeError(
+                f"Unexpected {sheet_name} dimensions: "
+                f"{worksheet.max_row} × {worksheet.max_column}."
+            )
+        expected_title = (
+            f"{TABLE_TITLE} — Hazard Validation"
+            if sheet_name == HAZARD_SHEET
+            else f"{TABLE_TITLE} — Road-Disruption Validation"
+        )
+        if worksheet["A1"].value != expected_title:
+            raise RuntimeError(f"Title row is missing or incorrect in {sheet_name}.")
+        specifications = [worksheet.cell(row, 1).value for row in range(3, rows + 1)]
+        if len(specifications) != len(set(specifications)):
+            raise RuntimeError(f"Duplicate specifications in {sheet_name}.")
+        for row in worksheet.iter_rows():
+            for cell in row:
+                if isinstance(cell.value, str) and cell.value in error_tokens:
+                    raise RuntimeError(
+                        f"Spreadsheet error token in {sheet_name}!{cell.coordinate}: {cell.value}"
+                    )
+
+
+def main() -> None:
+    table = build_table()
+    hazard, road = split_tables(table)
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    with pd.ExcelWriter(OUT, engine="openpyxl") as writer:
+        hazard.to_excel(writer, index=False, sheet_name=HAZARD_SHEET)
+        road.to_excel(writer, index=False, sheet_name=ROAD_SHEET)
+    style_workbook(OUT)
+    verify_workbook(OUT)
+    best_hazard = hazard.sort_values("Mean Spatial AUC", ascending=False).iloc[0]
+    best_road = road.sort_values(
+        "Median Restriction Score Percentile", ascending=False
+    ).iloc[0]
+    print(f"Saved: {OUT.relative_to(ROOT)}")
+    print(f"Hazard sheet: {len(hazard):,} rows × {len(hazard.columns):,} columns")
+    print(f"Road sheet: {len(road):,} rows × {len(road.columns):,} columns")
+    print(
+        f"Highest mean spatial AUC: {best_hazard['Specification']} "
+        f"({best_hazard['Mean Spatial AUC']:.3f})"
+    )
+    print(
+        f"Highest restriction median percentile: {best_road['Specification']} "
+        f"({best_road['Median Restriction Score Percentile']:.3f})"
+    )
+    print("Workbook verification: passed")
+
+
+if __name__ == "__main__":
+    main()
