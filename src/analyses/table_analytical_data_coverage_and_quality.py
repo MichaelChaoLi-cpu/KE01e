@@ -177,15 +177,12 @@ def style_workbook(path: Path) -> None:
     """Apply compact scientific-table formatting and validation-friendly styling."""
     workbook = load_workbook(path)
     worksheet = workbook[SHEET_NAME]
-    worksheet.insert_rows(1)
-    worksheet.merge_cells("A1:J1")
-    worksheet["A1"] = TABLE_TITLE
     worksheet.sheet_view.showGridLines = False
-    worksheet.freeze_panes = "A3"
-    worksheet.auto_filter.ref = f"A2:J{worksheet.max_row}"
+    worksheet.freeze_panes = "A2"
+    worksheet.auto_filter.ref = f"A1:J{worksheet.max_row}"
     worksheet.sheet_view.zoomScale = 85
     worksheet.print_area = f"A1:J{worksheet.max_row}"
-    worksheet.print_title_rows = "1:2"
+    worksheet.print_title_rows = "1:1"
     worksheet.page_setup.orientation = "landscape"
     worksheet.page_setup.paperSize = worksheet.PAPERSIZE_A3
     worksheet.page_setup.fitToWidth = 1
@@ -202,21 +199,15 @@ def style_workbook(path: Path) -> None:
 
     header_fill = PatternFill("solid", fgColor="17365D")
     header_font = Font(name="Aptos", size=10, bold=True, color="FFFFFF")
-    title_fill = PatternFill("solid", fgColor="D9EAF7")
-    title_font = Font(name="Aptos Display", size=14, bold=True, color="17365D")
     body_font = Font(name="Aptos", size=9, color="172033")
     subtle_border = Border(bottom=Side(style="thin", color="D0D5DD"))
-    worksheet["A1"].fill = title_fill
-    worksheet["A1"].font = title_font
-    worksheet["A1"].alignment = Alignment(horizontal="left", vertical="center")
-    worksheet.row_dimensions[1].height = 30
-    for cell in worksheet[2]:
+    for cell in worksheet[1]:
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    worksheet.row_dimensions[2].height = 34
+    worksheet.row_dimensions[1].height = 34
 
-    for row in worksheet.iter_rows(min_row=3, max_row=worksheet.max_row):
+    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row):
         for cell in row:
             cell.font = body_font
             cell.alignment = Alignment(vertical="top", wrap_text=True)
@@ -245,7 +236,7 @@ def style_workbook(path: Path) -> None:
         worksheet.column_dimensions[column].width = width
 
     worksheet.conditional_formatting.add(
-        f"G3:G{worksheet.max_row}",
+        f"G2:G{worksheet.max_row}",
         ColorScaleRule(
             start_type="num",
             start_value=0,
@@ -259,7 +250,7 @@ def style_workbook(path: Path) -> None:
         ),
     )
     worksheet.conditional_formatting.add(
-        f"H3:H{worksheet.max_row}",
+        f"H2:H{worksheet.max_row}",
         ColorScaleRule(
             start_type="num",
             start_value=0,
@@ -272,7 +263,7 @@ def style_workbook(path: Path) -> None:
             end_color="63BE7B",
         ),
     )
-    excel_table = Table(displayName="AnalyticalDataCoverage", ref=f"A2:J{worksheet.max_row}")
+    excel_table = Table(displayName="AnalyticalDataCoverage", ref=f"A1:J{worksheet.max_row}")
     excel_table.tableStyleInfo = TableStyleInfo(
         name="TableStyleMedium2",
         showFirstColumn=False,
@@ -290,19 +281,17 @@ def verify_workbook(path: Path) -> None:
     if workbook.sheetnames != [SHEET_NAME]:
         raise RuntimeError(f"Unexpected workbook sheets: {workbook.sheetnames}")
     worksheet = workbook[SHEET_NAME]
-    if worksheet.max_row != 24 or worksheet.max_column != 10:
+    if worksheet.max_row != 23 or worksheet.max_column != 10:
         raise RuntimeError(
-            f"Expected 24 worksheet rows including title and header and 10 columns; found "
+            f"Expected 23 worksheet rows including the header and 10 columns; found "
             f"{worksheet.max_row} × {worksheet.max_column}."
         )
-    if worksheet["A1"].value != TABLE_TITLE:
-        raise RuntimeError("Workbook title row is missing or incorrect.")
     error_tokens = {"#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A"}
     for row in worksheet.iter_rows():
         for cell in row:
             if isinstance(cell.value, str) and cell.value in error_tokens:
                 raise RuntimeError(f"Spreadsheet error token in {cell.coordinate}: {cell.value}")
-    for row in range(3, worksheet.max_row + 1):
+    for row in range(2, worksheet.max_row + 1):
         if not isinstance(worksheet.cell(row, 2).value, int):
             raise RuntimeError(f"Record Count must be integer at B{row}.")
         for column in (7, 8):

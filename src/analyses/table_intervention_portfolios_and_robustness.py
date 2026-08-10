@@ -32,7 +32,8 @@ import table_priority_road_sections as priority_roads
 
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "data/results/tables/Table_intervention_portfolios_and_robustness.xlsx"
+PORTFOLIO_OUT = ROOT / "data/results/tables/Table_intervention_portfolios.xlsx"
+COMPARATOR_OUT = ROOT / "data/results/tables/Table_comparator_robustness.xlsx"
 PREVIEW_OUT = ROOT / "data/exp/table_previews/Table_intervention_portfolios_and_robustness.png"
 SHEET_NAME = "Portfolio Robustness"
 COMPARATOR_SHEET = "Comparator Baselines"
@@ -105,7 +106,7 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
                 context["Attachment Community"],
                 context["Attachment Root"],
                 len(community_population),
-                isolation.RANDOM_SEED + 10_000,
+                intervention.INTERVENTION_RANDOM_SEED,
             ).astype(float)
             frequency_reduction = np.maximum(
                 baseline_frequency - adjusted_frequency,
@@ -229,19 +230,16 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
     return table, diagnostics
 
 
-def style_workbook(path: Path) -> None:
-    """Apply the title-first compact comparative portfolio format."""
-    workbook = load_workbook(path)
+def style_workbooks(portfolio_path: Path, comparator_path: Path) -> None:
+    """Apply compact Word-safe formatting to the two single-sheet workbooks."""
+    workbook = load_workbook(portfolio_path)
     worksheet = workbook[SHEET_NAME]
-    worksheet.insert_rows(1)
-    worksheet.merge_cells("A1:J1")
-    worksheet["A1"] = TABLE_TITLE
     worksheet.sheet_view.showGridLines = False
-    worksheet.freeze_panes = "B3"
-    worksheet.auto_filter.ref = f"A2:J{worksheet.max_row}"
+    worksheet.freeze_panes = "B2"
+    worksheet.auto_filter.ref = f"A1:J{worksheet.max_row}"
     worksheet.sheet_view.zoomScale = 90
     worksheet.print_area = f"A1:J{worksheet.max_row}"
-    worksheet.print_title_rows = "1:2"
+    worksheet.print_title_rows = "1:1"
     worksheet.page_setup.orientation = "landscape"
     worksheet.page_setup.paperSize = worksheet.PAPERSIZE_A3
     worksheet.page_setup.fitToWidth = 1
@@ -251,8 +249,6 @@ def style_workbook(path: Path) -> None:
         left=0.20, right=0.20, top=0.30, bottom=0.30, header=0.10, footer=0.10
     )
 
-    title_fill = PatternFill("solid", fgColor="D9EAF7")
-    title_font = Font(name="Aptos Display", size=14, bold=True, color="17365D")
     header_fill = PatternFill("solid", fgColor="17365D")
     header_font = Font(name="Aptos", size=9, bold=True, color="FFFFFF")
     body_font = Font(name="Aptos", size=9, color="172033")
@@ -262,17 +258,13 @@ def style_workbook(path: Path) -> None:
         "Central": PatternFill("solid", fgColor="FCE5D9"),
         "Optimistic": PatternFill("solid", fgColor="D9EDE9"),
     }
-    worksheet["A1"].fill = title_fill
-    worksheet["A1"].font = title_font
-    worksheet["A1"].alignment = Alignment(horizontal="left", vertical="center")
-    worksheet.row_dimensions[1].height = 30
-    for cell in worksheet[2]:
+    for cell in worksheet[1]:
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    worksheet.row_dimensions[2].height = 50
+    worksheet.row_dimensions[1].height = 50
 
-    for row in worksheet.iter_rows(min_row=3, max_row=worksheet.max_row):
+    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row):
         for cell in row:
             cell.font = body_font
             cell.alignment = Alignment(vertical="top", wrap_text=True)
@@ -305,7 +297,7 @@ def style_workbook(path: Path) -> None:
         worksheet.column_dimensions[column].width = width
     for column in ("H", "I", "J"):
         worksheet.conditional_formatting.add(
-            f"{column}3:{column}{worksheet.max_row}",
+            f"{column}2:{column}{worksheet.max_row}",
             ColorScaleRule(
                 start_type="min",
                 start_color="FFFFFF",
@@ -318,7 +310,7 @@ def style_workbook(path: Path) -> None:
         )
     excel_table = Table(
         displayName="InterventionPortfolioRobustness",
-        ref=f"A2:J{worksheet.max_row}",
+        ref=f"A1:J{worksheet.max_row}",
     )
     excel_table.tableStyleInfo = TableStyleInfo(
         name="TableStyleMedium2",
@@ -329,27 +321,24 @@ def style_workbook(path: Path) -> None:
     )
     worksheet.add_table(excel_table)
 
+    workbook.save(portfolio_path)
+
+    workbook = load_workbook(comparator_path)
     comparator = workbook[COMPARATOR_SHEET]
-    comparator.insert_rows(1)
-    comparator.merge_cells("A1:G1")
-    comparator["A1"] = f"{TABLE_TITLE} — Comparator Baselines"
     comparator.sheet_view.showGridLines = False
-    comparator.freeze_panes = "B3"
-    comparator.auto_filter.ref = f"A2:G{comparator.max_row}"
+    comparator.freeze_panes = "B2"
+    comparator.auto_filter.ref = f"A1:G{comparator.max_row}"
     comparator.page_setup.orientation = "landscape"
     comparator.page_setup.paperSize = comparator.PAPERSIZE_A3
     comparator.page_setup.fitToWidth = 1
     comparator.sheet_properties.pageSetUpPr.fitToPage = True
-    comparator["A1"].fill = title_fill
-    comparator["A1"].font = title_font
-    comparator["A1"].alignment = Alignment(horizontal="left", vertical="center")
-    comparator.row_dimensions[1].height = 30
-    for cell in comparator[2]:
+    comparator.print_title_rows = "1:1"
+    for cell in comparator[1]:
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    comparator.row_dimensions[2].height = 42
-    for row in comparator.iter_rows(min_row=3, max_row=comparator.max_row):
+    comparator.row_dimensions[1].height = 42
+    for row in comparator.iter_rows(min_row=2, max_row=comparator.max_row):
         for cell in row:
             cell.font = body_font
             cell.alignment = Alignment(vertical="top", wrap_text=True)
@@ -371,7 +360,7 @@ def style_workbook(path: Path) -> None:
         comparator.column_dimensions[column].width = width
     comparator_table = Table(
         displayName="InterventionComparatorBaselines",
-        ref=f"A2:G{comparator.max_row}",
+        ref=f"A1:G{comparator.max_row}",
     )
     comparator_table.tableStyleInfo = TableStyleInfo(
         name="TableStyleMedium2",
@@ -381,16 +370,16 @@ def style_workbook(path: Path) -> None:
         showColumnStripes=False,
     )
     comparator.add_table(comparator_table)
-    workbook.save(path)
+    workbook.save(comparator_path)
 
 
 def render_preview(path: Path, output: Path = PREVIEW_OUT) -> None:
     """Render the full 21-row title-first table as one PNG."""
     workbook = load_workbook(path, data_only=True)
     values = list(workbook[SHEET_NAME].values)
-    title = str(values[0][0])
-    headers = [str(value) for value in values[1]]
-    rows = [list(row) for row in values[2:]]
+    title = TABLE_TITLE
+    headers = [str(value) for value in values[0]]
+    rows = [list(row) for row in values[1:]]
     widths = [175, 145, 140, 260, 155, 170, 255, 175, 195, 190]
     margin = 22
     title_height = 84
@@ -505,46 +494,41 @@ def render_preview(path: Path, output: Path = PREVIEW_OUT) -> None:
     image.save(output, optimize=True)
 
 
-def verify_workbook(path: Path) -> None:
-    """Verify title/header placement, dimensions, and portfolio metric ranges."""
+def verify_workbook(path: Path, sheet_name: str, rows: int, columns: int) -> None:
+    """Verify one Word-safe workbook, dimensions, and metric ranges."""
     workbook = load_workbook(path, data_only=False)
-    if workbook.sheetnames != [SHEET_NAME, COMPARATOR_SHEET]:
+    if workbook.sheetnames != [sheet_name]:
         raise RuntimeError(f"Unexpected workbook sheets: {workbook.sheetnames}")
-    worksheet = workbook[SHEET_NAME]
-    if worksheet.max_row != BUDGET_COUNT * len(SETTINGS) + 2 or worksheet.max_column != 10:
+    worksheet = workbook[sheet_name]
+    if worksheet.max_row != rows or worksheet.max_column != columns:
         raise RuntimeError(
             f"Unexpected workbook dimensions: {worksheet.max_row} × {worksheet.max_column}."
         )
-    if worksheet["A1"].value != TABLE_TITLE:
-        raise RuntimeError("Workbook title row is missing or incorrect.")
     error_tokens = {"#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A"}
     for row in worksheet.iter_rows():
         for cell in row:
             if isinstance(cell.value, str) and cell.value in error_tokens:
                 raise RuntimeError(f"Spreadsheet error token in {cell.coordinate}: {cell.value}")
-    for row in range(3, worksheet.max_row + 1):
-        for column in (8, 10):
+    share_columns = (8, 10) if sheet_name == SHEET_NAME else (6,)
+    for row in range(2, worksheet.max_row + 1):
+        for column in share_columns:
             value = worksheet.cell(row, column).value
             if value is not None and not 0 <= float(value) <= 1:
                 raise RuntimeError(f"Share outside [0, 1] at row {row}, column {column}.")
-    comparator = workbook[COMPARATOR_SHEET]
-    if comparator.max_row != 30 or comparator.max_column != 7:
-        raise RuntimeError(
-            f"Unexpected comparator dimensions: {comparator.max_row} × {comparator.max_column}."
-        )
 
 
 def main() -> None:
     table, diagnostics = build_table()
     comparator = diagnostics["Comparator Table"]
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    with pd.ExcelWriter(OUT, engine="openpyxl") as writer:
-        table.to_excel(writer, index=False, sheet_name=SHEET_NAME)
-        comparator.to_excel(writer, index=False, sheet_name=COMPARATOR_SHEET)
-    style_workbook(OUT)
-    verify_workbook(OUT)
-    render_preview(OUT)
-    print(f"Saved: {OUT.relative_to(ROOT)}")
+    PORTFOLIO_OUT.parent.mkdir(parents=True, exist_ok=True)
+    table.to_excel(PORTFOLIO_OUT, index=False, sheet_name=SHEET_NAME, engine="openpyxl")
+    comparator.to_excel(COMPARATOR_OUT, index=False, sheet_name=COMPARATOR_SHEET, engine="openpyxl")
+    style_workbooks(PORTFOLIO_OUT, COMPARATOR_OUT)
+    verify_workbook(PORTFOLIO_OUT, SHEET_NAME, BUDGET_COUNT * len(SETTINGS) + 1, 10)
+    verify_workbook(COMPARATOR_OUT, COMPARATOR_SHEET, len(comparator) + 1, 7)
+    render_preview(PORTFOLIO_OUT)
+    print(f"Saved: {PORTFOLIO_OUT.relative_to(ROOT)}")
+    print(f"Saved: {COMPARATOR_OUT.relative_to(ROOT)}")
     print(f"Preview: {PREVIEW_OUT.relative_to(ROOT)}")
     print(f"Rows: {len(table):,}; columns: {len(table.columns):,}")
     print(

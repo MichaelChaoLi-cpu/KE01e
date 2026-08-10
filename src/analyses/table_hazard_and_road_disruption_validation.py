@@ -48,7 +48,8 @@ THRESHOLD_PATH = PROCESSED / "official_threshold_factors_preprocessed.parquet"
 ROAD_PATH = PROCESSED / "road_sections_preprocessed.parquet"
 EDGE_PATH = PROCESSED / "road_edges_preprocessed.parquet"
 MATCH_PATH = PROCESSED / "road_restriction_edge_matches_preprocessed.parquet"
-OUT = ROOT / "data/results/tables/Table_hazard_and_road_disruption_validation.xlsx"
+HAZARD_OUT = ROOT / "data/results/tables/Table_hazard_validation.xlsx"
+ROAD_OUT = ROOT / "data/results/tables/Table_road_disruption_validation.xlsx"
 TABLE_TITLE = "Hazard and Road-Disruption Validation"
 HAZARD_SHEET = "Hazard Validation"
 ROAD_SHEET = "Road Validation"
@@ -492,7 +493,6 @@ def split_tables(table: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 def configure_sheet(
     worksheet: object,
-    sheet_title: str,
     widths: dict[str, float],
     table_name: str,
     first_column_color: str,
@@ -501,15 +501,12 @@ def configure_sheet(
 ) -> None:
     """Apply shared scientific-table styling to one validation worksheet."""
     last_column = worksheet.cell(1, worksheet.max_column).column_letter
-    worksheet.insert_rows(1)
-    worksheet.merge_cells(f"A1:{last_column}1")
-    worksheet["A1"] = sheet_title
     worksheet.sheet_view.showGridLines = False
-    worksheet.freeze_panes = "A3"
-    worksheet.auto_filter.ref = f"A2:{last_column}{worksheet.max_row}"
+    worksheet.freeze_panes = "A2"
+    worksheet.auto_filter.ref = f"A1:{last_column}{worksheet.max_row}"
     worksheet.sheet_view.zoomScale = 95
     worksheet.print_area = f"A1:{last_column}{worksheet.max_row}"
-    worksheet.print_title_rows = "1:2"
+    worksheet.print_title_rows = "1:1"
     worksheet.page_setup.orientation = "landscape"
     worksheet.page_setup.paperSize = worksheet.PAPERSIZE_A3
     worksheet.page_setup.fitToWidth = 1
@@ -521,22 +518,16 @@ def configure_sheet(
 
     header_fill = PatternFill("solid", fgColor="17365D")
     header_font = Font(name="Aptos", size=10, bold=True, color="FFFFFF")
-    title_fill = PatternFill("solid", fgColor="D9EAF7")
-    title_font = Font(name="Aptos Display", size=14, bold=True, color="17365D")
     body_font = Font(name="Aptos", size=9.5, color="172033")
     subtle_border = Border(bottom=Side(style="thin", color="D0D5DD"))
     group_fill = PatternFill("solid", fgColor=first_column_color)
-    worksheet["A1"].fill = title_fill
-    worksheet["A1"].font = title_font
-    worksheet["A1"].alignment = Alignment(horizontal="left", vertical="center")
-    worksheet.row_dimensions[1].height = 30
-    for cell in worksheet[2]:
+    for cell in worksheet[1]:
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    worksheet.row_dimensions[2].height = 39
+    worksheet.row_dimensions[1].height = 39
 
-    for row in worksheet.iter_rows(min_row=3, max_row=worksheet.max_row):
+    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row):
         for cell in row:
             cell.font = body_font
             cell.alignment = Alignment(vertical="top", wrap_text=True)
@@ -552,9 +543,9 @@ def configure_sheet(
     for column, width in widths.items():
         worksheet.column_dimensions[column].width = width
     for column_index in (*percent_columns, correlation_column):
-        column = worksheet.cell(2, column_index).column_letter
+        column = worksheet.cell(1, column_index).column_letter
         worksheet.conditional_formatting.add(
-            f"{column}3:{column}{worksheet.max_row}",
+            f"{column}2:{column}{worksheet.max_row}",
             ColorScaleRule(
                 start_type="min",
                 start_color="F8696B",
@@ -568,7 +559,7 @@ def configure_sheet(
 
     excel_table = Table(
         displayName=table_name,
-        ref=f"A2:{last_column}{worksheet.max_row}",
+        ref=f"A1:{last_column}{worksheet.max_row}",
     )
     excel_table.tableStyleInfo = TableStyleInfo(
         name="TableStyleMedium2",
@@ -580,76 +571,69 @@ def configure_sheet(
     worksheet.add_table(excel_table)
 
 
-def style_workbook(path: Path) -> None:
-    """Style the two metric-specific validation worksheets."""
-    workbook = load_workbook(path)
+def style_workbooks(hazard_path: Path, road_path: Path) -> None:
+    """Style the two metric-specific single-sheet validation workbooks."""
+    workbook = load_workbook(hazard_path)
     configure_sheet(
         workbook[HAZARD_SHEET],
-        sheet_title=f"{TABLE_TITLE} — Hazard Validation",
         widths={"A": 34, "B": 20, "C": 13, "D": 17, "E": 18, "F": 27, "G": 20, "H": 43},
         table_name="HazardValidation",
         first_column_color="E4EEF7",
         percent_columns=(4, 6),
         correlation_column=7,
     )
+    workbook.save(hazard_path)
+
+    workbook = load_workbook(road_path)
     configure_sheet(
         workbook[ROAD_SHEET],
-        sheet_title=f"{TABLE_TITLE} — Road-Disruption Validation",
         widths={"A": 36, "B": 20, "C": 26, "D": 25, "E": 23, "F": 45},
         table_name="RoadValidation",
         first_column_color="FCE8D7",
         percent_columns=(3, 4),
         correlation_column=5,
     )
-    workbook.save(path)
+    workbook.save(road_path)
 
 
-def verify_workbook(path: Path) -> None:
-    """Verify both worksheets and reject spreadsheet errors."""
+def verify_workbook(path: Path, sheet_name: str, rows: int, columns: int) -> None:
+    """Verify one single-sheet workbook and reject spreadsheet errors."""
     workbook = load_workbook(path, data_only=False)
-    if workbook.sheetnames != [HAZARD_SHEET, ROAD_SHEET]:
+    if workbook.sheetnames != [sheet_name]:
         raise RuntimeError(f"Unexpected workbook sheets: {workbook.sheetnames}")
-    expected_shapes = {HAZARD_SHEET: (7, 8), ROAD_SHEET: (7, 6)}
     error_tokens = {"#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A"}
-    for sheet_name, (rows, columns) in expected_shapes.items():
-        worksheet = workbook[sheet_name]
-        if worksheet.max_row != rows or worksheet.max_column != columns:
-            raise RuntimeError(
-                f"Unexpected {sheet_name} dimensions: "
-                f"{worksheet.max_row} × {worksheet.max_column}."
-            )
-        expected_title = (
-            f"{TABLE_TITLE} — Hazard Validation"
-            if sheet_name == HAZARD_SHEET
-            else f"{TABLE_TITLE} — Road-Disruption Validation"
+    worksheet = workbook[sheet_name]
+    if worksheet.max_row != rows or worksheet.max_column != columns:
+        raise RuntimeError(
+            f"Unexpected {sheet_name} dimensions: "
+            f"{worksheet.max_row} × {worksheet.max_column}."
         )
-        if worksheet["A1"].value != expected_title:
-            raise RuntimeError(f"Title row is missing or incorrect in {sheet_name}.")
-        specifications = [worksheet.cell(row, 1).value for row in range(3, rows + 1)]
-        if len(specifications) != len(set(specifications)):
-            raise RuntimeError(f"Duplicate specifications in {sheet_name}.")
-        for row in worksheet.iter_rows():
-            for cell in row:
-                if isinstance(cell.value, str) and cell.value in error_tokens:
-                    raise RuntimeError(
-                        f"Spreadsheet error token in {sheet_name}!{cell.coordinate}: {cell.value}"
-                    )
+    specifications = [worksheet.cell(row, 1).value for row in range(2, rows + 1)]
+    if len(specifications) != len(set(specifications)):
+        raise RuntimeError(f"Duplicate specifications in {sheet_name}.")
+    for row in worksheet.iter_rows():
+        for cell in row:
+            if isinstance(cell.value, str) and cell.value in error_tokens:
+                raise RuntimeError(
+                    f"Spreadsheet error token in {sheet_name}!{cell.coordinate}: {cell.value}"
+                )
 
 
 def main() -> None:
     table = build_table()
     hazard, road = split_tables(table)
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    with pd.ExcelWriter(OUT, engine="openpyxl") as writer:
-        hazard.to_excel(writer, index=False, sheet_name=HAZARD_SHEET)
-        road.to_excel(writer, index=False, sheet_name=ROAD_SHEET)
-    style_workbook(OUT)
-    verify_workbook(OUT)
+    HAZARD_OUT.parent.mkdir(parents=True, exist_ok=True)
+    hazard.to_excel(HAZARD_OUT, index=False, sheet_name=HAZARD_SHEET, engine="openpyxl")
+    road.to_excel(ROAD_OUT, index=False, sheet_name=ROAD_SHEET, engine="openpyxl")
+    style_workbooks(HAZARD_OUT, ROAD_OUT)
+    verify_workbook(HAZARD_OUT, HAZARD_SHEET, 6, 8)
+    verify_workbook(ROAD_OUT, ROAD_SHEET, 6, 6)
     best_hazard = hazard.sort_values("Mean Spatial AUC", ascending=False).iloc[0]
     best_road = road.sort_values(
         "Median Restriction Score Percentile", ascending=False
     ).iloc[0]
-    print(f"Saved: {OUT.relative_to(ROOT)}")
+    print(f"Saved: {HAZARD_OUT.relative_to(ROOT)}")
+    print(f"Saved: {ROAD_OUT.relative_to(ROOT)}")
     print(f"Hazard sheet: {len(hazard):,} rows × {len(hazard.columns):,} columns")
     print(f"Road sheet: {len(road):,} rows × {len(road.columns):,} columns")
     print(

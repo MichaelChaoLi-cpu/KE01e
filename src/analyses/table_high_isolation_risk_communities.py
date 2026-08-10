@@ -158,15 +158,12 @@ def style_workbook(path: Path) -> None:
     """Style the title-first compact top-community workbook."""
     workbook = load_workbook(path)
     worksheet = workbook[SHEET_NAME]
-    worksheet.insert_rows(1)
-    worksheet.merge_cells("A1:K1")
-    worksheet["A1"] = TABLE_TITLE
     worksheet.sheet_view.showGridLines = False
-    worksheet.freeze_panes = "C3"
-    worksheet.auto_filter.ref = f"A2:K{worksheet.max_row}"
+    worksheet.freeze_panes = "C2"
+    worksheet.auto_filter.ref = f"A1:K{worksheet.max_row}"
     worksheet.sheet_view.zoomScale = 90
     worksheet.print_area = f"A1:K{worksheet.max_row}"
-    worksheet.print_title_rows = "1:2"
+    worksheet.print_title_rows = "1:1"
     worksheet.page_setup.orientation = "landscape"
     worksheet.page_setup.paperSize = worksheet.PAPERSIZE_A3
     worksheet.page_setup.fitToWidth = 1
@@ -176,8 +173,6 @@ def style_workbook(path: Path) -> None:
         left=0.20, right=0.20, top=0.30, bottom=0.30, header=0.10, footer=0.10
     )
 
-    title_fill = PatternFill("solid", fgColor="D9EAF7")
-    title_font = Font(name="Aptos Display", size=14, bold=True, color="17365D")
     header_fill = PatternFill("solid", fgColor="17365D")
     header_font = Font(name="Aptos", size=9, bold=True, color="FFFFFF")
     body_font = Font(name="Aptos", size=8.8, color="172033")
@@ -187,17 +182,13 @@ def style_workbook(path: Path) -> None:
         "middle": PatternFill("solid", fgColor="FCE5CD"),
         "lower": PatternFill("solid", fgColor="FFF2CC"),
     }
-    worksheet["A1"].fill = title_fill
-    worksheet["A1"].font = title_font
-    worksheet["A1"].alignment = Alignment(horizontal="left", vertical="center")
-    worksheet.row_dimensions[1].height = 30
-    for cell in worksheet[2]:
+    for cell in worksheet[1]:
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    worksheet.row_dimensions[2].height = 50
+    worksheet.row_dimensions[1].height = 50
 
-    for row in worksheet.iter_rows(min_row=3, max_row=worksheet.max_row):
+    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row):
         for cell in row:
             cell.font = body_font
             cell.alignment = Alignment(vertical="top", wrap_text=True)
@@ -235,7 +226,7 @@ def style_workbook(path: Path) -> None:
         worksheet.column_dimensions[column].width = width
     for column in ("G", "H", "I"):
         worksheet.conditional_formatting.add(
-            f"{column}3:{column}{worksheet.max_row}",
+            f"{column}2:{column}{worksheet.max_row}",
             ColorScaleRule(
                 start_type="min",
                 start_color="FFFFFF",
@@ -249,7 +240,7 @@ def style_workbook(path: Path) -> None:
 
     excel_table = Table(
         displayName="HighIsolationRiskCommunities",
-        ref=f"A2:K{worksheet.max_row}",
+        ref=f"A1:K{worksheet.max_row}",
     )
     excel_table.tableStyleInfo = TableStyleInfo(
         name="TableStyleMedium2",
@@ -266,9 +257,9 @@ def render_preview(path: Path, output: Path = PREVIEW_OUT) -> None:
     """Render the complete workbook as one title-first review PNG."""
     workbook = load_workbook(path, data_only=True)
     values = list(workbook[SHEET_NAME].values)
-    title = str(values[0][0])
-    headers = [str(value) for value in values[1]]
-    rows = [list(row) for row in values[2:]]
+    title = TABLE_TITLE
+    headers = [str(value) for value in values[0]]
+    rows = [list(row) for row in values[1:]]
     widths = [95, 210, 230, 115, 225, 190, 175, 170, 175, 280, 300]
     margin = 22
     title_height = 84
@@ -384,14 +375,12 @@ def verify_workbook(path: Path) -> None:
     if workbook.sheetnames != [SHEET_NAME]:
         raise RuntimeError(f"Unexpected workbook sheets: {workbook.sheetnames}")
     worksheet = workbook[SHEET_NAME]
-    if worksheet.max_row != TOP_COMMUNITIES + 2 or worksheet.max_column != 11:
+    if worksheet.max_row != TOP_COMMUNITIES + 1 or worksheet.max_column != 11:
         raise RuntimeError(
             f"Expected {TOP_COMMUNITIES + 2} rows and 11 columns; found "
             f"{worksheet.max_row} × {worksheet.max_column}."
         )
-    if worksheet["A1"].value != TABLE_TITLE:
-        raise RuntimeError("Workbook title row is missing or incorrect.")
-    ranks = [worksheet.cell(row, 1).value for row in range(3, TOP_COMMUNITIES + 3)]
+    ranks = [worksheet.cell(row, 1).value for row in range(2, TOP_COMMUNITIES + 2)]
     if ranks != list(range(1, TOP_COMMUNITIES + 1)):
         raise RuntimeError("Workbook ranks are not sequential.")
     error_tokens = {"#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A"}
@@ -399,7 +388,7 @@ def verify_workbook(path: Path) -> None:
         for cell in row:
             if isinstance(cell.value, str) and cell.value in error_tokens:
                 raise RuntimeError(f"Spreadsheet error token in {cell.coordinate}: {cell.value}")
-    for row in range(3, TOP_COMMUNITIES + 3):
+    for row in range(2, TOP_COMMUNITIES + 2):
         for column in (7, 8, 9):
             value = float(worksheet.cell(row, column).value)
             if not 0 <= value <= 1:

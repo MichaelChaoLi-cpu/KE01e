@@ -2156,6 +2156,7 @@ figureDictionary:
       questions.
     figureExplanation: Explains the ordered evidence chain and the validation gates separating scenario inputs,
       slope and road disruption, network consequences, and decision screening.
+    figurePanelCount: 1
     figureSuitableSection: 'Introduction: Conceptual Framework'
   fig_terrain_landslide_evidence_and_emergency_network_context:
     figureId: fig_terrain_landslide_evidence_and_emergency_network_context
@@ -2165,6 +2166,12 @@ figureDictionary:
       emergency routes, shelters, and water points.
     figureExplanation: Maps elevation, interpreted 2016 landslides, official warning zones, emergency roads, shelters,
       and resolved water points with common geographic framing.
+    figurePanelCount: 4
+    figureNote: >
+      Panel a maps elevation and interpreted landslide locations; panel b maps official
+      steep-slope, debris-flow, and landslide warning zones; panel c maps the analysis-
+      eligible road network and primary and secondary emergency roads; panel d maps
+      designated shelters and the subset of emergency water points with resolved locations.
     figureSuitableSection: 'Methods: Study Area and Data'
   fig_rainfall_history_and_official_threshold_adjustment:
     figureId: fig_rainfall_history_and_official_threshold_adjustment
@@ -2174,6 +2181,12 @@ figureDictionary:
       official 70 percent and 80 percent threshold retention settings for the threshold-adjustment question.
     figureExplanation: Shows station histories, empirical accumulation-window quantiles, official spatial threshold
       factors, and their effect on relative rainfall loading.
+    figurePanelCount: 4
+    figureNote: >
+      Panel a compares annual maximum 24-hour rainfall across the selected monitoring
+      stations; panel b reports Moderate, Heavy, and Extreme empirical rainfall quantiles
+      by accumulation window; panel c maps official threshold-retention settings; panel d
+      shows how baseline, central, and high threshold adjustments change relative rainfall loading.
     figureSuitableSection: 'Methods: Rainfall Scenarios'
   fig_official_threshold_adjusted_landslide_disruption_score:
     figureId: fig_official_threshold_adjusted_landslide_disruption_score
@@ -2183,6 +2196,12 @@ figureDictionary:
       unless event labels support probability calibration.
     figureExplanation: Displays the validation-selected transparent score under baseline, Moderate, Heavy, and Extreme
       rainfall while retaining score-based interpretation.
+    figurePanelCount: 4
+    figureNote: >
+      Panel a shows the Heavy-rainfall score under the baseline threshold and overlays
+      interpreted landslides; panels b and c show Moderate and Heavy rainfall under the
+      official threshold settings; panel d shows the Extreme-rainfall score, all on the
+      same relative disruption-score scale.
     figureSuitableSection: 'Results: Slope Disruption'
   fig_road_disruption_exposure_and_observed_restriction_evidence:
     figureId: fig_road_disruption_exposure_and_observed_restriction_evidence
@@ -2192,6 +2211,12 @@ figureDictionary:
       and sediment-inflow restriction evidence.
     figureExplanation: Maps directional upslope road scores and compares their rankings with independently reported
       landslide-related restriction evidence.
+    figurePanelCount: 4
+    figureNote: >
+      Panels a, b, and c map relative road disruption scores under Moderate, Heavy, and
+      Extreme rainfall, with the Extreme panel also identifying emergency transport roads;
+      panel d overlays deduplicated landslide-related restriction evidence on the Heavy-
+      rainfall score and summarizes matching and ranking correspondence.
     figureSuitableSection: 'Results: Road Disruption'
   fig_community_isolation_frequency_and_exposed_population:
     figureId: fig_community_isolation_frequency_and_exposed_population
@@ -2201,6 +2226,12 @@ figureDictionary:
       scenario.
     figureExplanation: Shows simulated community isolation, total and older population exposure, convergence, target-definition
       sensitivity, and ordered rainfall effects.
+    figurePanelCount: 4
+    figureNote: >
+      Panels a, b, and c map community isolation frequency weighted by total population
+      under Moderate, Heavy, and Extreme rainfall; panel b also reports simulation and
+      target-definition sensitivity; panel d maps age-65-and-older exposure under Extreme
+      rainfall using the same conditional isolation-frequency scale.
     figureSuitableSection: 'Results: Community Isolation'
   fig_basic_service_reachability_loss:
     figureId: fig_basic_service_reachability_loss
@@ -2210,6 +2241,12 @@ figureDictionary:
       with excess travel time where routes remain available.
     figureExplanation: Maps service-loss frequency and reports full-network excess travel time, with emergency-water
       results explicitly bounded by resolved locations.
+    figurePanelCount: 4
+    figureNote: >
+      Panels a, b, and c map Heavy-rainfall reachability loss for shelters, emergency
+      water points, and fire services; panel d compares expected affected population and
+      median excess travel time across shelters, emergency water, fire services, and
+      municipal facilities, with the emergency-water result bounded by resolved locations.
     figureSuitableSection: 'Results: Service Consequences'
   fig_intervention_priorities_and_budgeted_benefits:
     figureId: fig_intervention_priorities_and_budgeted_benefits
@@ -2219,6 +2256,12 @@ figureDictionary:
       change with intervention budget and sensitivity assumptions.
     figureExplanation: Maps consequence-aware road priorities and compares protected population across budgets,
       sensitivity settings, and four baseline portfolios.
+    figurePanelCount: 3
+    figureNote: >
+      Panel a maps ranked road-access intervention priorities; panel b maps community
+      resource-pre-positioning priorities with marker size representing isolation burden
+      and color representing the older-population share; panel c compares expected
+      protected population across budgets, sensitivity settings, and baseline portfolios.
     figureSuitableSection: 'Results: Intervention Priorities'
 tableDictionary:
   table_analytical_data_coverage_and_quality:
@@ -2229,7 +2272,7 @@ tableDictionary:
       layer.
     tableExplanation: Documents record counts, support, temporal coverage, missingness, location completeness, analytical
       role, and interpretation limits for every input layer.
-    tableSuitableSection: 'Methods: Data Quality'
+    tableSuitableSection: 'Appendix A: Analytical Data Coverage'
   table_rainfall_and_threshold_scenarios:
     tableId: table_rainfall_and_threshold_scenarios
     tablePath: data/results/tables/Table_rainfall_and_threshold_scenarios.xlsx
@@ -2241,13 +2284,21 @@ tableDictionary:
     tableSuitableSection: 'Methods: Rainfall Scenarios'
   table_hazard_and_road_disruption_validation:
     tableId: table_hazard_and_road_disruption_validation
-    tablePath: data/results/tables/Table_hazard_and_road_disruption_validation.xlsx
-    tableCaption: Hazard and road-disruption validation
-    tableAim: Compares the full specification, warning-zone baseline, and simplified scenario models using spatial
-      validation and observed restriction evidence.
-    tableExplanation: Reports spatial hazard validation and observed road-restriction ranking performance for selected
-      and comparator specifications.
-    tableSuitableSection: 'Results: Validation'
+    tablePath: data/results/tables/Table_hazard_validation.xlsx
+    tableCaption: Hazard validation
+    tableAim: Compares the full specification, warning-zone baseline, and simplified hazard models using spatial
+      validation.
+    tableExplanation: Reports spatial folds, AUC, inventory capture, ranking stability, and interpretation boundaries
+      for selected and comparator hazard specifications.
+    tableSuitableSection: 'Appendix B: Landslide Disruption Score Validation'
+  table_road_disruption_validation:
+    tableId: table_road_disruption_validation
+    tablePath: data/results/tables/Table_road_disruption_validation.xlsx
+    tableCaption: Road-disruption validation
+    tableAim: Compares rainfall-scenario road scores and road baselines using observed restriction evidence.
+    tableExplanation: Reports restriction correspondence, top-quartile hit rates, ranking stability, and interpretation
+      boundaries for selected and comparator road scores.
+    tableSuitableSection: 'Appendix B: Road-Restriction Correspondence'
   table_municipality_isolation_and_service_loss_summary:
     tableId: table_municipality_isolation_and_service_loss_summary
     tablePath: data/results/tables/Table_municipality_isolation_and_service_loss_summary.xlsx
@@ -2256,7 +2307,7 @@ tableDictionary:
       unit and scenario.
     tableExplanation: Aggregates eligible population, ordered isolation outcomes, service-loss populations, and
       full-network excess time to municipalities and wards.
-    tableSuitableSection: 'Results: Geographic Heterogeneity'
+    tableSuitableSection: 'Appendix C: Municipality Isolation and Service-Loss Summary'
   table_priority_road_sections:
     tableId: table_priority_road_sections
     tablePath: data/results/tables/Table_priority_road_sections.xlsx
@@ -2264,7 +2315,7 @@ tableDictionary:
     tableAim: Lists the 30 road sections with the largest consequence-aware intervention relevance.
     tableExplanation: Lists reader-facing road priorities, consequence burden, intervention assignment, planning
       cost, and robust priority score without internal road identifiers.
-    tableSuitableSection: 'Results: Intervention Priorities'
+    tableSuitableSection: 'Appendix C: Priority Road Sections'
   table_high_isolation_risk_communities:
     tableId: table_high_isolation_risk_communities
     tablePath: data/results/tables/Table_high_isolation_risk_communities.xlsx
@@ -2273,16 +2324,25 @@ tableDictionary:
       burden.
     tableExplanation: Lists population clusters with their locations, gateway counts, ordered isolation frequencies,
       affected populations, and principal service loss.
-    tableSuitableSection: 'Results: Community Isolation'
+    tableSuitableSection: 'Appendix C: High-Isolation-Risk Communities'
   table_intervention_portfolios_and_robustness:
     tableId: table_intervention_portfolios_and_robustness
-    tablePath: data/results/tables/Table_intervention_portfolios_and_robustness.xlsx
-    tableCaption: Intervention portfolios and comparator robustness
+    tablePath: data/results/tables/Table_intervention_portfolios.xlsx
+    tableCaption: Intervention portfolios
     tableAim: Compares budget-feasible intervention portfolios and their protective benefits across sensitivity
       settings.
-    tableExplanation: Reports budget-feasible portfolios, action mix, protected populations, overlap, cost efficiency,
-      and four baseline comparisons.
-    tableSuitableSection: 'Results: Intervention Robustness'
+    tableExplanation: Reports budget-feasible portfolios, action mix, protected populations, overlap, and cost
+      efficiency across sensitivity settings.
+    tableSuitableSection: 'Appendix B: Intervention Portfolio Robustness'
+  table_comparator_robustness:
+    tableId: table_comparator_robustness
+    tablePath: data/results/tables/Table_comparator_robustness.xlsx
+    tableCaption: Comparator robustness
+    tableAim: Compares the consequence-aware intervention ranking with hazard-only, emergency-route-only,
+      road-class-only, and equal-cost baselines.
+    tableExplanation: Reports comparator-specific budgets, selected roads, realized costs, protected populations,
+      avoided isolation shares, and unit-cost benefits.
+    tableSuitableSection: 'Appendix B: Intervention Portfolio Robustness'
 analysisStructureBrief:
   overview: Seven linked analytical levels translate official rainfall-threshold scenarios and terrain evidence
     into directional road disruption, community isolation, basic-service loss, and budget-constrained intervention

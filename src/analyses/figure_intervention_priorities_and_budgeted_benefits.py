@@ -23,6 +23,7 @@ from matplotlib.collections import LineCollection
 from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
+import resvg_py
 from rasterio.transform import from_bounds
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
@@ -39,6 +40,7 @@ ADMIN_PATH = PROCESSED / "administrative_areas_preprocessed.parquet"
 ROAD_PATH = PROCESSED / "road_sections_preprocessed.parquet"
 EDGE_PATH = PROCESSED / "road_edges_preprocessed.parquet"
 NODE_PATH = PROCESSED / "road_nodes_preprocessed.parquet"
+SVG_OUT = ROOT / "data/results/figures/Figure_intervention_priorities_and_budgeted_benefits.svg"
 OUT = ROOT / "data/results/figures/Figure_intervention_priorities_and_budgeted_benefits.png"
 
 DISPLAY_WIDTH = 950
@@ -66,6 +68,10 @@ COMPARATOR_COLORS = {
     "Equal-cost consequence": "#111827",
 }
 COMPARATOR_CACHE = ROOT / "data/exp/analysis_cache/intervention_comparators.npz"
+# Keep every article-facing intervention comparison on the same Heavy-scenario
+# realization as the primary community-isolation analysis. Reusing this seed for
+# baseline and adjusted propensities also preserves common-random-number pairing.
+INTERVENTION_RANDOM_SEED = isolation.RANDOM_SEED
 
 
 def quiet_isolation_frequency(
@@ -230,7 +236,8 @@ def evaluate_comparator_portfolios(
 ) -> pd.DataFrame:
     """Evaluate the four central-effect comparator portfolios with common draws."""
     signature = (
-        f"v2|{len(section_propensity)}|{float(np.sum(section_propensity)):.6f}|"
+        f"v3|seed={INTERVENTION_RANDOM_SEED}|{len(section_propensity)}|"
+        f"{float(np.sum(section_propensity)):.6f}|"
         f"{float(np.sum(base_cost)):.6f}|{len(community_population)}|"
         + "|".join(f"{value:.6f}" for value in budgets)
     )
@@ -270,7 +277,7 @@ def evaluate_comparator_portfolios(
                 attachment_community,
                 attachment_root,
                 len(community_population),
-                isolation.RANDOM_SEED + 10_000,
+                INTERVENTION_RANDOM_SEED,
             ).astype(float)
             reduction = np.maximum(baseline_frequency.astype(float) - frequency, 0.0)
             rows.append(
@@ -443,7 +450,7 @@ def main() -> None:
         attachment_community,
         attachment_root,
         len(community),
-        isolation.RANDOM_SEED + 10_000,
+        INTERVENTION_RANDOM_SEED,
     )
     baseline_expected_isolated = float(np.sum(community_population * baseline_frequency))
 
@@ -559,7 +566,7 @@ def main() -> None:
                 attachment_community,
                 attachment_root,
                 len(community),
-                isolation.RANDOM_SEED + 10_000,
+                INTERVENTION_RANDOM_SEED,
             )
             expected_isolated = float(np.sum(community_population * frequency))
             protected_population[setting].append(
@@ -795,7 +802,7 @@ def main() -> None:
     )
     axes[2].text(
         0.98,
-        0.04,
+        0.075,
         (
             f"Heavy baseline expected isolation: {baseline_expected_isolated:,.0f}\n"
             f"Maximum portfolio: {max(selected_counts['Central']):,} roads"
@@ -833,11 +840,19 @@ def main() -> None:
     )
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    figure.savefig(OUT, dpi=150, bbox_inches="tight", facecolor="white")
+    figure.savefig(SVG_OUT, format="svg", bbox_inches="tight", facecolor="white")
     plt.close(figure)
+    OUT.write_bytes(
+        resvg_py.svg_to_bytes(
+            svg_path=str(SVG_OUT),
+            dpi=150.0,
+            background="white",
+        )
+    )
 
     top_action_counts = pd.Series(actions[top_road_positions]).value_counts()
-    print(f"Saved: {OUT.relative_to(ROOT)}")
+    print(f"Saved SVG: {SVG_OUT.relative_to(ROOT)}")
+    print(f"Converted PNG: {OUT.relative_to(ROOT)}")
     print(f"Terrain-score construction: {model_mode}")
     print(f"Heavy baseline expected isolated population: {baseline_expected_isolated:,.1f}")
     print(f"Candidate road sections: {len(candidate_ids):,}")
