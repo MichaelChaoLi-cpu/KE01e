@@ -4,8 +4,8 @@
 Plan: Identify priority roads and communities and show protected population under
 budget and cost-effect sensitivity assumptions.
 Framework: Section 5 decision estimands; Section 6 action-appropriate closure
-propensity reduction, avoided isolation, protected population, and robust priority
-score; Section 7 consequence-aware screening against a planning-unit budget.
+propensity reduction, avoided isolation, protected population, and assigned-action
+priority score; Section 7 consequence-aware screening against a planning-unit budget.
 
 All priorities are emergency-screening outputs. Costs are relative planning units,
 effects are assumptions, and results do not replace field engineering assessment.
@@ -32,6 +32,7 @@ import shapely
 
 import figure_community_isolation_frequency_and_exposed_population as isolation
 import figure_road_disruption_exposure_and_observed_restriction_evidence as road_exposure
+from cache_fingerprint import cache_matches, content_signature
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -67,10 +68,13 @@ COMPARATOR_COLORS = {
     "Road class only": "#A16207",
     "Equal-cost consequence": "#111827",
 }
-COMPARATOR_CACHE = ROOT / "data/exp/analysis_cache/intervention_comparators.npz"
-# Keep every article-facing intervention comparison on the same Heavy-scenario
-# realization as the primary community-isolation analysis. Reusing this seed for
-# baseline and adjusted propensities also preserves common-random-number pairing.
+COMPARATOR_CACHE = ROOT / "data/exp/analysis_cache/intervention_comparators_v5.npz"
+INTERVENTION_CACHE_DIR = (
+    ROOT / "data/results/intermediate/intervention_event_idw_v5"
+)
+SINGLE_CLOSE_CACHE = INTERVENTION_CACHE_DIR / "single_section_consequence.npz"
+# Retained for compatibility with scripts that identify the primary replicate;
+# final intervention comparisons use all seeds in ``isolation.REPLICATE_SEEDS``.
 INTERVENTION_RANDOM_SEED = isolation.RANDOM_SEED
 
 
@@ -113,6 +117,80 @@ def quiet_isolation_frequency(
         )
         isolated_count += community_accessible == 0
     return isolated_count.astype("float32") / isolation.MONTE_CARLO_DRAWS
+
+
+def cached_intervention_frequency(
+    cache_name: str,
+    *args: object,
+) -> np.ndarray:
+    """Cache one deterministic intervention simulation for resumable generation."""
+    if len(args) < 10:
+        raise ValueError(
+            "cached_intervention_frequency requires the complete simulation argument set."
+        )
+    signature = content_signature(
+        "intervention-frequency-v5",
+        files=(Path(__file__),),
+        arrays={
+            "candidate_u": np.asarray(args[0]),
+            "candidate_v": np.asarray(args[1]),
+            "candidate_edge_section": np.asarray(args[2]),
+            "section_propensity": np.asarray(args[3]),
+            "target_roots": np.asarray(args[5]),
+            "attachment_community": np.asarray(args[6]),
+            "attachment_root": np.asarray(args[7]),
+        },
+        parameters={
+            "root_count": int(args[4]),
+            "community_count": int(args[8]),
+            "seed": int(args[9]),
+            "draws": isolation.MONTE_CARLO_DRAWS,
+        },
+    )
+    path = INTERVENTION_CACHE_DIR / f"{cache_name}.npz"
+    if path.exists():
+        cached = np.load(path, allow_pickle=False)
+        if cache_matches(cached, signature):
+            print(f"  loaded intervention cache: {cache_name}", flush=True)
+            return cached["frequency"].astype("float32")
+    frequency = quiet_isolation_frequency(*args)
+    INTERVENTION_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        path,
+        signature=np.asarray(signature),
+        frequency=frequency.astype("float32"),
+    )
+    print(f"  cached intervention simulation: {cache_name}", flush=True)
+    return frequency
+
+
+def single_close_signature(
+    screen_positions: np.ndarray,
+    candidate_u: np.ndarray,
+    candidate_v: np.ndarray,
+    candidate_edge_section: np.ndarray,
+    root_count: int,
+    target_roots: np.ndarray,
+    attachment_community: np.ndarray,
+    attachment_root: np.ndarray,
+    community_population: np.ndarray,
+) -> str:
+    """Return the complete cache signature for single-section consequence checks."""
+    return content_signature(
+        "single-section-consequence-v5",
+        files=(Path(__file__),),
+        arrays={
+            "screen_positions": screen_positions,
+            "candidate_u": candidate_u,
+            "candidate_v": candidate_v,
+            "candidate_edge_section": candidate_edge_section,
+            "target_roots": target_roots,
+            "attachment_community": attachment_community,
+            "attachment_root": attachment_root,
+            "community_population": community_population,
+        },
+        parameters={"root_count": root_count},
+    )
 
 
 def single_section_closed_population(
@@ -186,14 +264,57 @@ def select_under_budget(
     return np.asarray(selected, dtype="int32"), spent
 
 
+def section_burden_from_frequency(
+    baseline_frequency: np.ndarray,
+    community_population: np.ndarray,
+    attachment_community: np.ndarray,
+    attachment_root: np.ndarray,
+    candidate_u: np.ndarray,
+    candidate_v: np.ndarray,
+    candidate_edge_section: np.ndarray,
+    root_count: int,
+    section_count: int,
+) -> np.ndarray:
+    """Allocate simulation-conditional community burden to adjacent road sections."""
+    attachment_count = np.bincount(
+        attachment_community,
+        minlength=len(community_population),
+    ).astype(float)
+    attachment_share_burden = (
+        community_population * baseline_frequency / np.maximum(attachment_count, 1.0)
+    )
+    root_burden = np.zeros(root_count, dtype="float64")
+    np.add.at(root_burden, attachment_root, attachment_share_burden[attachment_community])
+    section_burden = np.zeros(section_count, dtype="float64")
+    edge_burden = root_burden[candidate_u] + root_burden[candidate_v]
+    np.maximum.at(section_burden, candidate_edge_section, edge_burden)
+    return section_burden
+
+
+def assigned_action_priority_score(
+    consequence_proxy: np.ndarray,
+    actions: np.ndarray,
+    base_cost: np.ndarray,
+) -> np.ndarray:
+    """Return the declared assigned-action median score across cost-effect settings."""
+    setting_scores: list[np.ndarray] = []
+    for setting in ("Conservative", "Central", "Optimistic"):
+        effect = np.asarray([ACTION_EFFECT[str(action)][setting] for action in actions])
+        cost = base_cost * COST_MULTIPLIER[setting]
+        setting_scores.append(consequence_proxy * effect / np.maximum(cost, 1e-6))
+    return np.median(np.vstack(setting_scores), axis=0)
+
+
 def comparator_orders(
     candidate_score: np.ndarray,
     emergency_candidate: np.ndarray,
     road_category: pd.Series,
     consequence_proxy: np.ndarray,
     actions: np.ndarray,
+    base_cost: np.ndarray,
+    setting: str,
 ) -> dict[str, np.ndarray]:
-    """Return the four pre-specified intervention ranking baselines."""
+    """Return comparators under the same cost-effect setting as the focal ranking."""
     class_weight = road_category.astype("string").map(
         {
             "National Expressway or Equivalent": 4.0,
@@ -203,27 +324,33 @@ def comparator_orders(
             "Other": 0.0,
         }
     ).fillna(0.0).to_numpy(dtype=float)
-    central_effect = np.asarray(
-        [ACTION_EFFECT[str(action)]["Central"] for action in actions],
+    setting_effect = np.asarray(
+        [ACTION_EFFECT[str(action)][setting] for action in actions],
         dtype=float,
     )
+    setting_cost = base_cost * COST_MULTIPLIER[setting]
     return {
         "Hazard only": np.argsort(candidate_score)[::-1],
         "Emergency route only": np.argsort(
             emergency_candidate.astype(float) * 10.0 + candidate_score
         )[::-1],
         "Road class only": np.argsort(class_weight * 10.0 + candidate_score)[::-1],
-        "Equal-cost consequence": np.argsort(consequence_proxy * central_effect)[::-1],
+        "Equal-cost consequence": np.argsort(
+            consequence_proxy * setting_effect / np.maximum(setting_cost, 1e-6)
+        )[::-1],
     }
 
 
 def evaluate_comparator_portfolios(
-    orders: dict[str, np.ndarray],
     budgets: np.ndarray,
     base_cost: np.ndarray,
     actions: np.ndarray,
+    candidate_score: np.ndarray,
+    emergency_candidate: np.ndarray,
+    road_category: pd.Series,
+    consequence_proxy: np.ndarray,
     section_propensity: np.ndarray,
-    baseline_frequency: np.ndarray,
+    baseline_frequencies: dict[int, np.ndarray],
     community_population: np.ndarray,
     community_older: np.ndarray,
     candidate_u: np.ndarray,
@@ -234,75 +361,138 @@ def evaluate_comparator_portfolios(
     attachment_community: np.ndarray,
     attachment_root: np.ndarray,
 ) -> pd.DataFrame:
-    """Evaluate the four central-effect comparator portfolios with common draws."""
-    signature = (
-        f"v3|seed={INTERVENTION_RANDOM_SEED}|{len(section_propensity)}|"
-        f"{float(np.sum(section_propensity)):.6f}|"
-        f"{float(np.sum(base_cost)):.6f}|{len(community_population)}|"
-        + "|".join(f"{value:.6f}" for value in budgets)
+    """Evaluate setting-matched comparators across independent simulation seeds."""
+    seeds = tuple(sorted(baseline_frequencies))
+    signature = content_signature(
+        "intervention-comparators-v5",
+        files=(Path(__file__),),
+        arrays={
+            "budgets": budgets,
+            "base_cost": base_cost,
+            "actions": np.asarray(actions, dtype="U40"),
+            "candidate_score": candidate_score,
+            "emergency_candidate": emergency_candidate,
+            "road_category": road_category.astype("string").fillna("").to_numpy(dtype="U40"),
+            "consequence_proxy": consequence_proxy,
+            "section_propensity": section_propensity,
+            "community_population": community_population,
+            "community_older": community_older,
+            "candidate_u": candidate_u,
+            "candidate_v": candidate_v,
+            "candidate_edge_section": candidate_edge_section,
+            "target_roots": target_roots,
+            "attachment_community": attachment_community,
+            "attachment_root": attachment_root,
+            **{f"baseline_seed_{seed}": baseline_frequencies[seed] for seed in seeds},
+        },
+        parameters={
+            "root_count": root_count,
+            "seeds": seeds,
+            "draws": isolation.MONTE_CARLO_DRAWS,
+            "action_effect": ACTION_EFFECT,
+            "cost_multiplier": COST_MULTIPLIER,
+        },
     )
     if COMPARATOR_CACHE.exists():
         cached = np.load(COMPARATOR_CACHE, allow_pickle=False)
-        if str(cached["signature"].item()) == signature:
+        if cache_matches(cached, signature):
             return pd.DataFrame(
                 {
                     "Comparator": cached["comparator"].astype(str),
+                    "Setting": cached["setting"].astype(str),
                     "Budget (Planning Units)": cached["budget"],
                     "Selected Road Count": cached["selected_count"].astype(int),
                     "Realized Portfolio Cost": cached["spent"],
                     "Protected Population": cached["protected"],
+                    "Protected Population Low": cached["protected_low"],
+                    "Protected Population High": cached["protected_high"],
                     "Protected Population Age 65+": cached["protected_older"],
+                    "Protected Population Age 65+ Low": cached["protected_older_low"],
+                    "Protected Population Age 65+ High": cached["protected_older_high"],
                 }
             )
 
-    baseline_expected = float(np.sum(community_population * baseline_frequency))
     rows: list[dict[str, object]] = []
-    central_effect = np.asarray(
-        [ACTION_EFFECT[str(action)]["Central"] for action in actions],
-        dtype=float,
-    )
-    for name, order in orders.items():
-        for budget in budgets:
-            selected, spent = select_under_budget(order, base_cost, float(budget))
-            adjusted = section_propensity.copy()
-            if selected.size:
-                adjusted[selected] *= 1.0 - central_effect[selected]
-            frequency = quiet_isolation_frequency(
-                candidate_u,
-                candidate_v,
-                candidate_edge_section,
-                adjusted,
-                root_count,
-                target_roots,
-                attachment_community,
-                attachment_root,
-                len(community_population),
-                INTERVENTION_RANDOM_SEED,
-            ).astype(float)
-            reduction = np.maximum(baseline_frequency.astype(float) - frequency, 0.0)
-            rows.append(
-                {
-                    "Comparator": name,
-                    "Budget (Planning Units)": float(budget),
-                    "Selected Road Count": int(selected.size),
-                    "Realized Portfolio Cost": float(spent),
-                    "Protected Population": float(np.sum(community_population * reduction)),
-                    "Protected Population Age 65+": float(np.sum(community_older * reduction)),
-                }
-            )
+    for setting in ("Conservative", "Central", "Optimistic"):
+        setting_effect = np.asarray(
+            [ACTION_EFFECT[str(action)][setting] for action in actions],
+            dtype=float,
+        )
+        setting_cost = base_cost * COST_MULTIPLIER[setting]
+        orders = comparator_orders(
+            candidate_score,
+            emergency_candidate,
+            road_category,
+            consequence_proxy,
+            actions,
+            base_cost,
+            setting,
+        )
+        for name, order in orders.items():
+            safe_name = name.lower().replace(" ", "_").replace("-", "_")
+            for budget_index, budget in enumerate(budgets):
+                selected, spent = select_under_budget(order, setting_cost, float(budget))
+                adjusted = section_propensity.copy()
+                if selected.size:
+                    adjusted[selected] *= 1.0 - setting_effect[selected]
+                protected_by_seed: list[float] = []
+                protected_older_by_seed: list[float] = []
+                for seed in seeds:
+                    frequency = cached_intervention_frequency(
+                        f"comparator_{setting.lower()}_{safe_name}_b{budget_index}_seed_{seed}",
+                        candidate_u,
+                        candidate_v,
+                        candidate_edge_section,
+                        adjusted,
+                        root_count,
+                        target_roots,
+                        attachment_community,
+                        attachment_root,
+                        len(community_population),
+                        seed,
+                    ).astype(float)
+                    reduction = np.maximum(
+                        baseline_frequencies[seed].astype(float) - frequency,
+                        0.0,
+                    )
+                    protected_by_seed.append(float(np.sum(community_population * reduction)))
+                    protected_older_by_seed.append(float(np.sum(community_older * reduction)))
+                rows.append(
+                    {
+                        "Comparator": name,
+                        "Setting": setting,
+                        "Budget (Planning Units)": float(budget),
+                        "Selected Road Count": int(selected.size),
+                        "Realized Portfolio Cost": float(spent),
+                        "Protected Population": float(np.mean(protected_by_seed)),
+                        "Protected Population Low": float(np.min(protected_by_seed)),
+                        "Protected Population High": float(np.max(protected_by_seed)),
+                        "Protected Population Age 65+": float(np.mean(protected_older_by_seed)),
+                        "Protected Population Age 65+ Low": float(np.min(protected_older_by_seed)),
+                        "Protected Population Age 65+ High": float(np.max(protected_older_by_seed)),
+                    }
+                )
     table = pd.DataFrame(rows)
     COMPARATOR_CACHE.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
         COMPARATOR_CACHE,
         signature=np.asarray(signature),
         comparator=table["Comparator"].to_numpy(dtype="U32"),
+        setting=table["Setting"].to_numpy(dtype="U16"),
         budget=table["Budget (Planning Units)"].to_numpy(dtype=float),
         selected_count=table["Selected Road Count"].to_numpy(dtype=int),
         spent=table["Realized Portfolio Cost"].to_numpy(dtype=float),
         protected=table["Protected Population"].to_numpy(dtype=float),
+        protected_low=table["Protected Population Low"].to_numpy(dtype=float),
+        protected_high=table["Protected Population High"].to_numpy(dtype=float),
         protected_older=table["Protected Population Age 65+"].to_numpy(dtype=float),
+        protected_older_low=table["Protected Population Age 65+ Low"].to_numpy(dtype=float),
+        protected_older_high=table["Protected Population Age 65+ High"].to_numpy(dtype=float),
     )
-    if baseline_expected <= 0:
+    if not any(
+        np.sum(community_population * value) > 0
+        for value in baseline_frequencies.values()
+    ):
         raise RuntimeError("Comparator evaluation requires positive baseline isolation.")
     return table
 
@@ -323,7 +513,7 @@ def main() -> None:
     display_shape = (display_height, DISPLAY_WIDTH)
     display_transform = from_bounds(west, south, east, north, DISPLAY_WIDTH, display_height)
 
-    terrain_scores, _, model_mode, elevation_grid = road_exposure.build_landslide_scores(
+    terrain_scores, _, model_mode, elevation_grid = road_exposure.load_or_build_landslide_scores(
         admin,
         admin_geometry,
         admin_union,
@@ -344,7 +534,12 @@ def main() -> None:
     )
     roads = roads.loc[roads["Network Analysis Eligible"]].reset_index(drop=True)
     road_geometry = road_exposure.decode_geometry(roads.pop("Geometry"))
-    road_scores = road_exposure.road_scores(road_geometry, terrain_scores, extent, elevation_grid)
+    road_scores = road_exposure.load_or_build_road_scores(
+        road_geometry,
+        terrain_scores,
+        extent,
+        elevation_grid,
+    )
     heavy_lower = isolation.positive_score_quantile(
         road_scores["Heavy"], isolation.CANDIDATE_QUANTILE
     )
@@ -439,42 +634,56 @@ def main() -> None:
     )
     community_population = community["Total_Population"].to_numpy(dtype=float)
     community_older = community["Population_Age_65"].to_numpy(dtype=float)
-    print("Simulating the Heavy baseline for intervention screening")
-    baseline_frequency = isolation.simulate_isolation(
-        candidate_u,
-        candidate_v,
-        candidate_edge_section,
-        section_propensity,
-        root_count,
-        target_roots,
-        attachment_community,
-        attachment_root,
-        len(community),
-        INTERVENTION_RANDOM_SEED,
+    print("Loading five independently seeded Heavy baselines for intervention screening")
+    baseline_frequencies = {
+        seed: isolation.cached_isolation(
+            f"central_heavy_seed_{seed}_m1000",
+            candidate_u,
+            candidate_v,
+            candidate_edge_section,
+            section_propensity,
+            root_count,
+            target_roots,
+            attachment_community,
+            attachment_root,
+            len(community),
+            seed,
+        ).astype(float)
+        for seed in isolation.REPLICATE_SEEDS
+    }
+    baseline_frequency = np.mean(
+        np.vstack(list(baseline_frequencies.values())),
+        axis=0,
     )
-    baseline_expected_isolated = float(np.sum(community_population * baseline_frequency))
+    baseline_expected_by_seed = np.asarray(
+        [
+            np.sum(community_population * baseline_frequencies[seed])
+            for seed in isolation.REPLICATE_SEEDS
+        ],
+        dtype=float,
+    )
+    baseline_expected_isolated = float(np.mean(baseline_expected_by_seed))
 
-    attachment_count = np.bincount(
-        attachment_community,
-        minlength=len(community),
-    ).astype(float)
-    attachment_share_burden = (
-        community_population * baseline_frequency / np.maximum(attachment_count, 1.0)
-    )
-    root_burden = np.zeros(root_count, dtype="float64")
-    np.add.at(root_burden, attachment_root, attachment_share_burden[attachment_community])
     root_degree = np.bincount(
         np.concatenate([candidate_u, candidate_v]),
         minlength=root_count,
     ).astype(float)
 
-    section_burden = np.zeros(len(candidate_ids), dtype="float64")
+    section_burden = section_burden_from_frequency(
+        baseline_frequency,
+        community_population,
+        attachment_community,
+        attachment_root,
+        candidate_u,
+        candidate_v,
+        candidate_edge_section,
+        root_count,
+        len(candidate_ids),
+    )
     section_scarcity = np.zeros(len(candidate_ids), dtype="float64")
-    edge_burden = root_burden[candidate_u] + root_burden[candidate_v]
     edge_scarcity = 1.0 / np.sqrt(
         np.maximum(np.minimum(root_degree[candidate_u], root_degree[candidate_v]), 1.0)
     )
-    np.maximum.at(section_burden, candidate_edge_section, edge_burden)
     np.maximum.at(section_scarcity, candidate_edge_section, edge_scarcity)
     emergency_candidate = (
         roads.loc[candidate_road_index, "Emergency Route Membership"]
@@ -491,21 +700,52 @@ def main() -> None:
     )
 
     screen_positions = np.argsort(preliminary_score)[-SINGLE_CLOSE_SCREEN_COUNT:]
-    single_close_population = np.zeros(len(candidate_ids), dtype="float64")
-    for count, position in enumerate(screen_positions, start=1):
-        single_close_population[position] = single_section_closed_population(
-            int(position),
-            candidate_u,
-            candidate_v,
-            candidate_edge_section,
-            root_count,
-            target_roots,
-            attachment_community,
-            attachment_root,
-            community_population,
+    single_signature = single_close_signature(
+        screen_positions,
+        candidate_u,
+        candidate_v,
+        candidate_edge_section,
+        root_count,
+        target_roots,
+        attachment_community,
+        attachment_root,
+        community_population,
+    )
+    if SINGLE_CLOSE_CACHE.exists():
+        cached_single = np.load(SINGLE_CLOSE_CACHE, allow_pickle=False)
+    else:
+        cached_single = None
+    if (
+        cached_single is not None
+        and cache_matches(cached_single, single_signature)
+    ):
+        single_close_population = cached_single["single_close_population"].astype("float64")
+        print("Loaded cached single-road consequence checks.", flush=True)
+    else:
+        single_close_population = np.zeros(len(candidate_ids), dtype="float64")
+        for count, position in enumerate(screen_positions, start=1):
+            single_close_population[position] = single_section_closed_population(
+                int(position),
+                candidate_u,
+                candidate_v,
+                candidate_edge_section,
+                root_count,
+                target_roots,
+                attachment_community,
+                attachment_root,
+                community_population,
+            )
+            if count % 250 == 0:
+                print(
+                    f"  completed {count:,}/{len(screen_positions):,} "
+                    "single-road consequence checks"
+                )
+        SINGLE_CLOSE_CACHE.parent.mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(
+            SINGLE_CLOSE_CACHE,
+            signature=np.asarray(single_signature),
+            single_close_population=single_close_population,
         )
-        if count % 250 == 0:
-            print(f"  completed {count:,}/{len(screen_positions):,} single-road consequence checks")
 
     consequence_proxy = single_close_population + 0.15 * section_burden
     candidate_length_km = (
@@ -526,13 +766,41 @@ def main() -> None:
         default=1.5 + 0.5 * candidate_length_km,
     ).astype("float64")
 
-    sensitivity_scores: list[np.ndarray] = []
-    for setting in ("Conservative", "Central", "Optimistic"):
-        effect = np.array([ACTION_EFFECT[action][setting] for action in actions])
-        cost = base_cost * COST_MULTIPLIER[setting]
-        sensitivity_scores.append(consequence_proxy * effect / np.maximum(cost, 1e-6))
-    priority_score = np.median(np.vstack(sensitivity_scores), axis=0)
+    priority_score = assigned_action_priority_score(consequence_proxy, actions, base_cost)
+    seed_priority_scores: list[np.ndarray] = []
+    for seed in isolation.REPLICATE_SEEDS:
+        seed_burden = section_burden_from_frequency(
+            baseline_frequencies[seed],
+            community_population,
+            attachment_community,
+            attachment_root,
+            candidate_u,
+            candidate_v,
+            candidate_edge_section,
+            root_count,
+            len(candidate_ids),
+        )
+        seed_priority_scores.append(
+            assigned_action_priority_score(
+                single_close_population + 0.15 * seed_burden,
+                actions,
+                base_cost,
+            )
+        )
     priority_order = np.argsort(priority_score)[::-1]
+    top_priority_set = set(priority_order[:PORTFOLIO_CANDIDATE_COUNT])
+    priority_rank_correlations = np.asarray(
+        [pd.Series(priority_score).corr(pd.Series(score), method="spearman") for score in seed_priority_scores],
+        dtype=float,
+    )
+    priority_top_overlap = np.asarray(
+        [
+            len(top_priority_set & set(np.argsort(score)[::-1][:PORTFOLIO_CANDIDATE_COUNT]))
+            / PORTFOLIO_CANDIDATE_COUNT
+            for score in seed_priority_scores
+        ],
+        dtype=float,
+    )
     portfolio_positions = priority_order[:PORTFOLIO_CANDIDATE_COUNT]
     top_road_positions = priority_order[:TOP_ROADS_TO_MAP]
 
@@ -541,13 +809,19 @@ def main() -> None:
     protected_population: dict[str, list[float]] = {
         setting: [] for setting in ("Conservative", "Central", "Optimistic")
     }
+    protected_population_low: dict[str, list[float]] = {
+        setting: [] for setting in ("Conservative", "Central", "Optimistic")
+    }
+    protected_population_high: dict[str, list[float]] = {
+        setting: [] for setting in ("Conservative", "Central", "Optimistic")
+    }
     selected_counts: dict[str, list[int]] = {
         setting: [] for setting in ("Conservative", "Central", "Optimistic")
     }
     for setting in ("Conservative", "Central", "Optimistic"):
         setting_cost = base_cost * COST_MULTIPLIER[setting]
         setting_effect = np.array([ACTION_EFFECT[action][setting] for action in actions])
-        for budget in budgets:
+        for budget_index, budget in enumerate(budgets):
             selected_array, spent = select_under_budget(
                 portfolio_positions,
                 setting_cost,
@@ -556,38 +830,38 @@ def main() -> None:
             adjusted_propensity = section_propensity.copy()
             if selected_array.size:
                 adjusted_propensity[selected_array] *= 1.0 - setting_effect[selected_array]
-            frequency = quiet_isolation_frequency(
-                candidate_u,
-                candidate_v,
-                candidate_edge_section,
-                adjusted_propensity,
-                root_count,
-                target_roots,
-                attachment_community,
-                attachment_root,
-                len(community),
-                INTERVENTION_RANDOM_SEED,
-            )
-            expected_isolated = float(np.sum(community_population * frequency))
-            protected_population[setting].append(
-                max(baseline_expected_isolated - expected_isolated, 0.0)
-            )
+            protected_by_seed: list[float] = []
+            for seed in isolation.REPLICATE_SEEDS:
+                frequency = cached_intervention_frequency(
+                    f"assigned_{setting.lower()}_b{budget_index}_seed_{seed}",
+                    candidate_u,
+                    candidate_v,
+                    candidate_edge_section,
+                    adjusted_propensity,
+                    root_count,
+                    target_roots,
+                    attachment_community,
+                    attachment_root,
+                    len(community),
+                    seed,
+                ).astype(float)
+                reduction = np.maximum(baseline_frequencies[seed] - frequency, 0.0)
+                protected_by_seed.append(float(np.sum(community_population * reduction)))
+            protected_population[setting].append(float(np.mean(protected_by_seed)))
+            protected_population_low[setting].append(float(np.min(protected_by_seed)))
+            protected_population_high[setting].append(float(np.max(protected_by_seed)))
             selected_counts[setting].append(len(selected_array))
 
-    baseline_orders = comparator_orders(
+    comparator_table = evaluate_comparator_portfolios(
+        budgets,
+        base_cost,
+        actions,
         candidate_score,
         emergency_candidate,
         candidate_road_category,
         consequence_proxy,
-        actions,
-    )
-    comparator_table = evaluate_comparator_portfolios(
-        baseline_orders,
-        budgets,
-        base_cost,
-        actions,
         section_propensity,
-        baseline_frequency,
+        baseline_frequencies,
         community_population,
         community_older,
         candidate_u,
@@ -599,8 +873,9 @@ def main() -> None:
         attachment_root,
     )
 
-    community_burden = baseline_frequency * (community_population + 0.5 * community_older)
-    community_order = np.argsort(community_burden)[::-1]
+    community_burden = baseline_frequency * community_population
+    community_older_burden = baseline_frequency * community_older
+    community_order = np.lexsort((-community_older_burden, -community_burden))
     top_community = community_order[:TOP_COMMUNITIES_TO_MAP]
     community_points = shapely.points(
         community["Longitude"].to_numpy(),
@@ -639,7 +914,8 @@ def main() -> None:
         [
             figure.add_subplot(grid[0, 0]),
             figure.add_subplot(grid[0, 1]),
-            figure.add_subplot(grid[1, :]),
+            figure.add_subplot(grid[1, 0]),
+            figure.add_subplot(grid[1, 1]),
         ]
     )
     boundary_segments = road_exposure.line_segments(shapely.boundary(admin_geometry))
@@ -767,6 +1043,15 @@ def main() -> None:
     )
 
     for setting in ("Conservative", "Central", "Optimistic"):
+        axes[2].fill_between(
+            budgets,
+            protected_population_low[setting],
+            protected_population_high[setting],
+            color=SETTING_COLORS[setting],
+            alpha=0.12,
+            linewidth=0,
+            zorder=2,
+        )
         axes[2].plot(
             budgets,
             protected_population[setting],
@@ -774,19 +1059,31 @@ def main() -> None:
             marker="o",
             markersize=4.8,
             linewidth=1.8,
-            label=setting,
+            label=f"Assigned-action: {setting}",
             zorder=5,
         )
-    for comparator, group in comparator_table.groupby("Comparator", sort=False):
+        matched = comparator_table.loc[
+            (comparator_table["Comparator"] == "Equal-cost consequence")
+            & (comparator_table["Setting"] == setting)
+        ].sort_values("Budget (Planning Units)")
         axes[2].plot(
-            group["Budget (Planning Units)"],
-            group["Protected Population"],
-            color=COMPARATOR_COLORS[str(comparator)],
+            matched["Budget (Planning Units)"],
+            matched["Protected Population"],
+            color=SETTING_COLORS[setting],
             linestyle=(0, (4, 3)),
-            linewidth=1.15,
-            alpha=0.88,
-            label=str(comparator),
+            linewidth=1.35,
+            alpha=0.90,
+            label=f"Equal-cost audit: {setting}",
             zorder=4,
+        )
+        axes[2].fill_between(
+            matched["Budget (Planning Units)"],
+            matched["Protected Population Low"],
+            matched["Protected Population High"],
+            color=SETTING_COLORS[setting],
+            alpha=0.07,
+            linewidth=0,
+            zorder=1,
         )
     axes[2].set_xlabel("Planning budget units", fontsize=9)
     axes[2].set_ylabel("Expected population protected", fontsize=9)
@@ -795,8 +1092,8 @@ def main() -> None:
     axes[2].set_axisbelow(True)
     axes[2].legend(
         loc="upper left",
-        fontsize=6.7,
-        ncol=2,
+        fontsize=6.3,
+        ncol=1,
         frameon=True,
         framealpha=0.94,
     )
@@ -804,8 +1101,11 @@ def main() -> None:
         0.98,
         0.075,
         (
-            f"Heavy baseline expected isolation: {baseline_expected_isolated:,.0f}\n"
-            f"Maximum portfolio: {max(selected_counts['Central']):,} roads"
+            f"Heavy baseline mean: {baseline_expected_isolated:,.0f} "
+            f"({baseline_expected_by_seed.min():,.0f}–{baseline_expected_by_seed.max():,.0f})\n"
+            f"Five seeds; maximum portfolio: {max(selected_counts['Central']):,} roads\n"
+            f"Priority stability: ρ ≥ {np.nanmin(priority_rank_correlations):.3f}; "
+            f"top-{PORTFOLIO_CANDIDATE_COUNT} overlap ≥ {priority_top_overlap.min():.1%}"
         ),
         transform=axes[2].transAxes,
         ha="right",
@@ -819,25 +1119,131 @@ def main() -> None:
         spine.set_linewidth(0.85)
         spine.set_color("#344054")
 
-    for label, axis in zip("abc", axes):
-        road_exposure.add_panel_label(axis, label)
-
-    # Geographic aspect constraints inset the two upper map frames inside their
-    # GridSpec cells. Align the lower analytical frame to those rendered outer
-    # map edges instead of the wider unadjusted GridSpec span.
-    figure.canvas.draw()
-    upper_left = axes[0].get_position()
-    upper_right = axes[1].get_position()
-    lower = axes[2].get_position()
-    figure.set_layout_engine(None)
-    axes[2].set_position(
-        [
-            upper_left.x0,
-            lower.y0,
-            upper_right.x1 - upper_left.x0,
-            lower.height,
-        ]
+    central_comparators = (
+        comparator_table.loc[comparator_table["Setting"] == "Central"]
+        .sort_values("Budget (Planning Units)")
+        .groupby("Comparator", sort=False)
+        .tail(1)
+        .set_index("Comparator")
     )
+    comparison_labels = [
+        "Assigned-action screening",
+        "Equal-cost consequence",
+        "Hazard only",
+        "Emergency route only",
+        "Road class only",
+    ]
+    comparison_values = np.asarray(
+        [protected_population["Central"][-1]]
+        + [
+            float(central_comparators.loc[label, "Protected Population"])
+            for label in comparison_labels[1:]
+        ],
+        dtype=float,
+    )
+    comparison_colors = [SETTING_COLORS["Central"]] + [
+        COMPARATOR_COLORS[label] for label in comparison_labels[1:]
+    ]
+    comparison_low = np.asarray(
+        [protected_population_low["Central"][-1]]
+        + [
+            float(central_comparators.loc[label, "Protected Population Low"])
+            for label in comparison_labels[1:]
+        ],
+        dtype=float,
+    )
+    comparison_high = np.asarray(
+        [protected_population_high["Central"][-1]]
+        + [
+            float(central_comparators.loc[label, "Protected Population High"])
+            for label in comparison_labels[1:]
+        ],
+        dtype=float,
+    )
+    comparison_y = np.arange(len(comparison_labels))
+    axes[3].barh(
+        comparison_y,
+        comparison_values,
+        color=comparison_colors,
+        height=0.62,
+        alpha=0.90,
+        zorder=3,
+    )
+    axes[3].errorbar(
+        comparison_values,
+        comparison_y,
+        xerr=np.vstack(
+            [comparison_values - comparison_low, comparison_high - comparison_values]
+        ),
+        fmt="none",
+        ecolor="#344054",
+        elinewidth=0.9,
+        capsize=2.5,
+        zorder=5,
+    )
+    axes[3].set_yticks(comparison_y, labels=comparison_labels)
+    axes[3].invert_yaxis()
+    axes[3].set_xlabel("Expected population protected at maximum budget", fontsize=9)
+    axes[3].tick_params(axis="both", labelsize=7.6)
+    axes[3].grid(axis="x", color="#D0D5DD", linewidth=0.60, linestyle=(0, (3, 3)))
+    axes[3].set_axisbelow(True)
+    value_reference = max(float(comparison_values.max()), 1.0)
+    axes[3].set_xlim(0, value_reference * 1.18)
+    for y_position, value in enumerate(comparison_values):
+        axes[3].text(
+            value + value_reference * 0.018,
+            y_position,
+            f"{value:,.0f}",
+            va="center",
+            ha="left",
+            fontsize=7.7,
+            fontweight="bold",
+            color="#172033",
+        )
+    equal_cost_value = comparison_values[1]
+    incremental = comparison_values[0] - equal_cost_value
+    incremental_percent = 100.0 * incremental / max(equal_cost_value, 1e-6)
+    axes[3].text(
+        0.98,
+        0.04,
+        (
+            "Central setting; identical costs and effects\n"
+            f"Assigned-action minus equal-cost audit: {incremental:+,.0f} "
+            f"({incremental_percent:+.1f}%)"
+        ),
+        transform=axes[3].transAxes,
+        ha="right",
+        va="bottom",
+        fontsize=7.4,
+        color="#344054",
+        bbox={"boxstyle": "round,pad=0.28", "facecolor": "white", "edgecolor": "#D0D5DD"},
+        zorder=10,
+    )
+    axes[2].text(
+        0.02,
+        0.02,
+        "Central modeled cost at 1 km: reinforcement 5.0 | clearance 2.0 | "
+        "alternative-route 3.7 units",
+        transform=axes[2].transAxes,
+        ha="left",
+        va="bottom",
+        fontsize=6.8,
+        color="#475467",
+        bbox={
+            "boxstyle": "round,pad=0.24",
+            "facecolor": "white",
+            "edgecolor": "#D0D5DD",
+            "alpha": 0.94,
+        },
+        zorder=10,
+    )
+    for spine in axes[3].spines.values():
+        spine.set_visible(True)
+        spine.set_linewidth(0.85)
+        spine.set_color("#344054")
+
+    for label, axis in zip("abcd", axes):
+        road_exposure.add_panel_label(axis, label)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(SVG_OUT, format="svg", bbox_inches="tight", facecolor="white")
@@ -845,16 +1251,20 @@ def main() -> None:
     OUT.write_bytes(
         resvg_py.svg_to_bytes(
             svg_path=str(SVG_OUT),
-            dpi=150.0,
+            dpi=300.0,
             background="white",
         )
     )
 
     top_action_counts = pd.Series(actions[top_road_positions]).value_counts()
     print(f"Saved SVG: {SVG_OUT.relative_to(ROOT)}")
-    print(f"Converted PNG: {OUT.relative_to(ROOT)}")
+    print(f"Converted PNG (300 dpi): {OUT.relative_to(ROOT)}")
     print(f"Terrain-score construction: {model_mode}")
-    print(f"Heavy baseline expected isolated population: {baseline_expected_isolated:,.1f}")
+    print(
+        "Heavy baseline expected isolated population across five seeds: "
+        f"mean={baseline_expected_isolated:,.1f}; "
+        f"range={baseline_expected_by_seed.min():,.1f}–{baseline_expected_by_seed.max():,.1f}"
+    )
     print(f"Candidate road sections: {len(candidate_ids):,}")
     print(f"Single-road consequence checks: {len(screen_positions):,}")
     print("Top-50 assigned intervention types:")
@@ -862,9 +1272,22 @@ def main() -> None:
         print(f"  {action}: {count:,}")
     for setting in ("Conservative", "Central", "Optimistic"):
         print(
-            f"{setting}: protected at maximum budget={protected_population[setting][-1]:,.1f}; "
+            f"{setting}: protected at maximum budget="
+            f"{protected_population[setting][-1]:,.1f} "
+            f"({protected_population_low[setting][-1]:,.1f}–"
+            f"{protected_population_high[setting][-1]:,.1f}); "
             f"selected roads={selected_counts[setting][-1]:,}"
         )
+    print(
+        "Central maximum-budget comparison: assigned-action="
+        f"{comparison_values[0]:,.1f}; equal-cost consequence={equal_cost_value:,.1f}; "
+        f"increment={incremental:+,.1f} ({incremental_percent:+.1f}%)"
+    )
+    print(
+        "Priority stability across baseline seeds: minimum Spearman rho="
+        f"{np.nanmin(priority_rank_correlations):.4f}; minimum top-"
+        f"{PORTFOLIO_CANDIDATE_COUNT} overlap={priority_top_overlap.min():.1%}"
+    )
     print("Interpretation: screening priorities under relative costs and assumed effects")
 
 

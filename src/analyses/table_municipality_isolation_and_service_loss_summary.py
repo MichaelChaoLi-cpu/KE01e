@@ -73,7 +73,7 @@ def prepare_network_and_outcomes() -> dict[str, object]:
         display_height,
     )
 
-    terrain_scores, _, model_mode, elevation_grid = road_exposure.build_landslide_scores(
+    terrain_scores, _, model_mode, elevation_grid = road_exposure.load_or_build_landslide_scores(
         admin,
         admin_geometry,
         admin_union,
@@ -92,7 +92,12 @@ def prepare_network_and_outcomes() -> dict[str, object]:
     )
     roads = roads.loc[roads["Network Analysis Eligible"]].reset_index(drop=True)
     road_geometry = road_exposure.decode_geometry(roads.pop("Geometry"))
-    road_scores = road_exposure.road_scores(road_geometry, terrain_scores, extent, elevation_grid)
+    road_scores = road_exposure.load_or_build_road_scores(
+        road_geometry,
+        terrain_scores,
+        extent,
+        elevation_grid,
+    )
 
     heavy_lower = isolation.positive_score_quantile(
         road_scores["Heavy"], isolation.CANDIDATE_QUANTILE
@@ -210,18 +215,25 @@ def prepare_network_and_outcomes() -> dict[str, object]:
             f"Simulating municipality isolation, {scenario}: "
             f"{np.count_nonzero(propensity):,} non-zero candidate sections"
         )
-        frequencies[scenario] = isolation.simulate_isolation(
-            candidate_u,
-            candidate_v,
-            candidate_edge_section,
-            propensity,
-            root_count,
-            target_roots,
-            attachment_community,
-            attachment_root,
-            len(community),
-            isolation.RANDOM_SEED,
-        )
+        seed_frequencies = [
+            isolation.cached_isolation(
+                f"central_{scenario.lower()}_seed_{seed}_m1000",
+                candidate_u,
+                candidate_v,
+                candidate_edge_section,
+                propensity,
+                root_count,
+                target_roots,
+                attachment_community,
+                attachment_root,
+                len(community),
+                seed,
+            )
+            for seed in isolation.REPLICATE_SEEDS
+        ]
+        frequencies[scenario] = np.mean(
+            np.vstack(seed_frequencies), axis=0
+        ).astype("float32")
 
     heavy_propensity = isolation.closure_propensity(
         candidate_scores["Heavy"], heavy_lower, heavy_upper
@@ -242,7 +254,7 @@ def prepare_network_and_outcomes() -> dict[str, object]:
     for service in service_loss.SERVICE_CLASSES:
         if len(service_roots[service]) == 0:
             raise RuntimeError(f"No {service} features attach to the road network.")
-    loss_frequency, _, _ = service_loss.simulate_service_loss(
+    loss_frequency, _, _ = service_loss.cached_service_loss(
         heavy_propensity,
         pair_reduction,
         root_count,
@@ -340,18 +352,7 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
     loss_frequency = context["loss_frequency"]
     mean_excess = context["mean_excess"]
 
-    service_excess = np.column_stack(
-        [mean_excess[name][community_position] for name in service_loss.SERVICE_CLASSES]
-    )
-    finite_excess = np.isfinite(service_excess)
-    service_excess_sum = np.nansum(service_excess, axis=1)
-    service_excess_count = finite_excess.sum(axis=1)
-    mesh_mean_excess = np.divide(
-        service_excess_sum,
-        service_excess_count,
-        out=np.full(len(service_excess), np.nan, dtype=float),
-        where=service_excess_count > 0,
-    )
+    shelter_excess = mean_excess["Shelter"][community_position]
 
     rows: list[dict[str, object]] = []
     for position, admin_row in admin.reset_index(drop=True).iterrows():
@@ -385,10 +386,17 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
             expected_loss = float(
                 np.sum(population[mask][evaluable] * service_values[evaluable])
             )
-            row[f"Heavy {service} Loss Population (Baseline-Reachable)"] = expected_loss
-        valid_excess = mask & np.isfinite(mesh_mean_excess)
-        row["Heavy Population-Weighted Mean Excess Time (min)"] = (
-            float(np.average(mesh_mean_excess[valid_excess], weights=population[valid_excess]))
+            if service == "Emergency water":
+                label = (
+                    "Heavy Emergency-Water Sensitivity Loss Population "
+                    "(10/36 Geolocated)"
+                )
+            else:
+                label = f"Heavy {service} Loss Population (Baseline-Reachable)"
+            row[label] = expected_loss
+        valid_excess = mask & np.isfinite(shelter_excess)
+        row["Heavy Shelter Mean Excess Time (min)"] = (
+            float(np.average(shelter_excess[valid_excess], weights=population[valid_excess]))
             if valid_excess.any() and population[valid_excess].sum() > 0
             else np.nan
         )
@@ -408,10 +416,10 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
         "Extreme Expected Isolated Population",
         "Heavy Expected Isolated Population Age 65+",
         "Heavy Shelter Loss Population (Baseline-Reachable)",
-        "Heavy Emergency water Loss Population (Baseline-Reachable)",
+        "Heavy Emergency-Water Sensitivity Loss Population (10/36 Geolocated)",
         "Heavy Fire service Loss Population (Baseline-Reachable)",
         "Heavy Municipal facility Loss Population (Baseline-Reachable)",
-        "Heavy Population-Weighted Mean Excess Time (min)",
+        "Heavy Shelter Mean Excess Time (min)",
     ]
     table = table.loc[:, columns]
     if table.shape != (49, 16):
@@ -433,15 +441,18 @@ def style_workbook(path: Path) -> None:
     workbook = load_workbook(path)
     worksheet = workbook[SHEET_NAME]
     worksheet.sheet_view.showGridLines = False
-    worksheet.freeze_panes = "C2"
-    worksheet.auto_filter.ref = f"A1:P{worksheet.max_row}"
+    worksheet.freeze_panes = "C3"
+    worksheet.auto_filter.ref = f"A2:P{worksheet.max_row}"
     worksheet.sheet_view.zoomScale = 80
     worksheet.print_area = f"A1:P{worksheet.max_row}"
-    worksheet.print_title_rows = "1:1"
+    # Keep the complete 49-row summary on one landscape A3 page.  The former
+    # automatic vertical pagination left only six rows on a second page and
+    # caused the repeated header to be clipped in LibreOffice's PDF rendering.
+    worksheet.print_title_rows = None
     worksheet.page_setup.orientation = "landscape"
     worksheet.page_setup.paperSize = worksheet.PAPERSIZE_A3
     worksheet.page_setup.fitToWidth = 1
-    worksheet.page_setup.fitToHeight = 0
+    worksheet.page_setup.fitToHeight = 1
     worksheet.sheet_properties.pageSetUpPr.fitToPage = True
     worksheet.page_margins = PageMargins(
         left=0.20, right=0.20, top=0.30, bottom=0.30, header=0.10, footer=0.10
@@ -459,13 +470,21 @@ def style_workbook(path: Path) -> None:
         9: "F5DADB",
         10: "F5DADB",
     }
-    for cell in worksheet[1]:
+    worksheet.merge_cells("A1:P1")
+    title_cell = worksheet["A1"]
+    title_cell.value = TABLE_TITLE
+    title_cell.fill = PatternFill("solid", fgColor="D9EAF7")
+    title_cell.font = Font(name="Aptos Display", size=15, bold=True, color="17365D")
+    title_cell.alignment = Alignment(horizontal="left", vertical="center")
+    worksheet.row_dimensions[1].height = 28
+
+    for cell in worksheet[2]:
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    worksheet.row_dimensions[1].height = 48
+    worksheet.row_dimensions[2].height = 54
 
-    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row):
+    for row in worksheet.iter_rows(min_row=3, max_row=worksheet.max_row):
         for cell in row:
             cell.font = body_font
             cell.alignment = Alignment(vertical="top", wrap_text=True)
@@ -495,7 +514,7 @@ def style_workbook(path: Path) -> None:
         "J": 21,
         "K": 24,
         "L": 20,
-        "M": 20,
+        "M": 28,
         "N": 20,
         "O": 21,
         "P": 25,
@@ -504,7 +523,7 @@ def style_workbook(path: Path) -> None:
         worksheet.column_dimensions[column].width = width
     for column in ("E", "G", "I"):
         worksheet.conditional_formatting.add(
-            f"{column}2:{column}{worksheet.max_row}",
+            f"{column}3:{column}{worksheet.max_row}",
             ColorScaleRule(
                 start_type="min",
                 start_color="FFFFFF",
@@ -516,7 +535,7 @@ def style_workbook(path: Path) -> None:
             ),
         )
 
-    excel_table = Table(displayName="MunicipalityServiceLoss", ref=f"A1:P{worksheet.max_row}")
+    excel_table = Table(displayName="MunicipalityServiceLoss", ref=f"A2:P{worksheet.max_row}")
     excel_table.tableStyleInfo = TableStyleInfo(
         name="TableStyleMedium2",
         showFirstColumn=False,
@@ -534,17 +553,19 @@ def verify_workbook(path: Path) -> None:
     if workbook.sheetnames != [SHEET_NAME]:
         raise RuntimeError(f"Unexpected workbook sheets: {workbook.sheetnames}")
     worksheet = workbook[SHEET_NAME]
-    if worksheet.max_row != 50 or worksheet.max_column != 16:
+    if worksheet.max_row != 51 or worksheet.max_column != 16:
         raise RuntimeError(
-            f"Expected 50 rows including the header and 16 columns; found "
+            f"Expected 51 rows including the title and header and 16 columns; found "
             f"{worksheet.max_row} × {worksheet.max_column}."
         )
+    if worksheet["A1"].value != TABLE_TITLE:
+        raise RuntimeError("Workbook title row is missing or incorrect.")
     error_tokens = {"#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A"}
     for row in worksheet.iter_rows():
         for cell in row:
             if isinstance(cell.value, str) and cell.value in error_tokens:
                 raise RuntimeError(f"Spreadsheet error token in {cell.coordinate}: {cell.value}")
-    for row in range(2, worksheet.max_row + 1):
+    for row in range(3, worksheet.max_row + 1):
         for column in (5, 7, 9):
             value = worksheet.cell(row, column).value
             if value is not None and not 0 <= float(value) <= 1:
@@ -554,7 +575,13 @@ def verify_workbook(path: Path) -> None:
 def main() -> None:
     table, context = build_table()
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    table.to_excel(OUT, index=False, sheet_name=SHEET_NAME, engine="openpyxl")
+    table.to_excel(
+        OUT,
+        index=False,
+        sheet_name=SHEET_NAME,
+        engine="openpyxl",
+        startrow=1,
+    )
     style_workbook(OUT)
     verify_workbook(OUT)
     highest = table.sort_values("Heavy Isolation Frequency", ascending=False).iloc[0]
@@ -564,6 +591,12 @@ def main() -> None:
     print(
         f"Highest Heavy isolation frequency: {highest['Municipality / Ward']} "
         f"({highest['Heavy Isolation Frequency']:.3f})"
+    )
+    water_resolved, water_total = context["source_counts"]["Emergency water"]
+    print(
+        "Emergency-water sensitivity support: "
+        f"{context['attached_counts']['Emergency water']:,} attached / "
+        f"{water_resolved:,} geolocated / {water_total:,} announcements"
     )
     print(f"Terrain-score construction: {context['model_mode']}")
     print("Workbook verification: passed")

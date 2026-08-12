@@ -2,7 +2,8 @@
 """Rainfall History and Official Threshold Adjustment.
 
 Plan: Show station rainfall history, cumulative rainfall, Moderate, Heavy, and
-Extreme scenarios, and official 70 percent and 80 percent threshold settings.
+Extreme scenarios, official 70 percent and 80 percent threshold settings, and
+the analyst-defined 0.75 Yatsushiro midpoint with 0.70-0.80 bounds.
 Framework: Section 5 scenario contrasts; Section 6 rolling rainfall and
 quantile-based rainfall scenarios; Section 7 rainfall/threshold scenario step.
 The figure does not imply fine-resolution rainfall interpolation or a causal
@@ -25,6 +26,7 @@ from matplotlib.patches import Patch, Polygon as MplPolygon
 from matplotlib.ticker import FuncFormatter
 import numpy as np
 import pandas as pd
+import resvg_py
 import seaborn as sns
 import shapely
 
@@ -32,21 +34,23 @@ import shapely
 ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data/processed"
 RAIN_PATH = PROCESSED / "jma_hourly_rainfall_preprocessed.parquet"
+SCENARIO_PATH = PROCESSED / "jma_rainfall_scenario_quantiles_preprocessed.parquet"
 THRESHOLD_PATH = PROCESSED / "official_threshold_factors_preprocessed.parquet"
 ADMIN_PATH = PROCESSED / "administrative_areas_preprocessed.parquet"
 OUT = ROOT / "data/results/figures/Figure_rainfall_history_and_official_threshold_adjustment.png"
+SVG_OUT = OUT.with_suffix(".svg")
 
 WINDOWS = [1, 3, 24, 72]
 SCENARIOS = {
-    "Moderate (75th percentile)": (0.75, "#2A9D8F"),
-    "Heavy (90th percentile)": (0.90, "#F4A261"),
-    "Extreme (99th percentile)": (0.99, "#C23B33"),
+    "Moderate": (0.75, "#2A9D8F"),
+    "Heavy": (0.90, "#F4A261"),
+    "Extreme": (0.99, "#C23B33"),
 }
 THRESHOLD_COLORS = {
     "No temporary reduction": "#E4E7EC",
-    "0.80 retention": "#F4A261",
-    "0.70 retention": "#C23B33",
-    "Mixed 0.70 / 0.80": "#7B61A8",
+    "Official 0.80 retention": "#F4A261",
+    "Official 0.70 retention": "#C23B33",
+    "Yatsushiro official 0.70 / 0.80 subareas": "#7B61A8",
 }
 STATION_LABELS = {
     "a0835": "Kikuchi",
@@ -143,23 +147,22 @@ def style_map_axis(ax: plt.Axes, bounds: tuple[float, float, float, float]) -> N
         spine.set_color("#344054")
 
 
-def build_rainfall_summaries(
-    rain: pd.DataFrame,
-) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Construct quality-screened annual maxima and wet-window quantiles."""
+def build_annual_maxima(rain: pd.DataFrame) -> pd.DataFrame:
+    """Construct quality-screened annual 24-hour maxima."""
     annual_rows: list[dict[str, object]] = []
-    quantile_rows: list[dict[str, object]] = []
 
     for station_id, group in rain.groupby("Station ID", sort=True):
         group = group.sort_values("Observation Time")
         station_name = str(group["Station Name (Japanese)"].iloc[0])
-        values = group.set_index("Observation Time")["Hourly Rainfall"].astype(float)
+        valid_rainfall = group["Hourly Rainfall"].where(group["Quality Flag"].eq(8))
+        values = pd.Series(
+            valid_rainfall.to_numpy(dtype=float),
+            index=group["Observation Time"],
+        )
         full_index = pd.date_range(values.index.min(), values.index.max(), freq="h", tz=values.index.tz)
         values = values.reindex(full_index)
 
-        rolling: dict[int, pd.Series] = {1: values}
-        for window in WINDOWS[1:]:
-            rolling[window] = values.rolling(window=window, min_periods=window).sum()
+        rolling_24h = values.rolling(window=24, min_periods=24).sum()
 
         hourly_by_year = values.groupby(values.index.year)
         for year, hourly_values in hourly_by_year:
@@ -167,7 +170,7 @@ def build_rainfall_summaries(
             coverage = hourly_values.notna().sum() / expected
             if coverage < 0.95:
                 continue
-            annual_maximum = rolling[24].loc[rolling[24].index.year == year].max()
+            annual_maximum = rolling_24h.loc[rolling_24h.index.year == year].max()
             annual_rows.append(
                 {
                     "Station ID": station_id,
@@ -178,23 +181,7 @@ def build_rainfall_summaries(
                 }
             )
 
-        for window in WINDOWS:
-            wet_windows = rolling[window].loc[rolling[window] > 0].dropna()
-            if wet_windows.empty:
-                raise ValueError(f"No complete wet windows for station {station_id}, window {window} h.")
-            for scenario, (quantile, _) in SCENARIOS.items():
-                quantile_rows.append(
-                    {
-                        "Station ID": station_id,
-                        "Window (h)": window,
-                        "Scenario": scenario,
-                        "Quantile": quantile,
-                        "Rainfall (mm)": float(wet_windows.quantile(quantile)),
-                        "Wet Window Count": int(len(wet_windows)),
-                    }
-                )
-
-    return pd.DataFrame(annual_rows), pd.DataFrame(quantile_rows)
+    return pd.DataFrame(annual_rows)
 
 
 def classify_threshold_areas(
@@ -216,11 +203,11 @@ def classify_threshold_areas(
     for municipality in admin["Municipality Name"].astype(str):
         factors = factor_sets.get(municipality, tuple())
         if factors == (0.7,):
-            categories.append("0.70 retention")
+            categories.append("Official 0.70 retention")
         elif factors == (0.8,):
-            categories.append("0.80 retention")
+            categories.append("Official 0.80 retention")
         elif factors == (0.7, 0.8):
-            categories.append("Mixed 0.70 / 0.80")
+            categories.append("Yatsushiro official 0.70 / 0.80 subareas")
         else:
             categories.append("No temporary reduction")
     return pd.Series(categories, index=admin.index, dtype="string")
@@ -240,7 +227,18 @@ def main() -> None:
         ],
     )
     rain = rain.loc[rain["Hourly Rainfall"].notna()].copy()
-    annual, quantiles = build_rainfall_summaries(rain)
+    annual = build_annual_maxima(rain)
+    scenario_values = pd.read_parquet(SCENARIO_PATH)
+    central_scenarios = scenario_values.loc[
+        scenario_values["Support Specification"].eq("Central: 7 stations, 2016-2020")
+    ].copy()
+    sensitivity_scenarios = scenario_values.loc[
+        scenario_values["Support Specification"].eq("Sensitivity: 5 stations, 2016-2025")
+    ].copy()
+    if central_scenarios["Station ID"].nunique() != 7:
+        raise RuntimeError("Central rainfall scenario support must contain seven stations.")
+    if sensitivity_scenarios["Station ID"].nunique() != 5:
+        raise RuntimeError("Temporal-support sensitivity must contain five stations.")
 
     threshold = pd.read_parquet(THRESHOLD_PATH)
     admin = pd.read_parquet(
@@ -274,12 +272,22 @@ def main() -> None:
     axes[0].legend(ncol=2, fontsize=7.6, frameon=True, framealpha=0.92, loc="upper right")
     style_chart_axis(axes[0])
 
-    # b: station distribution of wet-window scenario quantiles.
-    scenario_summary = (
-        quantiles.groupby(["Scenario", "Window (h)"])["Rainfall (mm)"]
-        .agg(Median="median", Minimum="min", Maximum="max")
-        .reset_index()
-    )
+    # b: station distribution of independent-event maximum quantiles.
+    scenario_rows: list[dict[str, object]] = []
+    for scenario in SCENARIOS:
+        subset = central_scenarios.loc[central_scenarios["Rainfall Scenario"].eq(scenario)]
+        for window in WINDOWS:
+            values = subset[f"Scenario {window} h Rainfall"].astype(float)
+            scenario_rows.append(
+                {
+                    "Scenario": scenario,
+                    "Window (h)": window,
+                    "Median": float(values.median()),
+                    "Minimum": float(values.min()),
+                    "Maximum": float(values.max()),
+                }
+            )
+    scenario_summary = pd.DataFrame(scenario_rows)
     for scenario, (_, color) in SCENARIOS.items():
         group = scenario_summary.loc[scenario_summary["Scenario"].eq(scenario)].sort_values("Window (h)")
         x = group["Window (h)"].to_numpy(dtype=float)
@@ -298,16 +306,16 @@ def main() -> None:
             markersize=4.2,
             linewidth=1.8,
             color=color,
-            label=scenario,
+            label=f"{scenario} ({int(SCENARIOS[scenario][0] * 100)}th)",
         )
     axes[1].set_xscale("log")
     axes[1].set_xticks(WINDOWS, [str(window) for window in WINDOWS])
     axes[1].set_xlabel("Accumulation window (h)", fontsize=9)
-    axes[1].set_ylabel("Wet-window rainfall quantile (mm)", fontsize=9)
+    axes[1].set_ylabel("Independent-event rainfall quantile (mm)", fontsize=9)
     axes[1].legend(fontsize=7.6, frameon=True, framealpha=0.92, loc="upper left")
     style_chart_axis(axes[1])
 
-    # c: official temporary threshold categories by available municipality geometry.
+    # c: official temporary threshold categories and the seven station supports.
     for category, color in THRESHOLD_COLORS.items():
         mask = admin["Threshold Category"].eq(category).to_numpy()
         if not mask.any():
@@ -329,36 +337,113 @@ def main() -> None:
             zorder=7,
         )
     )
+    station_support = central_scenarios[
+        ["Station ID", "Station Latitude", "Station Longitude"]
+    ].drop_duplicates()
+    axes[2].scatter(
+        station_support["Station Longitude"],
+        station_support["Station Latitude"],
+        s=30,
+        marker="o",
+        c="#1565C0",
+        edgecolors="white",
+        linewidths=0.7,
+        zorder=12,
+    )
+    label_offsets = {
+        "Kikuchi": (5, 4),
+        "Takamori": (5, -10),
+        "Kosa": (5, 4),
+        "Matsushima": (-48, 4),
+        "Yatsushiro": (5, -10),
+        "Misumi": (-35, -10),
+        "Kumamoto": (5, 4),
+    }
+    for row in station_support.itertuples(index=False):
+        station_name = STATION_LABELS.get(str(row[0]), str(row[0]))
+        axes[2].annotate(
+            station_name,
+            xy=(float(row[2]), float(row[1])),
+            xytext=label_offsets.get(station_name, (5, 4)),
+            textcoords="offset points",
+            fontsize=7.1,
+            color="#173A5E",
+            fontweight="bold",
+            bbox={"boxstyle": "round,pad=0.15", "facecolor": "white", "edgecolor": "none", "alpha": 0.78},
+            zorder=13,
+        )
     axes[2].legend(
-        handles=[Patch(facecolor=color, edgecolor="#667085", label=category) for category, color in THRESHOLD_COLORS.items()],
+        handles=[
+            *[
+                Patch(facecolor=color, edgecolor="#667085", label=category)
+                for category, color in THRESHOLD_COLORS.items()
+            ],
+            Line2D(
+                [0],
+                [0],
+                marker="o",
+                color="none",
+                markerfacecolor="#1565C0",
+                markeredgecolor="white",
+                markersize=6,
+                label="JMA rainfall station",
+            ),
+        ],
         loc="lower left",
         fontsize=7.6,
         frameon=True,
         framealpha=0.94,
     )
+    axes[2].text(
+        0.985,
+        0.985,
+        "Yatsushiro subarea boundary unresolved\n"
+        "Downstream municipal analysis: analyst midpoint 0.75\n"
+        "Bounding assignments: 0.70 and 0.80",
+        transform=axes[2].transAxes,
+        ha="right",
+        va="top",
+        fontsize=7.2,
+        color="#344054",
+        linespacing=1.25,
+        bbox={
+            "boxstyle": "round,pad=0.35",
+            "facecolor": "white",
+            "edgecolor": "#98A2B3",
+            "linewidth": 0.7,
+            "alpha": 0.94,
+        },
+        zorder=20,
+    )
     style_map_axis(axes[2], map_bounds)
 
-    # d: direct threshold-retention mechanics, independent of window weights.
-    rainfall_share = np.linspace(0, 1.2, 121)
-    factor_styles = [
-        (1.0, "Baseline 1.00", "#667085"),
-        (0.8, "Central 0.80", "#F4A261"),
-        (0.7, "High 0.70", "#C23B33"),
-    ]
-    for factor, label, color in factor_styles:
+    # d: temporal-support sensitivity, expressed as a ratio to the common-period median.
+    for scenario, (_, color) in SCENARIOS.items():
+        central_subset = central_scenarios.loc[
+            central_scenarios["Rainfall Scenario"].eq(scenario)
+        ]
+        sensitivity_subset = sensitivity_scenarios.loc[
+            sensitivity_scenarios["Rainfall Scenario"].eq(scenario)
+        ]
+        ratios = []
+        for window in WINDOWS:
+            central_median = central_subset[f"Scenario {window} h Rainfall"].median()
+            sensitivity_median = sensitivity_subset[f"Scenario {window} h Rainfall"].median()
+            ratios.append(100.0 * sensitivity_median / central_median)
         axes[3].plot(
-            rainfall_share * 100,
-            rainfall_share / factor,
+            WINDOWS,
+            ratios,
+            marker="o",
+            markersize=4.2,
             linewidth=2.0,
             color=color,
-            label=label,
+            label=scenario,
         )
-        axes[3].scatter([factor * 100], [1.0], s=30, color=color, edgecolors="white", linewidths=0.5, zorder=8)
-    axes[3].axhline(1.0, color="#344054", linestyle=(0, (4, 3)), linewidth=0.9)
-    axes[3].set_xlim(0, 120)
-    axes[3].set_ylim(0, 1.8)
-    axes[3].set_xlabel("Rainfall relative to baseline threshold (%)", fontsize=9)
-    axes[3].set_ylabel("Threshold-relative rainfall loading", fontsize=9)
+    axes[3].axhline(100.0, color="#344054", linestyle=(0, (4, 3)), linewidth=0.9)
+    axes[3].set_xscale("log")
+    axes[3].set_xticks(WINDOWS, [str(window) for window in WINDOWS])
+    axes[3].set_xlabel("Accumulation window (h)", fontsize=9)
+    axes[3].set_ylabel("2016–2025 / 2016–2020 scenario median (%)", fontsize=9)
     axes[3].legend(fontsize=7.8, frameon=True, framealpha=0.92, loc="upper left")
     style_chart_axis(axes[3])
 
@@ -366,12 +451,20 @@ def main() -> None:
         add_panel_label(axis, label)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT, dpi=150, bbox_inches="tight", facecolor="white")
+    fig.savefig(SVG_OUT, format="svg", bbox_inches="tight", facecolor="white")
     plt.close(fig)
-    print(f"Saved: {OUT.relative_to(ROOT)}")
+    OUT.write_bytes(
+        resvg_py.svg_to_bytes(
+            svg_path=str(SVG_OUT),
+            dpi=300.0,
+            background="white",
+        )
+    )
+    print(f"Saved SVG: {SVG_OUT.relative_to(ROOT)}")
+    print(f"Converted PNG (300 dpi): {OUT.relative_to(ROOT)}")
     print(f"Rainfall stations: {rain['Station ID'].nunique()}")
     print(f"Complete station-years shown: {len(annual)}")
-    print(f"Wet-window scenario records: {len(quantiles)}")
+    print(f"Independent-event scenario records: {len(scenario_values)}")
     print("Threshold map categories:")
     print(admin["Threshold Category"].value_counts().to_string())
 

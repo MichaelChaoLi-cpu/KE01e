@@ -4,7 +4,7 @@
 Plan: Map scenario road-disruption exposure and compare the Heavy scenario
 ranking with reliably matched rockfall and slope-collapse restriction evidence.
 Framework: Section 5 road-ranking validation; Section 6 slope-to-road transfer
-score D_e = 1 - product(1 - H_i q_ie); Section 7 validation of slope-to-road
+score D_e = sum(q_ie H_i) / sum(q_ie); Section 7 validation of slope-to-road
 translation. Scores are screening indices, not road-closure probabilities.
 """
 from __future__ import annotations
@@ -22,6 +22,7 @@ from matplotlib.lines import Line2D
 from matplotlib.ticker import FuncFormatter
 import numpy as np
 import pandas as pd
+import resvg_py
 from rasterio.features import rasterize
 from rasterio.transform import from_bounds
 from scipy.ndimage import maximum_filter
@@ -30,6 +31,7 @@ import seaborn as sns
 import shapely
 
 import figure_official_threshold_adjusted_landslide_disruption_score as terrain_score
+from cache_fingerprint import cache_matches, content_signature
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -37,15 +39,16 @@ PROCESSED = ROOT / "data/processed"
 ADMIN_PATH = PROCESSED / "administrative_areas_preprocessed.parquet"
 WARNING_PATH = PROCESSED / "landslide_warning_zones_preprocessed.parquet"
 LANDSLIDE_PATH = PROCESSED / "gsi_2016_landslide_inventory_preprocessed.parquet"
-RAIN_PATH = PROCESSED / "jma_hourly_rainfall_preprocessed.parquet"
+SCENARIO_PATH = PROCESSED / "jma_rainfall_scenario_quantiles_preprocessed.parquet"
 THRESHOLD_PATH = PROCESSED / "official_threshold_factors_preprocessed.parquet"
 ROAD_PATH = PROCESSED / "road_sections_preprocessed.parquet"
 EDGE_PATH = PROCESSED / "road_edges_preprocessed.parquet"
 MATCH_PATH = PROCESSED / "road_restriction_edge_matches_preprocessed.parquet"
 OUT = ROOT / "data/results/figures/Figure_road_disruption_exposure_and_observed_restriction_evidence.png"
+SVG_OUT = OUT.with_suffix(".svg")
+INTERMEDIATE = ROOT / "data/results/intermediate"
 
 DISPLAY_WIDTH = 950
-TRANSFER_WEIGHT = 0.10
 SAMPLE_FRACTIONS = (0.20, 0.50, 0.80)
 UPSLOPE_RADIUS_CELLS = 3
 MIN_UPSLOPE_RELIEF_M = 10.0
@@ -88,7 +91,8 @@ def build_landslide_scores(
     extent: tuple[float, float, float, float],
     display_shape: tuple[int, int],
     display_transform: Affine,
-) -> tuple[dict[str, np.ndarray], dict[str, float], str, np.ndarray]:
+    yatsushiro_factor: float = 0.75,
+) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray], str, np.ndarray]:
     """Reproduce the accepted official-threshold-adjusted terrain score grid."""
     native_features, aggregated_transform, source_crs = terrain_score.native_terrain_features()
     features = {
@@ -110,16 +114,21 @@ def build_landslide_scores(
         dtype="uint8",
     ).astype(bool)
 
-    warning = pd.read_parquet(WARNING_PATH, columns=["Geometry"])
-    warning_geometry = decode_geometry(warning["Geometry"])
-    features["Warning-Zone Exposure"] = rasterize(
-        ((geometry, 1) for geometry in warning_geometry),
-        out_shape=display_shape,
-        transform=display_transform,
-        fill=0,
-        all_touched=True,
-        dtype="uint8",
-    ).astype("float32")
+    current_warning_geometry, _ = terrain_score.warning_zone_geometry()
+    validation_warning_geometry, _ = terrain_score.warning_zone_geometry(
+        terrain_score.LANDSLIDE_VALIDATION_DATE
+    )
+    features["Warning-Zone Exposure"] = terrain_score.warning_zone_grid(
+        current_warning_geometry,
+        display_shape,
+        display_transform,
+    )
+    validation_features = features.copy()
+    validation_features["Warning-Zone Exposure"] = terrain_score.warning_zone_grid(
+        validation_warning_geometry,
+        display_shape,
+        display_transform,
+    )
 
     curvature_scale = np.nanpercentile(np.abs(features["Terrain Curvature"]), 99.5)
     if not np.isfinite(curvature_scale) or curvature_scale <= 0:
@@ -129,6 +138,7 @@ def build_landslide_scores(
         -curvature_scale,
         curvature_scale,
     )
+    validation_features["Terrain Curvature"] = features["Terrain Curvature"]
     valid = admin_mask.copy()
     for feature in terrain_score.FEATURE_NAMES:
         valid &= np.isfinite(features[feature])
@@ -137,7 +147,7 @@ def build_landslide_scores(
     landslide_geometry = decode_geometry(landslides["Geometry"])
     landslide_geometry = landslide_geometry[shapely.intersects(landslide_geometry, admin_union)]
     model, _, _, _, model_mode = terrain_score.fit_presence_background_model(
-        features,
+        validation_features,
         valid,
         landslide_geometry,
         extent,
@@ -149,14 +159,15 @@ def build_landslide_scores(
     terrain_logit = np.full(display_shape, np.nan, dtype="float32")
     terrain_logit[valid] = model.decision_function(matrix).astype("float32")
 
-    rain = pd.read_parquet(
-        RAIN_PATH,
-        columns=["Station ID", "Observation Time", "Hourly Rainfall"],
+    scenario_values = pd.read_parquet(SCENARIO_PATH)
+    scenario_loads = terrain_score.event_scenario_loads(
+        scenario_values,
+        extent,
+        display_shape,
     )
-    rain = rain.loc[rain["Hourly Rainfall"].notna()].copy()
-    scenario_loads = terrain_score.wet_window_scenario_loads(rain)
     threshold = pd.read_parquet(THRESHOLD_PATH)
-    factors, _ = terrain_score.threshold_categories(admin, threshold)
+    factors, mixed = terrain_score.threshold_categories(admin, threshold)
+    factors[mixed] = float(yatsushiro_factor)
     factor_grid = rasterize(
         ((geometry, float(factor)) for geometry, factor in zip(admin_geometry, factors)),
         out_shape=display_shape,
@@ -170,10 +181,87 @@ def build_landslide_scores(
     scores: dict[str, np.ndarray] = {}
     for scenario in ("Moderate", "Heavy", "Extreme"):
         rainfall_loading = scenario_loads[scenario] / factor_grid
-        score = expit(terrain_logit + rainfall_loading - 1.0).astype("float32")
+        score = expit(
+            terrain_logit
+            + terrain_score.RAINFALL_LOADING_GAMMA
+            * np.log(np.clip(rainfall_loading, 1e-6, None))
+        ).astype("float32")
         score[~valid] = np.nan
         scores[scenario] = score
     return scores, scenario_loads, model_mode, features["Elevation"]
+
+
+def load_or_build_landslide_scores(
+    admin: pd.DataFrame,
+    admin_geometry: np.ndarray,
+    admin_union: object,
+    extent: tuple[float, float, float, float],
+    display_shape: tuple[int, int],
+    display_transform: Affine,
+    yatsushiro_factor: float = 0.75,
+) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray], str, np.ndarray]:
+    """Reuse the accepted event-IDW terrain grids to limit peak memory."""
+    factor_tag = f"{int(round(yatsushiro_factor * 100)):03d}"
+    terrain_cache = INTERMEDIATE / f"landslide_score_grids_event_idw_v4_y{factor_tag}.npz"
+    signature = content_signature(
+        "landslide-score-grids-event-idw-v4",
+        files=(
+            terrain_score.DEM_PATH,
+            ADMIN_PATH,
+            WARNING_PATH,
+            LANDSLIDE_PATH,
+            SCENARIO_PATH,
+            THRESHOLD_PATH,
+            Path(terrain_score.__file__),
+            Path(__file__),
+        ),
+        parameters={
+            "extent": tuple(float(value) for value in extent),
+            "shape": tuple(int(value) for value in display_shape),
+            "aggregation_factor": terrain_score.AGGREGATION_FACTOR,
+            "windows": terrain_score.WINDOWS,
+            "scenario_quantiles": terrain_score.SCENARIO_QUANTILES,
+            "central_support": terrain_score.CENTRAL_SUPPORT,
+            "distance_stabilizer_degrees": terrain_score.DISTANCE_STABILIZER_DEGREES,
+            "rainfall_loading_gamma": terrain_score.RAINFALL_LOADING_GAMMA,
+            "fallback_weights": terrain_score.FALLBACK_WEIGHTS,
+            "yatsushiro_factor": float(yatsushiro_factor),
+        },
+    )
+    if terrain_cache.exists():
+        cached = np.load(terrain_cache, allow_pickle=False)
+        if cache_matches(cached, signature):
+            scores = {
+                scenario: cached[f"score_{scenario}"].astype("float32")
+                for scenario in ("Moderate", "Heavy", "Extreme")
+            }
+            loads = {
+                scenario: cached[f"load_{scenario}"].astype("float32")
+                for scenario in ("Moderate", "Heavy", "Extreme")
+            }
+            return scores, loads, str(cached["model_mode"]), cached["elevation"].astype("float32")
+
+    scores, loads, model_mode, elevation = build_landslide_scores(
+        admin,
+        admin_geometry,
+        admin_union,
+        extent,
+        display_shape,
+        display_transform,
+        yatsushiro_factor,
+    )
+    terrain_cache.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        terrain_cache,
+        signature=np.asarray(signature),
+        extent=np.asarray(extent, dtype=float),
+        shape=np.asarray(display_shape, dtype=int),
+        model_mode=np.asarray(model_mode),
+        elevation=elevation,
+        **{f"score_{scenario}": value for scenario, value in scores.items()},
+        **{f"load_{scenario}": value for scenario, value in loads.items()},
+    )
+    return scores, loads, model_mode, elevation
 
 
 def sample_grid(
@@ -203,9 +291,10 @@ def road_scores(
 
     Candidate source cells must be above the sampled road point and have a local
     downhill gradient directed toward it. Distance decay and directional alignment
-    form q_ie; scenario scores are then combined as one-minus-product survival.
+    form q_ie; scenario scores are normalized directional weighted means.
     """
     parts, parent_index = shapely.get_parts(geometry, return_index=True)
+    print(f"Road-score parts prepared: {len(parts):,}.", flush=True)
     sampled_points = [
         shapely.line_interpolate_point(parts, fraction, normalized=True)
         for fraction in SAMPLE_FRACTIONS
@@ -218,16 +307,17 @@ def road_scores(
         float(np.nanmedian(elevation_grid)),
     )
     gradient_y, gradient_x = np.gradient(filled_elevation.astype("float64"))
-    part_log_survival = {
+    part_weighted_score = {
         scenario: np.zeros(len(parts), dtype="float64") for scenario in terrain_scores
     }
+    part_weight = np.zeros(len(parts), dtype="float64")
     offsets = [
         (dy, dx)
         for dy in range(-UPSLOPE_RADIUS_CELLS, UPSLOPE_RADIUS_CELLS + 1)
         for dx in range(-UPSLOPE_RADIUS_CELLS, UPSLOPE_RADIUS_CELLS + 1)
         if dx or dy
     ]
-    for points in sampled_points:
+    for sample_index, points in enumerate(sampled_points, start=1):
         coordinates = shapely.get_coordinates(points)[:, :2]
         column = np.floor((coordinates[:, 0] - west) / (east - west) * columns).astype(int)
         row = np.floor((north - coordinates[:, 1]) / (north - south) * rows).astype(int)
@@ -270,29 +360,79 @@ def road_scores(
             rr = rr[plausible]
             cc = cc[plausible]
             q_ie = (
-                TRANSFER_WEIGHT
-                * np.exp(-distance / 2.5)
+                np.exp(-distance / 2.5)
                 * np.clip(alignment[plausible], 0.0, 1.0)
                 * np.clip(relief[plausible] / 100.0, 0.20, 1.0)
             )
+            np.add.at(part_weight, selected, q_ie)
             for scenario, score_grid in terrain_scores.items():
-                contribution = np.clip(
-                    np.nan_to_num(score_grid[rr, cc], nan=0.0) * q_ie,
-                    0.0,
-                    0.95,
-                )
+                contribution = np.nan_to_num(score_grid[rr, cc], nan=0.0) * q_ie
                 np.add.at(
-                    part_log_survival[scenario],
+                    part_weighted_score[scenario],
                     selected,
-                    np.log1p(-contribution),
+                    contribution,
                 )
+        print(f"Completed road sample fraction {sample_index}/{len(sampled_points)}.", flush=True)
 
     road_results: dict[str, np.ndarray] = {}
-    for scenario, part_log in part_log_survival.items():
-        road_log_survival = np.zeros(len(geometry), dtype="float64")
-        np.add.at(road_log_survival, parent_index, part_log)
-        road_results[scenario] = (1.0 - np.exp(road_log_survival)).astype("float32")
+    road_weight = np.zeros(len(geometry), dtype="float64")
+    np.add.at(road_weight, parent_index, part_weight)
+    for scenario, part_numerator in part_weighted_score.items():
+        road_numerator = np.zeros(len(geometry), dtype="float64")
+        np.add.at(road_numerator, parent_index, part_numerator)
+        result = np.zeros(len(geometry), dtype="float32")
+        supported = road_weight > 0
+        result[supported] = (road_numerator[supported] / road_weight[supported]).astype("float32")
+        road_results[scenario] = result
     return road_results
+
+
+def load_or_build_road_scores(
+    geometry: np.ndarray,
+    terrain_scores: dict[str, np.ndarray],
+    extent: tuple[float, float, float, float],
+    elevation_grid: np.ndarray,
+    yatsushiro_factor: float = 0.75,
+) -> dict[str, np.ndarray]:
+    """Reuse normalized road scores across downstream consequence analyses."""
+    factor_tag = f"{int(round(yatsushiro_factor * 100)):03d}"
+    road_score_cache = INTERMEDIATE / f"road_disruption_scores_normalized_v4_y{factor_tag}.npz"
+    signature = content_signature(
+        "road-disruption-scores-normalized-v4",
+        files=(ROAD_PATH, Path(__file__)),
+        arrays={
+            "elevation_grid": elevation_grid,
+            **{
+                f"terrain_score_{scenario}": terrain_scores[scenario]
+                for scenario in ("Moderate", "Heavy", "Extreme")
+            },
+        },
+        parameters={
+            "road_count": len(geometry),
+            "extent": tuple(float(value) for value in extent),
+            "sample_fractions": SAMPLE_FRACTIONS,
+            "upslope_radius_cells": UPSLOPE_RADIUS_CELLS,
+            "minimum_upslope_relief_m": MIN_UPSLOPE_RELIEF_M,
+            "minimum_downslope_alignment": MIN_DOWNSLOPE_ALIGNMENT,
+            "yatsushiro_factor": float(yatsushiro_factor),
+        },
+    )
+    if road_score_cache.exists():
+        cached = np.load(road_score_cache, allow_pickle=False)
+        if cache_matches(cached, signature):
+            return {
+                scenario: cached[f"score_{scenario}"].astype("float32")
+                for scenario in ("Moderate", "Heavy", "Extreme")
+            }
+    scores = road_scores(geometry, terrain_scores, extent, elevation_grid)
+    road_score_cache.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        road_score_cache,
+        signature=np.asarray(signature),
+        road_count=np.asarray(len(geometry), dtype=int),
+        **{f"score_{scenario}": value for scenario, value in scores.items()},
+    )
+    return scores
 
 
 def rasterize_road_scores(
@@ -311,6 +451,102 @@ def rasterize_road_scores(
         all_touched=True,
         dtype="float32",
     )
+
+
+def matched_road_concordance(
+    roads: pd.DataFrame,
+    road_geometry: np.ndarray,
+    heavy_score: np.ndarray,
+    evidence_section_ids: pd.Series,
+    admin_geometry: np.ndarray,
+    display_shape: tuple[int, int],
+    display_transform: Affine,
+    extent: tuple[float, float, float, float],
+) -> dict[str, float]:
+    """Compare observed restriction sections with matched pseudo-background roads."""
+    municipality_grid = rasterize(
+        ((geometry, index + 1) for index, geometry in enumerate(admin_geometry)),
+        out_shape=display_shape,
+        transform=display_transform,
+        fill=0,
+        all_touched=True,
+        dtype="int16",
+    )
+    midpoints = shapely.line_interpolate_point(road_geometry, 0.5, normalized=True)
+    municipality_index = sample_grid(
+        municipality_grid.astype("float32"),
+        shapely.get_coordinates(midpoints)[:, :2],
+        extent,
+    ).astype(int)
+    length_decile = pd.qcut(
+        roads["Road Section Length (m)"].rank(method="first"),
+        q=10,
+        labels=False,
+        duplicates="drop",
+    ).to_numpy(dtype=int)
+    road_category = roads["Road Category"].fillna("Unknown").astype(str).to_numpy()
+    emergency_class = (
+        roads["Emergency Route Membership"].fillna("None").astype(str).to_numpy()
+    )
+    section_lookup = pd.Series(
+        np.arange(len(roads), dtype=int),
+        index=roads["Road Section ID"].astype(str),
+    )
+    evidence_positions = (
+        evidence_section_ids.astype(str).drop_duplicates().map(section_lookup).dropna().astype(int)
+    )
+    evidence_position_set = set(evidence_positions.tolist())
+    random = np.random.default_rng(20260812)
+    score_concordance: list[float] = []
+    length_concordance: list[float] = []
+    control_counts: list[int] = []
+    road_length = roads["Road Section Length (m)"].to_numpy(dtype=float)
+    for case in evidence_positions:
+        eligible = (
+            (municipality_index == municipality_index[case])
+            & (road_category == road_category[case])
+            & (emergency_class == emergency_class[case])
+            & (length_decile == length_decile[case])
+        )
+        candidates = np.flatnonzero(eligible)
+        candidates = np.array(
+            [position for position in candidates if position not in evidence_position_set],
+            dtype=int,
+        )
+        if candidates.size == 0:
+            continue
+        controls = random.choice(
+            candidates,
+            size=min(10, candidates.size),
+            replace=False,
+        )
+        score_difference = heavy_score[case] - heavy_score[controls]
+        length_difference = road_length[case] - road_length[controls]
+        score_concordance.append(
+            float(np.mean((score_difference > 0) + 0.5 * (score_difference == 0)))
+        )
+        length_concordance.append(
+            float(np.mean((length_difference > 0) + 0.5 * (length_difference == 0)))
+        )
+        control_counts.append(int(len(controls)))
+
+    if not score_concordance:
+        raise RuntimeError("No observed road section had an eligible matched control.")
+    score_array = np.asarray(score_concordance)
+    bootstrap = np.empty(2000, dtype=float)
+    for iteration in range(len(bootstrap)):
+        bootstrap[iteration] = np.mean(
+            random.choice(score_array, size=len(score_array), replace=True)
+        )
+    return {
+        "Evidence Sections": float(len(evidence_positions)),
+        "Matched Evidence Sections": float(len(score_array)),
+        "Matched Controls": float(np.sum(control_counts)),
+        "Road Score Concordance": float(np.mean(score_array)),
+        "Road Score CI Low": float(np.quantile(bootstrap, 0.025)),
+        "Road Score CI High": float(np.quantile(bootstrap, 0.975)),
+        "Length Concordance": float(np.mean(length_concordance)),
+    }
 
 
 def style_map_axis(ax: plt.Axes, extent: tuple[float, float, float, float]) -> None:
@@ -364,7 +600,7 @@ def main() -> None:
     display_shape = (display_height, DISPLAY_WIDTH)
     display_transform = from_bounds(west, south, east, north, DISPLAY_WIDTH, display_height)
 
-    landslide_scores, scenario_loads, model_mode, elevation_grid = build_landslide_scores(
+    landslide_scores, scenario_loads, model_mode, elevation_grid = load_or_build_landslide_scores(
         admin,
         admin_geometry,
         admin_union,
@@ -372,6 +608,7 @@ def main() -> None:
         display_shape,
         display_transform,
     )
+    print("Completed terrain and rainfall score grids.", flush=True)
 
     roads = pd.read_parquet(
         ROAD_PATH,
@@ -386,7 +623,13 @@ def main() -> None:
     )
     roads = roads.loc[roads["Network Analysis Eligible"]].reset_index(drop=True)
     road_geometry = decode_geometry(roads.pop("Geometry"))
-    scores = road_scores(road_geometry, landslide_scores, extent, elevation_grid)
+    scores = load_or_build_road_scores(
+        road_geometry,
+        landslide_scores,
+        extent,
+        elevation_grid,
+    )
+    print("Completed normalized directional road scores.", flush=True)
     score_rasters = {
         scenario: rasterize_road_scores(
             road_geometry,
@@ -432,6 +675,7 @@ def main() -> None:
         validate="many_to_one",
     ).drop_duplicates(["Road Edge ID", "Restriction Reason"])
     evidence_geometry = decode_geometry(evidence_edges["Geometry"])
+    print("Completed restriction linkage funnel.", flush=True)
 
     heavy_lookup = pd.Series(scores["Heavy"], index=roads["Road Section ID"])
     evidence_scores = evidence_edges["Road Section ID"].map(heavy_lookup).dropna().to_numpy()
@@ -442,6 +686,56 @@ def main() -> None:
     top_quartile_share = float(
         np.mean(evidence_scores >= np.quantile(valid_heavy, 0.75))
     )
+    matched_metrics = matched_road_concordance(
+        roads,
+        road_geometry,
+        scores["Heavy"],
+        evidence_edges["Road Section ID"],
+        admin_geometry,
+        display_shape,
+        display_transform,
+        extent,
+    )
+    yatsushiro_bound_metrics: dict[str, dict[str, float]] = {}
+    yatsushiro_bound_scores: dict[str, np.ndarray] = {}
+    for bound_factor in (0.70, 0.80):
+        bound_landslide_scores, _, _, _ = load_or_build_landslide_scores(
+            admin,
+            admin_geometry,
+            admin_union,
+            extent,
+            display_shape,
+            display_transform,
+            yatsushiro_factor=bound_factor,
+        )
+        bound_score = load_or_build_road_scores(
+            road_geometry,
+            bound_landslide_scores,
+            extent,
+            elevation_grid,
+            yatsushiro_factor=bound_factor,
+        )["Heavy"]
+        label = f"{bound_factor:.2f}"
+        yatsushiro_bound_scores[label] = bound_score
+        yatsushiro_bound_metrics[label] = matched_road_concordance(
+            roads,
+            road_geometry,
+            bound_score,
+            evidence_edges["Road Section ID"],
+            admin_geometry,
+            display_shape,
+            display_transform,
+            extent,
+        )
+    bound_concordance = [
+        values["Road Score Concordance"]
+        for values in yatsushiro_bound_metrics.values()
+    ]
+    bound_max_change = max(
+        float(np.nanmax(np.abs(bound_score - scores["Heavy"])))
+        for bound_score in yatsushiro_bound_scores.values()
+    )
+    print("Completed matched road validation.", flush=True)
 
     fig = plt.figure(figsize=(14.5, 11), constrained_layout=True)
     grid = fig.add_gridspec(
@@ -543,8 +837,17 @@ def main() -> None:
         axes[3].add_collection(
             LineCollection(
                 segments,
+                colors="white",
+                linewidths=3.2,
+                alpha=0.98,
+                zorder=13,
+            )
+        )
+        axes[3].add_collection(
+            LineCollection(
+                segments,
                 colors=REASON_COLORS[reason],
-                linewidths=1.35,
+                linewidths=2.0,
                 alpha=0.95,
                 zorder=14,
             )
@@ -571,8 +874,13 @@ def main() -> None:
         (
             f"{len(evidence_observations):,} deduplicated observations\n"
             f"{evidence_edges['Road Edge ID'].nunique():,} reliably matched edges\n"
-            f"Median score percentile: {median_percentile:.0%}\n"
-            f"Share in top quartile: {top_quartile_share:.0%}"
+            f"Matched sections: {int(matched_metrics['Matched Evidence Sections']):,}/"
+            f"{int(matched_metrics['Evidence Sections']):,}\n"
+            f"Matched concordance: {matched_metrics['Road Score Concordance']:.2f} "
+            f"({matched_metrics['Road Score CI Low']:.2f}–"
+            f"{matched_metrics['Road Score CI High']:.2f})\n"
+            f"Yatsushiro 0.70–0.80 concordance: "
+            f"{min(bound_concordance):.2f}–{max(bound_concordance):.2f}"
         ),
         transform=axes[3].transAxes,
         ha="right",
@@ -595,20 +903,42 @@ def main() -> None:
     colorbar.ax.tick_params(labelsize=8)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT, dpi=150, bbox_inches="tight", facecolor="white")
+    fig.savefig(SVG_OUT, format="svg", bbox_inches="tight", facecolor="white")
     plt.close(fig)
+    OUT.write_bytes(
+        resvg_py.svg_to_bytes(
+            svg_path=str(SVG_OUT),
+            dpi=300.0,
+            background="white",
+        )
+    )
 
-    print(f"Saved: {OUT.relative_to(ROOT)}")
+    print(f"Saved SVG: {SVG_OUT.relative_to(ROOT)}")
+    print(f"Converted PNG (300 dpi): {OUT.relative_to(ROOT)}")
     print(f"Road sections scored: {len(roads):,}")
     print(f"Terrain-score construction: {model_mode}")
-    print(f"Transfer weight per sampled influence point: {TRANSFER_WEIGHT:.2f}")
+    print("Road pooling: normalized directional weighted mean")
     print(f"Reliable deduplicated restriction observations: {len(evidence_observations):,}")
     print(f"Reliable matched restriction edges: {evidence_edges['Road Edge ID'].nunique():,}")
     print(f"Median matched-edge Heavy score percentile: {median_percentile:.3f}")
     print(f"Matched-edge share in Heavy top quartile: {top_quartile_share:.3f}")
-    print("Scenario loads relative to Heavy:")
+    print("Matched pseudo-background validation:")
+    for key, value in matched_metrics.items():
+        print(f"  {key}: {value:.4f}")
+    print(
+        "Yatsushiro 0.70-0.80 Heavy sensitivity: "
+        f"matched concordance={min(bound_concordance):.4f}-"
+        f"{max(bound_concordance):.4f}; maximum road-score change={bound_max_change:.6f}"
+    )
+    print("Scenario loading medians:")
     for scenario, value in scenario_loads.items():
-        print(f"  {scenario}: {value:.4f}")
+        print(f"  {scenario}: {np.nanmedian(value):.4f}")
+    print("Road-score zero shares and rank correlations:")
+    for scenario, value in scores.items():
+        print(f"  {scenario} zero share: {np.mean(value == 0):.4%}")
+    for left, right in (("Moderate", "Heavy"), ("Heavy", "Extreme")):
+        correlation = pd.Series(scores[left]).corr(pd.Series(scores[right]), method="spearman")
+        print(f"  {left} vs {right}: {correlation:.6f}")
     print("Interpretation: relative road-disruption ranking; not a closure probability")
 
 

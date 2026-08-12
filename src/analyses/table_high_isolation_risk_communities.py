@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """High-Isolation-Risk Communities.
 
-Plan: List the 30 communities with the largest Heavy-scenario population and
-older-population isolation burden in a compact operational summary.
+Plan: List the 30 communities with the largest Heavy-scenario total-population
+isolation burden, using older-population burden only to break ties.
 Framework: AnaSOP Sections 5-7 use the accepted baseline community definition,
 1,000-draw scenario-conditional isolation frequencies, Heavy-scenario service
 loss simulation, and candidate gateway-road dependence. Frequencies are model-
@@ -91,16 +91,20 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
     total = community["Total_Population"].to_numpy(dtype=float)
     older = community["Population_Age_65"].to_numpy(dtype=float)
     heavy = frequencies["Heavy"].astype(float)
-    burden = heavy * (total + 0.5 * older)
-    order = np.lexsort((-frequencies["Extreme"], -burden))[:TOP_COMMUNITIES]
+    total_burden = heavy * total
+    older_burden = heavy * older
+    order = np.lexsort((-older_burden, -total_burden))[:TOP_COMMUNITIES]
     municipality_names = community_admin_names(context)
     gateway_counts = gateway_section_counts(context)
 
     rows: list[dict[str, object]] = []
+    core_service_classes = tuple(
+        name for name in service_loss.SERVICE_CLASSES if name != "Emergency water"
+    )
     for rank, position in enumerate(order, start=1):
         service_values = {
             name: float(context["loss_frequency"][name][position])
-            for name in service_loss.SERVICE_CLASSES
+            for name in core_service_classes
             if np.isfinite(context["loss_frequency"][name][position])
         }
         if service_values:
@@ -132,7 +136,7 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
                     f"{total[position] * heavy[position]:,.1f} / "
                     f"{older[position] * heavy[position]:,.1f}"
                 ),
-                "Principal Heavy Service Loss": principal_loss,
+                "Principal Heavy Core-Service Loss": principal_loss,
             }
         )
 
@@ -159,15 +163,15 @@ def style_workbook(path: Path) -> None:
     workbook = load_workbook(path)
     worksheet = workbook[SHEET_NAME]
     worksheet.sheet_view.showGridLines = False
-    worksheet.freeze_panes = "C2"
-    worksheet.auto_filter.ref = f"A1:K{worksheet.max_row}"
+    worksheet.freeze_panes = "C3"
+    worksheet.auto_filter.ref = f"A2:K{worksheet.max_row}"
     worksheet.sheet_view.zoomScale = 90
     worksheet.print_area = f"A1:K{worksheet.max_row}"
-    worksheet.print_title_rows = "1:1"
+    worksheet.print_title_rows = None
     worksheet.page_setup.orientation = "landscape"
     worksheet.page_setup.paperSize = worksheet.PAPERSIZE_A3
     worksheet.page_setup.fitToWidth = 1
-    worksheet.page_setup.fitToHeight = 0
+    worksheet.page_setup.fitToHeight = 1
     worksheet.sheet_properties.pageSetUpPr.fitToPage = True
     worksheet.page_margins = PageMargins(
         left=0.20, right=0.20, top=0.30, bottom=0.30, header=0.10, footer=0.10
@@ -182,13 +186,21 @@ def style_workbook(path: Path) -> None:
         "middle": PatternFill("solid", fgColor="FCE5CD"),
         "lower": PatternFill("solid", fgColor="FFF2CC"),
     }
-    for cell in worksheet[1]:
+    worksheet.merge_cells("A1:K1")
+    title_cell = worksheet["A1"]
+    title_cell.value = TABLE_TITLE
+    title_cell.fill = PatternFill("solid", fgColor="D9EAF7")
+    title_cell.font = Font(name="Aptos Display", size=15, bold=True, color="17365D")
+    title_cell.alignment = Alignment(horizontal="left", vertical="center")
+    worksheet.row_dimensions[1].height = 28
+
+    for cell in worksheet[2]:
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    worksheet.row_dimensions[1].height = 50
+    worksheet.row_dimensions[2].height = 54
 
-    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row):
+    for row in worksheet.iter_rows(min_row=3, max_row=worksheet.max_row):
         for cell in row:
             cell.font = body_font
             cell.alignment = Alignment(vertical="top", wrap_text=True)
@@ -226,7 +238,7 @@ def style_workbook(path: Path) -> None:
         worksheet.column_dimensions[column].width = width
     for column in ("G", "H", "I"):
         worksheet.conditional_formatting.add(
-            f"{column}2:{column}{worksheet.max_row}",
+            f"{column}3:{column}{worksheet.max_row}",
             ColorScaleRule(
                 start_type="min",
                 start_color="FFFFFF",
@@ -240,7 +252,7 @@ def style_workbook(path: Path) -> None:
 
     excel_table = Table(
         displayName="HighIsolationRiskCommunities",
-        ref=f"A1:K{worksheet.max_row}",
+        ref=f"A2:K{worksheet.max_row}",
     )
     excel_table.tableStyleInfo = TableStyleInfo(
         name="TableStyleMedium2",
@@ -257,9 +269,9 @@ def render_preview(path: Path, output: Path = PREVIEW_OUT) -> None:
     """Render the complete workbook as one title-first review PNG."""
     workbook = load_workbook(path, data_only=True)
     values = list(workbook[SHEET_NAME].values)
-    title = TABLE_TITLE
-    headers = [str(value) for value in values[0]]
-    rows = [list(row) for row in values[1:]]
+    title = str(values[0][0])
+    headers = [str(value) for value in values[1]]
+    rows = [list(row) for row in values[2:]]
     widths = [95, 210, 230, 115, 225, 190, 175, 170, 175, 280, 300]
     margin = 22
     title_height = 84
@@ -280,7 +292,7 @@ def render_preview(path: Path, output: Path = PREVIEW_OUT) -> None:
     draw.text((margin, 16), title, font=title_font, fill="#17365D")
     draw.text(
         (margin, 52),
-        "Top 30 communities ranked by Heavy-scenario population and age-65+ isolation burden",
+        "Ranked by Heavy-scenario total-population isolation burden; age 65+ shown separately",
         font=note_font,
         fill="#52606D",
     )
@@ -375,12 +387,14 @@ def verify_workbook(path: Path) -> None:
     if workbook.sheetnames != [SHEET_NAME]:
         raise RuntimeError(f"Unexpected workbook sheets: {workbook.sheetnames}")
     worksheet = workbook[SHEET_NAME]
-    if worksheet.max_row != TOP_COMMUNITIES + 1 or worksheet.max_column != 11:
+    if worksheet.max_row != TOP_COMMUNITIES + 2 or worksheet.max_column != 11:
         raise RuntimeError(
             f"Expected {TOP_COMMUNITIES + 2} rows and 11 columns; found "
             f"{worksheet.max_row} × {worksheet.max_column}."
         )
-    ranks = [worksheet.cell(row, 1).value for row in range(2, TOP_COMMUNITIES + 2)]
+    if worksheet["A1"].value != TABLE_TITLE:
+        raise RuntimeError("Workbook title row is missing or incorrect.")
+    ranks = [worksheet.cell(row, 1).value for row in range(3, TOP_COMMUNITIES + 3)]
     if ranks != list(range(1, TOP_COMMUNITIES + 1)):
         raise RuntimeError("Workbook ranks are not sequential.")
     error_tokens = {"#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A"}
@@ -388,7 +402,7 @@ def verify_workbook(path: Path) -> None:
         for cell in row:
             if isinstance(cell.value, str) and cell.value in error_tokens:
                 raise RuntimeError(f"Spreadsheet error token in {cell.coordinate}: {cell.value}")
-    for row in range(2, TOP_COMMUNITIES + 2):
+    for row in range(3, TOP_COMMUNITIES + 3):
         for column in (7, 8, 9):
             value = float(worksheet.cell(row, column).value)
             if not 0 <= value <= 1:
@@ -398,7 +412,13 @@ def verify_workbook(path: Path) -> None:
 def main() -> None:
     table, diagnostics = build_table()
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    table.to_excel(OUT, index=False, sheet_name=SHEET_NAME, engine="openpyxl")
+    table.to_excel(
+        OUT,
+        index=False,
+        sheet_name=SHEET_NAME,
+        engine="openpyxl",
+        startrow=1,
+    )
     style_workbook(OUT)
     verify_workbook(OUT)
     render_preview(OUT)

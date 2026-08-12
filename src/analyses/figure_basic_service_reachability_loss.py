@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Basic Service Reachability Loss.
 
-Plan: Map Heavy-scenario reachability loss for shelter, emergency-water, and fire
-services and summarize population exposure and reachable-route travel-time penalties
-for shelter, water, fire, and municipal facilities.
+Plan: Map Heavy-scenario reachability loss separately for shelter, fire, and municipal
+services and summarize population exposure and reachable-route travel-time penalties.
+Emergency-water results are a conditional sensitivity for the 10 geolocated records,
+not a co-equal primary service estimate.
 Framework: Section 5 secondary consequence estimands; Section 6 service reachability
 loss and excess travel time; Section 7 nearest-service routing on the accepted
 community and road-disruption screening network.
@@ -16,6 +17,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import warnings
 
 os.environ.pop("PROJ_LIB", None)
 os.environ.pop("PROJ_DATA", None)
@@ -27,6 +29,7 @@ from matplotlib.colors import Normalize
 from matplotlib.patches import Patch
 import numpy as np
 import pandas as pd
+import resvg_py
 from rasterio.transform import from_bounds
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components, dijkstra
@@ -36,6 +39,7 @@ import shapely
 
 import figure_community_isolation_frequency_and_exposed_population as isolation
 import figure_road_disruption_exposure_and_observed_restriction_evidence as road_exposure
+from cache_fingerprint import cache_matches, content_signature
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -51,6 +55,7 @@ WATER_PATH = PROCESSED / "emergency_water_points_preprocessed.parquet"
 FIRE_PATH = PROCESSED / "fire_stations_preprocessed.parquet"
 MUNICIPAL_PATH = PROCESSED / "public_offices_halls_preprocessed.parquet"
 OUT = ROOT / "data/results/figures/Figure_basic_service_reachability_loss.png"
+SVG_OUT = OUT.with_suffix(".svg")
 
 DISPLAY_WIDTH = 950
 SERVICE_ATTACHMENT_LIMIT_M = 500.0
@@ -62,7 +67,8 @@ SERVICE_COLORS = {
     "Municipal facility": "#7A5195",
 }
 FULL_GRAPH_TRAVEL_DRAWS = 100
-FULL_GRAPH_CACHE = ROOT / "data/exp/analysis_cache/full_graph_service_times.npz"
+FULL_GRAPH_CACHE_DIR = ROOT / "data/exp/analysis_cache/service_travel_five_seed_v5"
+SERVICE_LOSS_CACHE_DIR = ROOT / "data/results/intermediate/service_reachability_five_seed_v4"
 
 
 def point_geometry_from_coordinates(frame: pd.DataFrame) -> np.ndarray:
@@ -147,15 +153,56 @@ def full_graph_service_excess_time(
     mesh_node: np.ndarray,
     community_count: int,
 ) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray]]:
-    """Estimate full-network excess time with 100 weighted rerouting draws."""
-    signature = (
-        f"v2|{len(edge_u)}|{node_count}|{len(section_propensity)}|"
-        f"{float(np.sum(section_propensity)):.6f}|{FULL_GRAPH_TRAVEL_DRAWS}|"
-        + "|".join(f"{name}:{len(service_nodes[name])}" for name in SERVICE_CLASSES)
+    """Estimate five-seed mean full-network excess time."""
+    replicate_results = [
+        _full_graph_service_excess_time_seed(
+            edge_u, edge_v, edge_time, edge_candidate_position, section_propensity,
+            node_count, service_nodes, mesh_community, mesh_node, community_count, seed,
+        )
+        for seed in isolation.REPLICATE_SEEDS
+    ]
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        mean_excess = {
+            name: np.nanmean(
+                np.stack([item[0][name] for item in replicate_results]), axis=0
+            ).astype("float32")
+            for name in SERVICE_CLASSES
+        }
+    return mean_excess, replicate_results[0][1]
+
+
+def _full_graph_service_excess_time_seed(
+    edge_u: np.ndarray, edge_v: np.ndarray, edge_time: np.ndarray,
+    edge_candidate_position: np.ndarray, section_propensity: np.ndarray,
+    node_count: int, service_nodes: dict[str, np.ndarray], mesh_community: np.ndarray,
+    mesh_node: np.ndarray, community_count: int, seed: int,
+) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray]]:
+    """Estimate one predeclared-seed full-network excess-time replicate."""
+    cache_path = FULL_GRAPH_CACHE_DIR / f"seed_{seed}.npz"
+    signature = content_signature(
+        "full-graph-service-times-v4",
+        files=(Path(__file__),),
+        arrays={
+            "edge_u": edge_u,
+            "edge_v": edge_v,
+            "edge_time": edge_time,
+            "edge_candidate_position": edge_candidate_position,
+            "section_propensity": section_propensity,
+            "mesh_community": mesh_community,
+            "mesh_node": mesh_node,
+            **{f"service_nodes_{name}": service_nodes[name] for name in SERVICE_CLASSES},
+        },
+        parameters={
+            "node_count": node_count,
+            "community_count": community_count,
+            "draws": FULL_GRAPH_TRAVEL_DRAWS,
+            "seed": int(seed),
+        },
     )
-    if FULL_GRAPH_CACHE.exists():
-        cached = np.load(FULL_GRAPH_CACHE, allow_pickle=False)
-        if str(cached["signature"].item()) == signature:
+    if cache_path.exists():
+        cached = np.load(cache_path, allow_pickle=False)
+        if cache_matches(cached, signature):
             return (
                 {name: cached[f"excess_{name}"].astype("float32") for name in SERVICE_CLASSES},
                 {name: cached[f"baseline_{name}"].astype("float64") for name in SERVICE_CLASSES},
@@ -197,7 +244,7 @@ def full_graph_service_excess_time(
 
     excess_sum = {service: np.zeros(community_count, dtype="float64") for service in SERVICE_CLASSES}
     excess_count = {service: np.zeros(community_count, dtype="int32") for service in SERVICE_CLASSES}
-    random = np.random.default_rng(isolation.RANDOM_SEED + 80_000)
+    random = np.random.default_rng(seed)
     for draw in range(FULL_GRAPH_TRAVEL_DRAWS):
         section_open = random.random(len(section_propensity)) >= section_propensity
         graph = graph_for(section_open)
@@ -226,9 +273,9 @@ def full_graph_service_excess_time(
             excess_sum[service][available] / excess_count[service][available]
         ).astype("float32")
         mean_excess[service] = values
-    FULL_GRAPH_CACHE.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
-        FULL_GRAPH_CACHE,
+        cache_path,
         signature=np.asarray(signature),
         **{f"excess_{name}": mean_excess[name] for name in SERVICE_CLASSES},
         **{f"baseline_{name}": baseline[name] for name in SERVICE_CLASSES},
@@ -305,6 +352,7 @@ def simulate_service_loss(
     attachment_community: np.ndarray,
     attachment_root: np.ndarray,
     community_count: int,
+    seed: int,
 ) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray], dict[str, np.ndarray]]:
     """Estimate Heavy-scenario reachability loss and conditional excess travel time."""
     all_open = np.ones(len(section_propensity), dtype=bool)
@@ -327,7 +375,7 @@ def simulate_service_loss(
     loss_count = {service: np.zeros(community_count, dtype="int32") for service in SERVICE_CLASSES}
     excess_sum = {service: np.zeros(community_count, dtype="float64") for service in SERVICE_CLASSES}
     excess_count = {service: np.zeros(community_count, dtype="int32") for service in SERVICE_CLASSES}
-    random = np.random.default_rng(isolation.RANDOM_SEED + 80_000)
+    random = np.random.default_rng(seed)
     for draw in range(isolation.MONTE_CARLO_DRAWS):
         section_open = random.random(len(section_propensity)) >= section_propensity
         graph = weighted_draw_graph(section_open, pair_reduction, root_count)
@@ -375,6 +423,104 @@ def simulate_service_loss(
     return loss_frequency, mean_excess, baseline
 
 
+def cached_service_loss(
+    section_propensity: np.ndarray,
+    pair_reduction: dict[str, np.ndarray],
+    root_count: int,
+    service_roots: dict[str, np.ndarray],
+    attachment_community: np.ndarray,
+    attachment_root: np.ndarray,
+    community_count: int,
+    cache_tag: str = "central",
+) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray], dict[str, np.ndarray]]:
+    """Return five-seed mean Heavy-scenario service outcomes."""
+    replicates = [
+        _cached_service_loss_seed(
+            section_propensity, pair_reduction, root_count, service_roots,
+            attachment_community, attachment_root, community_count, seed, cache_tag,
+        )
+        for seed in isolation.REPLICATE_SEEDS
+    ]
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        loss = {
+            name: np.nanmean(
+                np.stack([item[0][name] for item in replicates]), axis=0
+            ).astype("float32")
+            for name in SERVICE_CLASSES
+        }
+        excess = {
+            name: np.nanmean(
+                np.stack([item[1][name] for item in replicates]), axis=0
+            ).astype("float32")
+            for name in SERVICE_CLASSES
+        }
+    return loss, excess, replicates[0][2]
+
+
+def _cached_service_loss_seed(
+    section_propensity: np.ndarray, pair_reduction: dict[str, np.ndarray], root_count: int,
+    service_roots: dict[str, np.ndarray], attachment_community: np.ndarray,
+    attachment_root: np.ndarray, community_count: int, seed: int,
+    cache_tag: str = "central",
+) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray], dict[str, np.ndarray]]:
+    """Cache one predeclared service simulation seed."""
+    cache_path = SERVICE_LOSS_CACHE_DIR / f"{cache_tag}_seed_{seed}.npz"
+    signature = content_signature(
+        "service-reachability-event-idw-v3",
+        files=(Path(__file__),),
+        arrays={
+            "section_propensity": section_propensity,
+            "pair_order": pair_reduction["order"],
+            "pair_start": pair_reduction["start"],
+            "pair_u": pair_reduction["pair_u"],
+            "pair_v": pair_reduction["pair_v"],
+            "pair_edge_section": pair_reduction["edge_section"],
+            "pair_edge_time": pair_reduction["edge_time"],
+            "attachment_community": attachment_community,
+            "attachment_root": attachment_root,
+            **{f"service_roots_{name}": service_roots[name] for name in SERVICE_CLASSES},
+        },
+        parameters={
+            "root_count": root_count,
+            "community_count": community_count,
+            "draws": isolation.MONTE_CARLO_DRAWS,
+            "seed": int(seed),
+            "cache_tag": cache_tag,
+        },
+    )
+    if cache_path.exists():
+        cached = np.load(cache_path, allow_pickle=False)
+        if cache_matches(cached, signature):
+            print("Loaded cached class-specific service simulation.", flush=True)
+            return (
+                {name: cached[f"loss_{name}"].astype("float32") for name in SERVICE_CLASSES},
+                {name: cached[f"excess_{name}"].astype("float32") for name in SERVICE_CLASSES},
+                {name: cached[f"baseline_{name}"].astype("float64") for name in SERVICE_CLASSES},
+            )
+    result = simulate_service_loss(
+        section_propensity,
+        pair_reduction,
+        root_count,
+        service_roots,
+        attachment_community,
+        attachment_root,
+        community_count,
+        seed,
+    )
+    loss_frequency, mean_excess, baseline = result
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        cache_path,
+        signature=np.asarray(signature),
+        **{f"loss_{name}": loss_frequency[name] for name in SERVICE_CLASSES},
+        **{f"excess_{name}": mean_excess[name] for name in SERVICE_CLASSES},
+        **{f"baseline_{name}": baseline[name] for name in SERVICE_CLASSES},
+    )
+    print("Cached class-specific service simulation.", flush=True)
+    return result
+
+
 def main() -> None:
     sns.set_theme(style="white", context="paper")
 
@@ -390,7 +536,7 @@ def main() -> None:
     display_shape = (display_height, DISPLAY_WIDTH)
     display_transform = from_bounds(west, south, east, north, DISPLAY_WIDTH, display_height)
 
-    terrain_scores, _, model_mode, elevation_grid = road_exposure.build_landslide_scores(
+    terrain_scores, _, model_mode, elevation_grid = road_exposure.load_or_build_landslide_scores(
         admin,
         admin_geometry,
         admin_union,
@@ -409,7 +555,12 @@ def main() -> None:
     )
     roads = roads.loc[roads["Network Analysis Eligible"]].reset_index(drop=True)
     road_geometry = road_exposure.decode_geometry(roads.pop("Geometry"))
-    road_scores = road_exposure.road_scores(road_geometry, terrain_scores, extent, elevation_grid)
+    road_scores = road_exposure.load_or_build_road_scores(
+        road_geometry,
+        terrain_scores,
+        extent,
+        elevation_grid,
+    )
     heavy_lower = isolation.positive_score_quantile(
         road_scores["Heavy"], isolation.CANDIDATE_QUANTILE
     )
@@ -525,7 +676,7 @@ def main() -> None:
         if len(service_roots[service]) == 0:
             raise RuntimeError(f"No {service} features could be attached to the road network.")
 
-    loss_frequency, _, _ = simulate_service_loss(
+    loss_frequency, _, _ = cached_service_loss(
         section_propensity,
         pair_reduction,
         root_count,
@@ -534,6 +685,20 @@ def main() -> None:
         attachment_root,
         len(community),
     )
+    service_seed_results = [
+        _cached_service_loss_seed(
+            section_propensity,
+            pair_reduction,
+            root_count,
+            service_roots,
+            attachment_community,
+            attachment_root,
+            len(community),
+            seed,
+            "central",
+        )
+        for seed in isolation.REPLICATE_SEEDS
+    ]
     mean_excess, baseline_distance = full_graph_service_excess_time(
         edge_u,
         edge_v,
@@ -555,10 +720,64 @@ def main() -> None:
         service: float(np.nansum(loss_frequency[service] * total_population))
         for service in SERVICE_CLASSES
     }
-    median_excess = {
-        service: float(np.nanmedian(mean_excess[service]))
+    expected_loss_by_seed = {
+        service: np.asarray(
+            [
+                float(np.nansum(result[0][service] * total_population))
+                for result in service_seed_results
+            ],
+            dtype=float,
+        )
         for service in SERVICE_CLASSES
     }
+    yatsushiro_service_bounds: dict[str, dict[str, float]] = {}
+    for bound_factor in (0.70, 0.80):
+        bound_terrain_scores, _, _, _ = road_exposure.load_or_build_landslide_scores(
+            admin,
+            admin_geometry,
+            admin_union,
+            extent,
+            display_shape,
+            display_transform,
+            yatsushiro_factor=bound_factor,
+        )
+        bound_road_scores = road_exposure.load_or_build_road_scores(
+            road_geometry,
+            bound_terrain_scores,
+            extent,
+            elevation_grid,
+            yatsushiro_factor=bound_factor,
+        )
+        bound_candidate_score = pd.Series(
+            bound_road_scores["Heavy"], index=roads["Road Section ID"]
+        ).reindex(candidate_ids).to_numpy(dtype="float32")
+        bound_propensity = isolation.closure_propensity(
+            bound_candidate_score,
+            heavy_lower,
+            heavy_upper,
+        )
+        bound_loss, _, _ = cached_service_loss(
+            bound_propensity,
+            pair_reduction,
+            root_count,
+            service_roots,
+            attachment_community,
+            attachment_root,
+            len(community),
+            cache_tag=f"yatsushiro_{int(bound_factor * 100)}",
+        )
+        yatsushiro_service_bounds[f"{bound_factor:.2f}"] = {
+            service: float(np.nansum(bound_loss[service] * total_population))
+            for service in SERVICE_CLASSES
+        }
+    median_excess: dict[str, float] = {}
+    for service in SERVICE_CLASSES:
+        positive_excess = mean_excess[service][
+            np.isfinite(mean_excess[service]) & (mean_excess[service] > 1e-6)
+        ]
+        median_excess[service] = (
+            float(np.median(positive_excess)) if len(positive_excess) else 0.0
+        )
 
     fig = plt.figure(figsize=(14.5, 11), constrained_layout=True)
     grid = fig.add_gridspec(
@@ -582,7 +801,7 @@ def main() -> None:
     emergency_segments = road_exposure.line_segments(
         road_geometry[roads["Emergency Route Membership"].astype("string").ne("None").to_numpy()]
     )
-    map_services = ("Shelter", "Emergency water", "Fire service")
+    map_services = ("Shelter", "Fire service", "Municipal facility")
     for index, (axis, service) in enumerate(zip(axes[:3], map_services)):
         axis.set_facecolor("#F8FAFC")
         axis.add_collection(
@@ -618,11 +837,6 @@ def main() -> None:
                 zorder=8,
             )
         )
-        coverage_note = (
-            f"\nResolved-point lower bound: {source_counts[service][0]}/{source_counts[service][1]} located"
-            if service == "Emergency water"
-            else ""
-        )
         axis.text(
             0.018,
             0.982,
@@ -630,8 +844,9 @@ def main() -> None:
                 f"{service} reachability loss\n"
                 f"Heavy rainfall\n"
                 f"Expected affected population: {expected_loss_population[service]:,.0f}\n"
-                f"Median excess time: {median_excess[service]:.2f} min"
-                f"{coverage_note}"
+                f"Five-seed range: {expected_loss_by_seed[service].min():,.0f}–"
+                f"{expected_loss_by_seed[service].max():,.0f}\n"
+                f"Median positive excess time: {median_excess[service]:.2f} min"
             ),
             transform=axis.transAxes,
             ha="left",
@@ -665,15 +880,28 @@ def main() -> None:
     y = np.arange(len(SERVICE_CLASSES))
     affected = np.array([expected_loss_population[service] for service in SERVICE_CLASSES])
     excess = np.array([median_excess[service] for service in SERVICE_CLASSES])
-    bar_axis.barh(
+    bar_colors = [
+        SERVICE_COLORS[service] if service != "Emergency water" else "#98A2B3"
+        for service in SERVICE_CLASSES
+    ]
+    bars = bar_axis.barh(
         y,
         affected,
-        color=[SERVICE_COLORS[service] for service in SERVICE_CLASSES],
+        color=bar_colors,
         alpha=0.88,
         height=0.58,
         zorder=3,
     )
-    bar_axis.set_yticks(y, labels=SERVICE_CLASSES)
+    bars[1].set_hatch("///")
+    bars[1].set_edgecolor("#475467")
+    bar_axis.set_yticks(
+        y,
+        labels=[
+            f"{service}{'*' if service == 'Emergency water' else ''}\n"
+            f"Median positive excess: {median_excess[service]:.2f} min"
+            for service in SERVICE_CLASSES
+        ],
+    )
     bar_axis.invert_yaxis()
     bar_axis.set_xlabel("Expected population losing reachability", fontsize=8.7)
     bar_axis.set_xlim(0, affected.max() * 1.08)
@@ -692,29 +920,33 @@ def main() -> None:
             color="white" if large_bar else "#172033",
             fontweight="bold",
         )
-    time_axis = bar_axis.twiny()
-    time_axis.scatter(
-        excess,
-        y,
-        color="#172033",
-        s=28,
-        zorder=6,
+    bound_labels = {
+        "Shelter": "Shelter",
+        "Emergency water": "Water*",
+        "Fire service": "Fire",
+        "Municipal facility": "Municipal",
+    }
+    bound_text = "; ".join(
+        f"{bound_labels[service]} "
+        f"{min(values[service] for values in yatsushiro_service_bounds.values()):,.0f}–"
+        f"{max(values[service] for values in yatsushiro_service_bounds.values()):,.0f}"
+        for service in SERVICE_CLASSES
     )
-    time_axis.set_xlabel(
-        f"Median full-network excess travel time when reachable (min; {FULL_GRAPH_TRAVEL_DRAWS} draws)",
-        fontsize=8.7,
+    bar_axis.text(
+        0.02,
+        0.02,
+        "* Hatched water estimate is conditional on 10/36 geolocated destinations;\n"
+        "it is excluded from the primary cross-service interpretation.\n"
+        "Yatsushiro 0.70–0.80 affected-population bounds:\n"
+        f"{bound_text}",
+        transform=bar_axis.transAxes,
+        ha="left",
+        va="bottom",
+        fontsize=6.7,
+        color="#475467",
+        bbox={"boxstyle": "round,pad=0.28", "facecolor": "white", "edgecolor": "#D0D5DD"},
+        zorder=10,
     )
-    time_axis.tick_params(axis="x", labelsize=8)
-    for index, value in enumerate(excess):
-        time_axis.text(
-            value,
-            index - 0.20,
-            f"{value:.2f}",
-            ha="center",
-            va="bottom",
-            fontsize=7.2,
-            color="#172033",
-        )
     road_exposure.add_panel_label(bar_axis, "d")
     for spine in bar_axis.spines.values():
         spine.set_visible(True)
@@ -727,10 +959,18 @@ def main() -> None:
     colorbar.ax.tick_params(labelsize=8)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT, dpi=150, bbox_inches="tight", facecolor="white")
+    fig.savefig(SVG_OUT, format="svg", bbox_inches="tight", facecolor="white")
     plt.close(fig)
+    OUT.write_bytes(
+        resvg_py.svg_to_bytes(
+            svg_path=str(SVG_OUT),
+            dpi=300.0,
+            background="white",
+        )
+    )
 
-    print(f"Saved: {OUT.relative_to(ROOT)}")
+    print(f"Saved: {SVG_OUT.relative_to(ROOT)}")
+    print(f"Saved: {OUT.relative_to(ROOT)} (300 dpi at 14.5 x 11 in)")
     print(f"Terrain-score construction: {model_mode}")
     print(f"Communities evaluated: {len(community):,}")
     print(f"Eligible population: {community_diagnostics['Eligible Population']:,.0f}")
@@ -742,9 +982,21 @@ def main() -> None:
             f"road-attached={attached_counts[service]:,}; roots={len(service_roots[service]):,}; "
             f"baseline-reachable communities={baseline_reachable:,}; "
             f"expected affected population={expected_loss_population[service]:,.1f}; "
+            f"five-seed range={expected_loss_by_seed[service].min():,.1f}-"
+            f"{expected_loss_by_seed[service].max():,.1f}; "
             f"median excess time={median_excess[service]:.3f} min"
         )
-    print("Interpretation: conditional reachability loss; excess time uses the full weighted road graph")
+        service_bounds = [
+            values[service] for values in yatsushiro_service_bounds.values()
+        ]
+        print(
+            f"  Yatsushiro 0.70-0.80 expected affected bounds="
+            f"{min(service_bounds):,.1f}-{max(service_bounds):,.1f}"
+        )
+    print(
+        "Interpretation: shelter, fire, and municipal results are class-specific primary "
+        "service consequences; emergency water is conditional sensitivity evidence only."
+    )
 
 
 if __name__ == "__main__":

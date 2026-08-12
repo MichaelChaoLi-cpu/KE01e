@@ -4,8 +4,8 @@
 Plan: List the 30 road sections with the largest consequence-aware intervention
 relevance under the accepted Heavy-rainfall screening scenario.
 Framework: AnaSOP Sections 5-7 use relative road disruption scores, the central
-score-to-closure mapping, single-section consequence checks, and robust median
-benefit-per-planning-cost ranking. Results are screening priorities rather than
+score-to-closure mapping, single-section consequence checks, and median
+assigned-action consequence-per-planning-cost ranking. Results are screening priorities rather than
 engineering recommendations or calibrated closure probabilities.
 """
 from __future__ import annotations
@@ -145,9 +145,9 @@ def render_preview(path: Path, output: Path = PREVIEW_OUT) -> None:
     workbook = load_workbook(path, data_only=True)
     worksheet = workbook[SHEET_NAME]
     values = list(worksheet.values)
-    title = TABLE_TITLE
-    headers = [str(value) for value in values[0]]
-    rows = [list(row) for row in values[1:]]
+    title = str(values[0][0])
+    headers = [str(value) for value in values[1]]
+    rows = [list(row) for row in values[2:]]
 
     widths = [100, 210, 240, 150, 180, 175, 170, 225, 360, 260, 160, 175]
     margin = 24
@@ -334,7 +334,7 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
         display_height,
     )
 
-    terrain_scores, _, model_mode, elevation_grid = road_exposure.build_landslide_scores(
+    terrain_scores, _, model_mode, elevation_grid = road_exposure.load_or_build_landslide_scores(
         admin,
         admin_geometry,
         admin_union,
@@ -355,7 +355,12 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
     )
     roads = roads.loc[roads["Network Analysis Eligible"]].reset_index(drop=True)
     road_geometry = road_exposure.decode_geometry(roads.pop("Geometry"))
-    road_scores = road_exposure.road_scores(road_geometry, terrain_scores, extent, elevation_grid)
+    road_scores = road_exposure.load_or_build_road_scores(
+        road_geometry,
+        terrain_scores,
+        extent,
+        elevation_grid,
+    )
     heavy_lower = isolation.positive_score_quantile(
         road_scores["Heavy"], isolation.CANDIDATE_QUANTILE
     )
@@ -456,44 +461,44 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
     )
     community_population = community["Total_Population"].to_numpy(dtype=float)
     community_older = community["Population_Age_65"].to_numpy(dtype=float)
-    print("Simulating Heavy baseline for priority-road screening")
-    baseline_frequency = isolation.simulate_isolation(
-        candidate_u,
-        candidate_v,
-        candidate_edge_section,
-        section_propensity,
-        root_count,
-        target_roots,
-        attachment_community,
-        attachment_root,
-        len(community),
-        intervention.INTERVENTION_RANDOM_SEED,
-    )
+    print("Loading five Heavy baseline seeds for priority-road screening")
+    baseline_frequencies = {
+        seed: isolation.cached_isolation(
+            f"central_heavy_seed_{seed}_m1000",
+            candidate_u,
+            candidate_v,
+            candidate_edge_section,
+            section_propensity,
+            root_count,
+            target_roots,
+            attachment_community,
+            attachment_root,
+            len(community),
+            seed,
+        ).astype(float)
+        for seed in isolation.REPLICATE_SEEDS
+    }
+    baseline_frequency = np.mean(np.vstack(list(baseline_frequencies.values())), axis=0)
 
-    attachment_count = np.bincount(
-        attachment_community,
-        minlength=len(community),
-    ).astype(float)
-    attachment_share_burden = (
-        community_population * baseline_frequency / np.maximum(attachment_count, 1.0)
-    )
-    root_burden = np.zeros(root_count, dtype="float64")
-    np.add.at(
-        root_burden,
-        attachment_root,
-        attachment_share_burden[attachment_community],
-    )
     root_degree = np.bincount(
         np.concatenate([candidate_u, candidate_v]),
         minlength=root_count,
     ).astype(float)
-    section_burden = np.zeros(len(candidate_ids), dtype="float64")
+    section_burden = intervention.section_burden_from_frequency(
+        baseline_frequency,
+        community_population,
+        attachment_community,
+        attachment_root,
+        candidate_u,
+        candidate_v,
+        candidate_edge_section,
+        root_count,
+        len(candidate_ids),
+    )
     section_scarcity = np.zeros(len(candidate_ids), dtype="float64")
-    edge_burden = root_burden[candidate_u] + root_burden[candidate_v]
     edge_scarcity = 1.0 / np.sqrt(
         np.maximum(np.minimum(root_degree[candidate_u], root_degree[candidate_v]), 1.0)
     )
-    np.maximum.at(section_burden, candidate_edge_section, edge_burden)
     np.maximum.at(section_scarcity, candidate_edge_section, edge_scarcity)
     emergency_candidate = (
         roads.loc[candidate_road_index, "Emergency Route Membership"]
@@ -509,24 +514,53 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
     )
 
     screen_positions = np.argsort(preliminary_score)[-intervention.SINGLE_CLOSE_SCREEN_COUNT :]
-    single_close_population = np.zeros(len(candidate_ids), dtype="float64")
-    for count, position in enumerate(screen_positions, start=1):
-        single_close_population[position] = intervention.single_section_closed_population(
-            int(position),
-            candidate_u,
-            candidate_v,
-            candidate_edge_section,
-            root_count,
-            target_roots,
-            attachment_community,
-            attachment_root,
-            community_population,
-        )
-        if count % 250 == 0:
-            print(
-                f"  completed {count:,}/{len(screen_positions):,} "
-                "single-road consequence checks"
+    single_signature = intervention.single_close_signature(
+        screen_positions,
+        candidate_u,
+        candidate_v,
+        candidate_edge_section,
+        root_count,
+        target_roots,
+        attachment_community,
+        attachment_root,
+        community_population,
+    )
+    cached_single = (
+        np.load(intervention.SINGLE_CLOSE_CACHE, allow_pickle=False)
+        if intervention.SINGLE_CLOSE_CACHE.exists()
+        else None
+    )
+    if (
+        cached_single is not None
+        and intervention.cache_matches(cached_single, single_signature)
+    ):
+        single_close_population = cached_single["single_close_population"].astype("float64")
+        print("Loaded cached single-road consequence checks.", flush=True)
+    else:
+        single_close_population = np.zeros(len(candidate_ids), dtype="float64")
+        for count, position in enumerate(screen_positions, start=1):
+            single_close_population[position] = intervention.single_section_closed_population(
+                int(position),
+                candidate_u,
+                candidate_v,
+                candidate_edge_section,
+                root_count,
+                target_roots,
+                attachment_community,
+                attachment_root,
+                community_population,
             )
+            if count % 250 == 0:
+                print(
+                    f"  completed {count:,}/{len(screen_positions):,} "
+                    "single-road consequence checks"
+                )
+        intervention.SINGLE_CLOSE_CACHE.parent.mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(
+            intervention.SINGLE_CLOSE_CACHE,
+            signature=np.asarray(single_signature),
+            single_close_population=single_close_population,
+        )
 
     consequence_proxy = single_close_population + 0.15 * section_burden
     candidate_length_km = (
@@ -548,16 +582,11 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
         default=1.5 + 0.5 * candidate_length_km,
     ).astype("float64")
 
-    sensitivity_scores: list[np.ndarray] = []
-    for setting in ("Conservative", "Central", "Optimistic"):
-        effect = np.array(
-            [intervention.ACTION_EFFECT[action][setting] for action in actions]
-        )
-        cost = base_cost * intervention.COST_MULTIPLIER[setting]
-        sensitivity_scores.append(
-            consequence_proxy * effect / np.maximum(cost, 1e-6)
-        )
-    priority_score = np.median(np.vstack(sensitivity_scores), axis=0)
+    priority_score = intervention.assigned_action_priority_score(
+        consequence_proxy,
+        actions,
+        base_cost,
+    )
     priority_order = np.argsort(priority_score)[::-1]
     top_positions = priority_order[:TOP_ROADS]
 
@@ -611,7 +640,11 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
                 len(community),
             )
             if np.any(baseline_service_access[name] & ~access):
-                dependent_services.append(name)
+                dependent_services.append(
+                    "Emergency water (sensitivity; 10/36)"
+                    if name == "Emergency water"
+                    else name
+                )
         road_index = int(candidate_road_index[position])
         road_geometry_value = road_geometry[road_index]
         municipality_matches = np.flatnonzero(
@@ -666,8 +699,10 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
                     "; ".join(dependent_services) if dependent_services else "None detected"
                 ),
                 "Assigned Intervention Type": action,
-                "Central Planning Cost": float(base_cost[position]),
-                "Robust Priority Score": float(priority_score[position]),
+                "Central Planning Cost (Relative Units)": float(base_cost[position]),
+                "Assigned-Action Screening Score (Consequence / Relative Cost)": float(
+                    priority_score[position]
+                ),
             }
         )
 
@@ -701,6 +736,7 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
         "Community Population": community_population,
         "Community Population Age 65+": community_older,
         "Baseline Frequency": baseline_frequency,
+        "Baseline Frequencies": baseline_frequencies,
         "Candidate Score": candidate_score,
         "Emergency Candidate": emergency_candidate,
         "Candidate Road Category": roads.loc[
@@ -716,15 +752,15 @@ def style_workbook(path: Path) -> None:
     workbook = load_workbook(path)
     worksheet = workbook[SHEET_NAME]
     worksheet.sheet_view.showGridLines = False
-    worksheet.freeze_panes = "C2"
-    worksheet.auto_filter.ref = f"A1:L{worksheet.max_row}"
+    worksheet.freeze_panes = "C3"
+    worksheet.auto_filter.ref = f"A2:L{worksheet.max_row}"
     worksheet.sheet_view.zoomScale = 90
     worksheet.print_area = f"A1:L{worksheet.max_row}"
-    worksheet.print_title_rows = "1:1"
+    worksheet.print_title_rows = None
     worksheet.page_setup.orientation = "landscape"
     worksheet.page_setup.paperSize = worksheet.PAPERSIZE_A3
     worksheet.page_setup.fitToWidth = 1
-    worksheet.page_setup.fitToHeight = 0
+    worksheet.page_setup.fitToHeight = 1
     worksheet.sheet_properties.pageSetUpPr.fitToPage = True
     worksheet.page_margins = PageMargins(
         left=0.20, right=0.20, top=0.30, bottom=0.30, header=0.10, footer=0.10
@@ -739,13 +775,21 @@ def style_workbook(path: Path) -> None:
         "middle": PatternFill("solid", fgColor="FCE5CD"),
         "lower": PatternFill("solid", fgColor="FFF2CC"),
     }
-    for cell in worksheet[1]:
+    worksheet.merge_cells("A1:L1")
+    title_cell = worksheet["A1"]
+    title_cell.value = TABLE_TITLE
+    title_cell.fill = PatternFill("solid", fgColor="D9EAF7")
+    title_cell.font = Font(name="Aptos Display", size=15, bold=True, color="17365D")
+    title_cell.alignment = Alignment(horizontal="left", vertical="center")
+    worksheet.row_dimensions[1].height = 28
+
+    for cell in worksheet[2]:
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    worksheet.row_dimensions[1].height = 48
+    worksheet.row_dimensions[2].height = 54
 
-    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row):
+    for row in worksheet.iter_rows(min_row=3, max_row=worksheet.max_row):
         for cell in row:
             cell.font = body_font
             cell.alignment = Alignment(vertical="top", wrap_text=True)
@@ -786,7 +830,7 @@ def style_workbook(path: Path) -> None:
         worksheet.column_dimensions[column].width = width
     for column in ("E", "F", "L"):
         worksheet.conditional_formatting.add(
-            f"{column}2:{column}{worksheet.max_row}",
+            f"{column}3:{column}{worksheet.max_row}",
             ColorScaleRule(
                 start_type="min",
                 start_color="FFFFFF",
@@ -798,7 +842,7 @@ def style_workbook(path: Path) -> None:
             ),
         )
 
-    excel_table = Table(displayName="PriorityRoadSections", ref=f"A1:L{worksheet.max_row}")
+    excel_table = Table(displayName="PriorityRoadSections", ref=f"A2:L{worksheet.max_row}")
     excel_table.tableStyleInfo = TableStyleInfo(
         name="TableStyleMedium2",
         showFirstColumn=False,
@@ -816,12 +860,14 @@ def verify_workbook(path: Path) -> None:
     if workbook.sheetnames != [SHEET_NAME]:
         raise RuntimeError(f"Unexpected workbook sheets: {workbook.sheetnames}")
     worksheet = workbook[SHEET_NAME]
-    if worksheet.max_row != TOP_ROADS + 1 or worksheet.max_column != 12:
+    if worksheet.max_row != TOP_ROADS + 2 or worksheet.max_column != 12:
         raise RuntimeError(
-            f"Expected {TOP_ROADS + 1} rows including the header and 12 columns; found "
+            f"Expected {TOP_ROADS + 2} rows including title and header and 12 columns; found "
             f"{worksheet.max_row} × {worksheet.max_column}."
         )
-    ranks = [worksheet.cell(row, 1).value for row in range(2, TOP_ROADS + 2)]
+    if worksheet["A1"].value != TABLE_TITLE:
+        raise RuntimeError("Workbook title row is missing or incorrect.")
+    ranks = [worksheet.cell(row, 1).value for row in range(3, TOP_ROADS + 3)]
     if ranks != list(range(1, TOP_ROADS + 1)):
         raise RuntimeError(f"Workbook priority ranks are not 1 through {TOP_ROADS}.")
     error_tokens = {"#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A"}
@@ -829,7 +875,7 @@ def verify_workbook(path: Path) -> None:
         for cell in row:
             if isinstance(cell.value, str) and cell.value in error_tokens:
                 raise RuntimeError(f"Spreadsheet error token in {cell.coordinate}: {cell.value}")
-    for row in range(2, TOP_ROADS + 2):
+    for row in range(3, TOP_ROADS + 3):
         for column in (5, 6):
             value = float(worksheet.cell(row, column).value)
             if not 0 <= value <= 1:
@@ -839,7 +885,13 @@ def verify_workbook(path: Path) -> None:
 def main() -> None:
     table, diagnostics = build_table()
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    table.to_excel(OUT, index=False, sheet_name=SHEET_NAME, engine="openpyxl")
+    table.to_excel(
+        OUT,
+        index=False,
+        sheet_name=SHEET_NAME,
+        engine="openpyxl",
+        startrow=1,
+    )
     style_workbook(OUT)
     verify_workbook(OUT)
     render_preview(OUT)
@@ -849,7 +901,8 @@ def main() -> None:
     print(f"Candidate roads: {diagnostics['Candidate Roads']:,}")
     print(
         f"Top-road location: {table.iloc[0]['Municipality / Ward']}; "
-        f"priority score={table.iloc[0]['Robust Priority Score']:.3f}"
+        "priority score="
+        f"{table.iloc[0]['Assigned-Action Screening Score (Consequence / Relative Cost)']:.3f}"
     )
     print(f"Terrain-score construction: {diagnostics['Model Mode']}")
     print("Workbook verification: passed")

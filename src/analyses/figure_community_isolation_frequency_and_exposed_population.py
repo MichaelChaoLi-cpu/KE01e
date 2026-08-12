@@ -7,7 +7,7 @@ Framework: Section 5 scenario consequence estimand; Section 6 monotone road-scor
 to closure-propensity mapping and 1,000-draw connectivity simulation; Section 7
 baseline community definition and network disruption workflow.
 
-The central screening specification treats Heavy-score top-decile road sections as
+The central screening specification treats the upper 15% of positive Heavy-score road sections as
 closure candidates. Remaining roads are held open, communities are fixed before
 simulation, and frequencies are not interpreted as calibrated real-world probabilities.
 """
@@ -26,6 +26,7 @@ from matplotlib.colors import Normalize
 from matplotlib.patches import Patch
 import numpy as np
 import pandas as pd
+import resvg_py
 from rasterio.features import rasterize
 from rasterio.transform import from_bounds
 from scipy.sparse import coo_matrix
@@ -35,6 +36,7 @@ import seaborn as sns
 import shapely
 
 import figure_road_disruption_exposure_and_observed_restriction_evidence as road_exposure
+from cache_fingerprint import cache_matches, content_signature
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -46,6 +48,10 @@ NODE_PATH = PROCESSED / "road_nodes_preprocessed.parquet"
 MESH_PATH = PROCESSED / "population_mesh_125m_preprocessed.parquet"
 GROUP_PATH = PROCESSED / "population_disclosure_groups_preprocessed.parquet"
 OUT = ROOT / "data/results/figures/Figure_community_isolation_frequency_and_exposed_population.png"
+SVG_OUT = OUT.with_suffix(".svg")
+SIMULATION_CACHE_DIR = (
+    ROOT / "data/results/intermediate/community_isolation_event_idw_v3"
+)
 
 DISPLAY_WIDTH = 950
 ATTACHMENT_LIMIT_M = 500.0
@@ -55,6 +61,7 @@ UPPER_MAPPING_QUANTILE = 0.995
 MAX_CLOSURE_PROPENSITY = 0.30
 MONTE_CARLO_DRAWS = 1000
 RANDOM_SEED = 20260809
+REPLICATE_SEEDS = tuple(RANDOM_SEED + 1000 * index for index in range(5))
 
 
 def planar_coordinates(longitude_latitude: np.ndarray, reference_latitude: float) -> np.ndarray:
@@ -274,6 +281,7 @@ def simulate_isolation(
     community_count: int,
     seed: int,
     draws: int = MONTE_CARLO_DRAWS,
+    report_progress: bool = True,
 ) -> np.ndarray:
     """Run repeated section-level closures on the stable-component graph."""
     random = np.random.default_rng(seed)
@@ -300,9 +308,50 @@ def simulate_isolation(
             root_accessible[attachment_root].astype("uint8"),
         )
         isolated_count += community_accessible == 0
-        if (draw + 1) % 500 == 0:
+        if report_progress and (draw + 1) % 500 == 0:
             print(f"  completed {draw + 1:,}/{draws:,} draws")
     return isolated_count.astype("float32") / draws
+
+
+def cached_isolation(cache_name: str, *args: object, **kwargs: object) -> np.ndarray:
+    """Persist one simulation block so long workflows can resume deterministically."""
+    if len(args) < 10:
+        raise ValueError("cached_isolation requires the complete simulation argument set.")
+    draws = int(kwargs.get("draws", MONTE_CARLO_DRAWS))
+    signature = content_signature(
+        "community-isolation-event-idw-v3",
+        files=(Path(__file__),),
+        arrays={
+            "candidate_u": np.asarray(args[0]),
+            "candidate_v": np.asarray(args[1]),
+            "candidate_edge_section": np.asarray(args[2]),
+            "section_propensity": np.asarray(args[3]),
+            "target_roots": np.asarray(args[5]),
+            "attachment_community": np.asarray(args[6]),
+            "attachment_root": np.asarray(args[7]),
+        },
+        parameters={
+            "root_count": int(args[4]),
+            "community_count": int(args[8]),
+            "seed": int(args[9]),
+            "draws": draws,
+        },
+    )
+    path = SIMULATION_CACHE_DIR / f"{cache_name}.npz"
+    if path.exists():
+        cached = np.load(path, allow_pickle=False)
+        if cache_matches(cached, signature):
+            print(f"  loaded cached simulation: {cache_name}", flush=True)
+            return cached["frequency"].astype("float32")
+    result = simulate_isolation(*args, **kwargs)
+    SIMULATION_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        path,
+        signature=np.asarray(signature),
+        frequency=result.astype("float32"),
+    )
+    print(f"  cached simulation: {cache_name}", flush=True)
+    return result
 
 
 def rasterize_mesh_rgba(
@@ -356,7 +405,7 @@ def main() -> None:
     display_shape = (display_height, DISPLAY_WIDTH)
     display_transform = from_bounds(west, south, east, north, DISPLAY_WIDTH, display_height)
 
-    terrain_scores, _, model_mode, elevation_grid = road_exposure.build_landslide_scores(
+    terrain_scores, _, model_mode, elevation_grid = road_exposure.load_or_build_landslide_scores(
         admin,
         admin_geometry,
         admin_union,
@@ -375,7 +424,12 @@ def main() -> None:
     )
     roads = roads.loc[roads["Network Analysis Eligible"]].reset_index(drop=True)
     road_geometry = road_exposure.decode_geometry(roads.pop("Geometry"))
-    scores = road_exposure.road_scores(road_geometry, terrain_scores, extent, elevation_grid)
+    scores = road_exposure.load_or_build_road_scores(
+        road_geometry,
+        terrain_scores,
+        extent,
+        elevation_grid,
+    )
 
     heavy_lower = positive_score_quantile(scores["Heavy"], CANDIDATE_QUANTILE)
     heavy_upper = positive_score_quantile(scores["Heavy"], UPPER_MAPPING_QUANTILE)
@@ -461,32 +515,44 @@ def main() -> None:
         target_network_components,
     )
     frequencies: dict[str, np.ndarray] = {}
+    replicate_frequencies: dict[str, list[np.ndarray]] = {}
     candidate_scores: dict[str, np.ndarray] = {}
-    for scenario_index, scenario in enumerate(("Moderate", "Heavy", "Extreme")):
+    for scenario in ("Moderate", "Heavy", "Extreme"):
         candidate_scores[scenario] = pd.Series(
             scores[scenario], index=roads["Road Section ID"]
         ).reindex(candidate_ids).to_numpy(dtype="float32")
         propensity = closure_propensity(candidate_scores[scenario], heavy_lower, heavy_upper)
         print(
             f"Simulating {scenario}: {np.count_nonzero(propensity):,} candidate sections "
-            f"with non-zero closure propensity"
+            f"with non-zero closure propensity across {len(REPLICATE_SEEDS)} seed sets"
         )
-        frequencies[scenario] = simulate_isolation(
-            candidate_u,
-            candidate_v,
-            candidate_edge_section,
-            propensity,
-            root_count,
-            target_roots,
-            attachment_community,
-            attachment_root,
-            len(community),
-            RANDOM_SEED,
-        )
+        replicate_frequencies[scenario] = []
+        for seed_index, seed in enumerate(REPLICATE_SEEDS):
+            replicate_frequencies[scenario].append(
+                cached_isolation(
+                    f"central_{scenario.lower()}_seed_{seed}_m1000",
+                    candidate_u,
+                    candidate_v,
+                    candidate_edge_section,
+                    propensity,
+                    root_count,
+                    target_roots,
+                    attachment_community,
+                    attachment_root,
+                    len(community),
+                    seed,
+                    report_progress=seed_index == 0,
+                )
+            )
+        frequencies[scenario] = np.mean(
+            np.vstack(replicate_frequencies[scenario]),
+            axis=0,
+        ).astype("float32")
 
     heavy_propensity = closure_propensity(candidate_scores["Heavy"], heavy_lower, heavy_upper)
     convergence = {
-        draws: simulate_isolation(
+        draws: cached_isolation(
+            f"convergence_heavy_seed_{RANDOM_SEED}_m{draws}",
             candidate_u,
             candidate_v,
             candidate_edge_section,
@@ -498,12 +564,17 @@ def main() -> None:
             len(community),
             RANDOM_SEED,
             draws=draws,
+            report_progress=False,
         )
         for draws in (500, 2000)
     }
-    convergence[1000] = frequencies["Heavy"]
+    # Compare nested draw counts on one common seed. The primary reported Heavy
+    # estimate remains the five-seed mean above; convergence is a separate
+    # computational diagnostic and must not mix single-seed and averaged estimators.
+    convergence[1000] = replicate_frequencies["Heavy"][0]
     target_sensitivity = {
-        name: simulate_isolation(
+        name: cached_isolation(
+            f"target_{name.lower().replace(' ', '_')}_seed_{RANDOM_SEED}_m1000",
             candidate_u,
             candidate_v,
             candidate_edge_section,
@@ -514,12 +585,14 @@ def main() -> None:
             attachment_root,
             len(community),
             RANDOM_SEED,
+            report_progress=False,
         )
         for name, roots in target_definitions.items()
         if name != "Primary boundary gateways"
     }
     closure_sensitivity = {
-        label: simulate_isolation(
+        label: cached_isolation(
+            f"closure_{label.lower()}_seed_{RANDOM_SEED}_m1000",
             candidate_u,
             candidate_v,
             candidate_edge_section,
@@ -530,12 +603,73 @@ def main() -> None:
             attachment_root,
             len(community),
             RANDOM_SEED,
+            report_progress=False,
         )
         for label, maximum in (("Low", 0.15), ("High", 0.45))
     }
 
     total_population = community["Total_Population"].to_numpy(dtype=float)
     older_population = community["Population_Age_65"].to_numpy(dtype=float)
+    seed_expected_population = {
+        scenario: np.asarray(
+            [
+                np.sum(total_population * frequency)
+                for frequency in replicate_frequencies[scenario]
+            ],
+            dtype=float,
+        )
+        for scenario in ("Moderate", "Heavy", "Extreme")
+    }
+    heavy_seed_sd = float(np.std(seed_expected_population["Heavy"], ddof=1))
+    heavy_seed_min = float(np.min(seed_expected_population["Heavy"]))
+    heavy_seed_max = float(np.max(seed_expected_population["Heavy"]))
+    yatsushiro_bound_expected: dict[str, float] = {}
+    for bound_factor in (0.70, 0.80):
+        bound_terrain_scores, _, _, _ = road_exposure.load_or_build_landslide_scores(
+            admin,
+            admin_geometry,
+            admin_union,
+            extent,
+            display_shape,
+            display_transform,
+            yatsushiro_factor=bound_factor,
+        )
+        bound_road_scores = road_exposure.load_or_build_road_scores(
+            road_geometry,
+            bound_terrain_scores,
+            extent,
+            elevation_grid,
+            yatsushiro_factor=bound_factor,
+        )
+        bound_candidate_score = pd.Series(
+            bound_road_scores["Heavy"], index=roads["Road Section ID"]
+        ).reindex(candidate_ids).to_numpy(dtype="float32")
+        bound_propensity = closure_propensity(
+            bound_candidate_score,
+            heavy_lower,
+            heavy_upper,
+        )
+        bound_frequencies = [
+            cached_isolation(
+                f"yatsushiro_{int(bound_factor * 100)}_heavy_seed_{seed}_m1000",
+                candidate_u,
+                candidate_v,
+                candidate_edge_section,
+                bound_propensity,
+                root_count,
+                target_roots,
+                attachment_community,
+                attachment_root,
+                len(community),
+                seed,
+                report_progress=False,
+            )
+            for seed in REPLICATE_SEEDS
+        ]
+        bound_mean_frequency = np.mean(np.vstack(bound_frequencies), axis=0)
+        yatsushiro_bound_expected[f"{bound_factor:.2f}"] = float(
+            np.sum(total_population * bound_mean_frequency)
+        )
     mesh_community = selected_mesh["Community Position"].to_numpy(dtype="int32")
     mesh_total_population = selected_mesh["Total Population"].to_numpy(dtype=float)
     mesh_older_population = selected_mesh["Population Age 65+"].to_numpy(dtype=float)
@@ -694,6 +828,11 @@ def main() -> None:
         0.018,
         (
             f"M=500/1,000/2,000 95th-pct frequency difference: {convergence_delta:.3f}\n"
+            f"Five-seed Heavy expected isolated: {heavy_seed_min:,.0f}–"
+            f"{heavy_seed_max:,.0f} (SD {heavy_seed_sd:,.1f})\n"
+            f"Yatsushiro 0.70–0.80 assignment bounds: "
+            f"{min(yatsushiro_bound_expected.values()):,.0f}–"
+            f"{max(yatsushiro_bound_expected.values()):,.0f}\n"
             f"Target sensitivity, expected isolated: "
             f"{min(target_expected.values()):,.0f}–{max(target_expected.values()):,.0f}\n"
             f"Closure mapping sensitivity: "
@@ -713,10 +852,18 @@ def main() -> None:
     colorbar.ax.tick_params(labelsize=8)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT, dpi=150, bbox_inches="tight", facecolor="white")
+    fig.savefig(SVG_OUT, format="svg", bbox_inches="tight", facecolor="white")
     plt.close(fig)
+    OUT.write_bytes(
+        resvg_py.svg_to_bytes(
+            svg_path=str(SVG_OUT),
+            dpi=300.0,
+            background="white",
+        )
+    )
 
-    print(f"Saved: {OUT.relative_to(ROOT)}")
+    print(f"Saved SVG: {SVG_OUT.relative_to(ROOT)}")
+    print(f"Converted PNG (300 dpi): {OUT.relative_to(ROOT)}")
     print(f"Terrain-score construction: {model_mode}")
     print(f"Candidate road sections: {len(candidate_ids):,} ({candidate.mean():.1%})")
     print(f"Stable contracted network roots: {root_count:,}")
@@ -732,6 +879,17 @@ def main() -> None:
             f"{scenario}: expected isolated population={expected_total:,.1f}; "
             f"age 65+={expected_older:,.1f}; maximum frequency={frequencies[scenario].max():.3f}"
         )
+        values = seed_expected_population[scenario]
+        print(
+            f"  five-seed expected isolated population: mean={values.mean():,.1f}; "
+            f"SD={values.std(ddof=1):,.1f}; range={values.min():,.1f}–{values.max():,.1f}"
+        )
+    print(
+        "Yatsushiro 0.70-0.80 Heavy expected-isolated bounds: "
+        f"{min(yatsushiro_bound_expected.values()):,.3f}-"
+        f"{max(yatsushiro_bound_expected.values()):,.3f}"
+    )
+    print(f"Convergence 95th-percentile frequency difference: {convergence_delta:.4f}")
     print("Interpretation: Monte Carlo frequency conditional on the declared screening model")
 
 

@@ -3,18 +3,19 @@ version: 1.0.0
 datasetDictionary:
   jma_hourly_rainfall:
     datasetSourceName: JMA historical hourly rainfall station collection
-    datasetDescription: Hourly rainfall observations used to construct historical accumulation-window quantiles
-      and rainfall scenarios.
+    datasetDescription: Hourly rainfall observations used to construct independent rainfall events, event-maximum
+      accumulation-window quantiles, and rainfall scenarios.
     datasetAttribute: table
     datasetProvider: Japan Meteorological Agency (JMA)
     datasetGenerationInfo: Official station observations concatenated from station-time chunks for the Kumamoto
-      study stations.
+      study stations, with companion independent-event maxima and scenario-quantile tables.
     datasetPeriod: 2016-01-01 through 2025-12-31
-    datasetScale: 526,056 station-hour records
+    datasetScale: 526,056 station-hour records; 5,868 station-event records; 36 station-scenario records
     datasetSpatialResolution: Rain-gauge station
     datasetTemporalResolution: Hourly
     datasetPreprocessingInfo: Parsed timestamps in Asia/Tokyo, converted rainfall and quality fields, deduplicated
-      station-hour records, and did not interpolate rainfall spatially.
+      station-hour records, identified events separated by 24 complete zero-rainfall hours, computed event maxima,
+      and retained rainfall at station support during preprocessing.
   gsi_dem10b_tiles:
     datasetSourceName: GSI DEM10B elevation tile collection
     datasetDescription: Terrain elevation tiles and mosaic used to derive slope, curvature, and upslope road exposure.
@@ -23,7 +24,8 @@ datasetDictionary:
     datasetGenerationInfo: Official DEM10B web tiles decoded with the published elevation rule and mosaicked for
       Kumamoto.
     datasetPeriod: Reference terrain acquired for the 2026 analysis
-    datasetScale: 3,304 available tiles from 3,904 scheduled tiles; 196,402,616 valid elevation pixels
+    datasetScale: 3,304 available tiles from 3,904 scheduled tiles; 196,402,616 valid elevation pixels; 0.000212%
+      noncoverage within Kumamoto Prefecture
     datasetSpatialResolution: Approximately 10 m terrain pixels
     datasetTemporalResolution: Static terrain reference
     datasetPreprocessingInfo: Decoded RGB elevations, retained missing tiles explicitly, generated a georeferenced
@@ -76,7 +78,7 @@ datasetDictionary:
     datasetSpatialResolution: Individual announced facility point when resolved
     datasetTemporalResolution: Event schedule snapshots
     datasetPreprocessingInfo: Preserved unresolved locations, retained only resolved points for routing, and reported
-      resulting service estimates as a lower bound.
+      resulting service estimates as conditional sensitivity evidence with indeterminate bias direction.
   gsi_airphoto_interpreted_landslides:
     datasetSourceName: GSI 2016 air-photo-interpreted landslides
     datasetDescription: Interpreted landslide points used as incomplete presence evidence for spatial validation.
@@ -304,6 +306,22 @@ variableDictionary:
     variableUnit: not applicable
     variableDescription: Station Name (Japanese) retained from jma_hourly_rainfall for the compound-hazard analysis;
       missing values are preserved.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 526056
+  station_latitude:
+    variableNameInDataset: lat
+    variableNameInArticle: JMA Station Latitude (decimal degrees)
+    variableAttribute: continuous
+    variableUnit: decimal degrees
+    variableDescription: Latitude of each JMA rainfall station, used for coarse station-supported spatial loading.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 526056
+  station_longitude:
+    variableNameInDataset: lon
+    variableNameInArticle: JMA Station Longitude (decimal degrees)
+    variableAttribute: continuous
+    variableUnit: decimal degrees
+    variableDescription: Longitude of each JMA rainfall station, used for coarse station-supported spatial loading.
     variableSource: jma_hourly_rainfall
     observationNumber: 526056
   observation_time:
@@ -2020,14 +2038,31 @@ variableDictionary:
     variableDescription: Rolling rainfall accumulated over the declared 3, 24, or 72 hour window.
     variableSource: jma_hourly_rainfall
     observationNumber: 526056
+  rainfall_event_id:
+    variableNameInDataset: derived::rainfall_event_id
+    variableNameInArticle: Independent Rainfall Event Identifier
+    variableAttribute: categorical
+    variableUnit: identifier
+    variableDescription: Deterministic station-event identifier; events are separated by at least 24 consecutive complete zero-rainfall hours.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 5868
+  event_maximum_rainfall:
+    variableNameInDataset: derived::event_maximum_rainfall
+    variableNameInArticle: Independent-Event Maximum Rainfall (mm)
+    variableAttribute: continuous
+    variableUnit: mm
+    variableDescription: Maximum complete 1, 3, 24, or 72 hour accumulation within each independent station rainfall event.
+    variableSource: jma_hourly_rainfall
+    observationNumber: 5868
   rainfall_scenario:
     variableNameInDataset: derived::rainfall_scenario
     variableNameInArticle: Rainfall Severity Scenario
     variableAttribute: ordinal
     variableUnit: scenario category
-    variableDescription: Moderate, Heavy, or Extreme rainfall scenario defined from historical station quantiles.
+    variableDescription: Moderate, Heavy, or Extreme rainfall scenario defined from station-specific independent-event
+      maximum quantiles of 0.75, 0.90, and 0.99.
     variableSource: jma_hourly_rainfall
-    observationNumber: 3
+    observationNumber: 36
   terrain_slope:
     variableNameInDataset: derived::terrain_slope
     variableNameInArticle: Terrain Slope (degrees)
@@ -2140,10 +2175,11 @@ variableDictionary:
     observationNumber: 0
   priority_score:
     variableNameInDataset: derived::priority_score
-    variableNameInArticle: Robust Intervention Priority Score
+    variableNameInArticle: Assigned-Action Consequence-Based Screening Score
     variableAttribute: continuous
-    variableUnit: protected persons per cost unit
-    variableDescription: Median marginal protected population per planning cost across action and sensitivity settings.
+    variableUnit: consequence proxy per relative planning cost
+    variableDescription: Median assigned-action consequence proxy per relative planning cost across Conservative,
+      Central, and Optimistic settings; not a cross-action marginal-benefit estimate.
     variableSource: kumamoto_road_sections_preprocessed
     observationNumber: 343844
 figureDictionary:
@@ -2237,31 +2273,34 @@ figureDictionary:
     figureId: fig_basic_service_reachability_loss
     figurePath: data/results/figures/Figure_basic_service_reachability_loss.png
     figureCaption: Basic-service reachability loss under road disruption
-    figureAim: Shows loss of reachability to shelters, water points, fire services, and municipal facilities, together
-      with excess travel time where routes remain available.
-    figureExplanation: Maps service-loss frequency and reports full-network excess travel time, with emergency-water
-      results explicitly bounded by resolved locations.
+    figureAim: Shows class-specific loss of reachability to shelters, fire services, and municipal facilities, together
+      with excess travel time where routes remain available; emergency water is a conditional sensitivity for 10
+      of 36 geolocated destinations.
+    figureExplanation: Maps primary service-loss frequencies and reports full-network excess travel time; the hatched
+      emergency-water estimate is excluded from the primary cross-service interpretation.
     figurePanelCount: 4
     figureNote: >
-      Panels a, b, and c map Heavy-rainfall reachability loss for shelters, emergency
-      water points, and fire services; panel d compares expected affected population and
-      median excess travel time across shelters, emergency water, fire services, and
-      municipal facilities, with the emergency-water result bounded by resolved locations.
+      Panels a, b, and c map Heavy-rainfall reachability loss for shelters, fire services,
+      and municipal facilities; panel d compares expected affected population and median
+      excess travel time and marks emergency water as conditional sensitivity evidence for
+      the 10 of 36 geolocated destinations.
     figureSuitableSection: 'Results: Service Consequences'
   fig_intervention_priorities_and_budgeted_benefits:
     figureId: fig_intervention_priorities_and_budgeted_benefits
     figurePath: data/results/figures/Figure_intervention_priorities_and_budgeted_benefits.png
     figureCaption: Intervention priorities and benefits across planning budgets
-    figureAim: Identifies priority roads and communities and shows how protected population and avoided isolation
-      change with intervention budget and sensitivity assumptions.
-    figureExplanation: Maps consequence-aware road priorities and compares protected population across budgets,
-      sensitivity settings, and four baseline portfolios.
-    figurePanelCount: 3
+    figureAim: Identifies assigned-action road priorities and total-population community priorities and shows how
+      five-seed protected population changes with budget under setting-matched cost-effect assumptions and comparator
+      rankings.
+    figureExplanation: Maps assigned-action road and community priorities, reports five-seed budget curves, and shows
+      that the Central assigned-action and equal-cost consequence rankings yield the same protected population.
+    figurePanelCount: 4
     figureNote: >
       Panel a maps ranked road-access intervention priorities; panel b maps community
       resource-pre-positioning priorities with marker size representing isolation burden
-      and color representing the older-population share; panel c compares expected
-      protected population across budgets, sensitivity settings, and baseline portfolios.
+      and color representing older-population share; panel c compares five-seed protected
+      population across budgets and sensitivity settings; panel d compares the Central
+      assigned-action portfolio with setting-matched baselines at maximum budget.
     figureSuitableSection: 'Results: Intervention Priorities'
 tableDictionary:
   table_analytical_data_coverage_and_quality:
@@ -2282,12 +2321,11 @@ tableDictionary:
     tableExplanation: Defines all rainfall quantiles, accumulation-window values, antecedent rainfall summaries,
       threshold-retention settings, and scenario interpretation boundaries.
     tableSuitableSection: 'Methods: Rainfall Scenarios'
-  table_hazard_and_road_disruption_validation:
-    tableId: table_hazard_and_road_disruption_validation
+  table_hazard_validation:
+    tableId: table_hazard_validation
     tablePath: data/results/tables/Table_hazard_validation.xlsx
     tableCaption: Hazard validation
-    tableAim: Compares the full specification, warning-zone baseline, and simplified hazard models using spatial
-      validation.
+    tableAim: Compares the pre-specified transparent score and diagnostic alternatives using spatial validation.
     tableExplanation: Reports spatial folds, AUC, inventory capture, ranking stability, and interpretation boundaries
       for selected and comparator hazard specifications.
     tableSuitableSection: 'Appendix B: Landslide Disruption Score Validation'
@@ -2295,38 +2333,38 @@ tableDictionary:
     tableId: table_road_disruption_validation
     tablePath: data/results/tables/Table_road_disruption_validation.xlsx
     tableCaption: Road-disruption validation
-    tableAim: Compares rainfall-scenario road scores and road baselines using observed restriction evidence.
-    tableExplanation: Reports restriction correspondence, top-quartile hit rates, ranking stability, and interpretation
+    tableAim: Compares rainfall-scenario road scores and road baselines using matched observed-restriction evidence.
+    tableExplanation: Reports matched concordance, section-bootstrap intervals, ranking stability, and interpretation
       boundaries for selected and comparator road scores.
     tableSuitableSection: 'Appendix B: Road-Restriction Correspondence'
   table_municipality_isolation_and_service_loss_summary:
     tableId: table_municipality_isolation_and_service_loss_summary
     tablePath: data/results/tables/Table_municipality_isolation_and_service_loss_summary.xlsx
     tableCaption: Municipality isolation and service-loss summary
-    tableAim: Summarizes community isolation, exposed population, older population, and service loss for each administrative
-      unit and scenario.
-    tableExplanation: Aggregates eligible population, ordered isolation outcomes, service-loss populations, and
-      full-network excess time to municipalities and wards.
+    tableAim: Summarizes community isolation, exposed population, older population, class-specific service loss,
+      and shelter-specific excess travel time for each administrative unit and scenario.
+    tableExplanation: Aggregates eligible population, ordered isolation outcomes, primary service-loss populations,
+      conditional emergency-water sensitivity, and shelter excess time to municipalities and wards.
     tableSuitableSection: 'Appendix C: Municipality Isolation and Service-Loss Summary'
   table_priority_road_sections:
     tableId: table_priority_road_sections
     tablePath: data/results/tables/Table_priority_road_sections.xlsx
     tableCaption: Top thirty priority road sections
-    tableAim: Lists the 30 road sections with the largest consequence-aware intervention relevance.
-    tableExplanation: Lists reader-facing road priorities, consequence burden, intervention assignment, planning
-      cost, and robust priority score without internal road identifiers.
+    tableAim: Lists the 30 road sections with the largest assigned-action consequence-based intervention relevance.
+    tableExplanation: Lists reader-facing road priorities, consequence burden, intervention assignment, relative
+      planning cost, and assigned-action screening score without internal road identifiers.
     tableSuitableSection: 'Appendix C: Priority Road Sections'
   table_high_isolation_risk_communities:
     tableId: table_high_isolation_risk_communities
     tablePath: data/results/tables/Table_high_isolation_risk_communities.xlsx
     tableCaption: Top thirty high-isolation-risk communities
-    tableAim: Lists the 30 communities with the highest Heavy-scenario population and older-population isolation
-      burden.
+    tableAim: Lists the 30 communities with the highest Heavy-scenario expected isolated Total Population, using
+      expected isolated Population Age 65+ only as a secondary key and separate descriptor.
     tableExplanation: Lists population clusters with their locations, gateway counts, ordered isolation frequencies,
       affected populations, and principal service loss.
     tableSuitableSection: 'Appendix C: High-Isolation-Risk Communities'
-  table_intervention_portfolios_and_robustness:
-    tableId: table_intervention_portfolios_and_robustness
+  table_intervention_portfolios:
+    tableId: table_intervention_portfolios
     tablePath: data/results/tables/Table_intervention_portfolios.xlsx
     tableCaption: Intervention portfolios
     tableAim: Compares budget-feasible intervention portfolios and their protective benefits across sensitivity
@@ -2338,8 +2376,8 @@ tableDictionary:
     tableId: table_comparator_robustness
     tablePath: data/results/tables/Table_comparator_robustness.xlsx
     tableCaption: Comparator robustness
-    tableAim: Compares the consequence-aware intervention ranking with hazard-only, emergency-route-only,
-      road-class-only, and equal-cost baselines.
+    tableAim: Compares the assigned-action consequence-based screening ranking with hazard-only, emergency-route-only,
+      road-class-only, and equal-cost consequence baselines under matched cost-effect settings.
     tableExplanation: Reports comparator-specific budgets, selected roads, realized costs, protected populations,
       avoided isolation shares, and unit-cost benefits.
     tableSuitableSection: 'Appendix B: Intervention Portfolio Robustness'
@@ -2368,21 +2406,24 @@ analysisStructureBrief:
     interpretation: Only layers passing their declared quality gates enter the scenario chain; unresolved locations
       and baseline-disconnected cases remain explicit rather than being treated as failures.
   - levelName: Rainfall and threshold scenario construction
-    levelAim: Translate historical station rainfall and official post-earthquake factors into ordered scenario loading.
+    levelAim: Translate independent-event station rainfall maxima and official post-earthquake factors into ordered
+      scenario loading.
     inputs:
     - Observation Time
     - Hourly Rainfall
     - Station ID
+    - Independent Rainfall Event Identifier
+    - Independent-Event Maximum Rainfall
     - Rainfall Threshold Retention Factor
     - Municipality or Subarea (Japanese)
-    modelOrMethod: Rolling rainfall is R_h(s,t)=sum_{u=t-h+1}^{t} R_1h(s,u). Moderate, Heavy, and Extreme use station
-      quantiles 0.75, 0.90, and 0.99; relative loading divides the weighted window quantiles by the retained official
-      threshold.
+    modelOrMethod: Events are separated by 24 complete zero-rainfall hours. Moderate, Heavy, and Extreme use station-specific
+      event-maximum quantiles 0.75, 0.90, and 0.99; coarse inverse-distance loading divides the weighted window
+      quantiles by the retained official threshold.
     outputs:
     - Rainfall History and Official Threshold Adjustment
     - Rainfall and Threshold Scenarios
-    interpretation: Scenarios measure relative rainfall loading at station support; they do not interpolate fine-grid
-      rainfall or identify a causal earthquake effect.
+    interpretation: Scenarios measure relative rainfall loading at coarse station support; they alter score magnitude
+      but near-unity rank correlations preclude a spatial reprioritization or causal earthquake claim.
   - levelName: Terrain and landslide disruption scoring
     levelAim: Construct a stable, interpretable slope-disruption ranking from terrain, warning zones, and scenario
       rainfall.
@@ -2394,14 +2435,13 @@ analysisStructureBrief:
     - Rainfall Scenario
     - Rainfall Threshold Retention Factor
     - Landslide Inventory ID
-    modelOrMethod: The score follows H_i^(r,f)=logit^-1(theta_0+theta_z Z_i+theta_s S_i+theta_c C_i+theta_w W_i+theta_r
-      X_i^(r,f)). A fitted score is retained only when the pre-specified spatial stability rule passes; otherwise
-      the transparent standardized scenario score is selected.
+    modelOrMethod: The selected score follows H_i^(r,f)=logit^-1(0.15 Z_i+1.00 S_i+0.35 abs(C_i)+0.75 W_i+gamma
+      log X_i^(r,f)), with gamma=1.00 centrally; fitted logistic specifications remain diagnostic comparators.
     outputs:
     - Official-Threshold-Adjusted Landslide Disruption Score
-    - Hazard and Road-Disruption Validation
-    interpretation: The selected result is a spatially validated disruption ranking against incomplete presence
-      evidence, not a landslide occurrence probability.
+    - Hazard Validation
+    interpretation: The selected result has moderate spatial discrimination against incomplete presence evidence
+      and remains a transparent disruption ranking, not a landslide occurrence probability.
   - levelName: Directional slope-to-road translation
     levelAim: Identify road sections exposed to hazardous terrain located above and aligned toward the road.
     inputs:
@@ -2413,13 +2453,14 @@ analysisStructureBrief:
     - Emergency Route Membership
     - Restriction Reason
     - Matched Road Edge ID
-    modelOrMethod: For road e, D_e^(r,f)=1-product_{i in U_e}(1-H_i^(r,f) q_ie), where U_e requires positive relief
-      and downhill alignment and q_ie decreases with distance.
+    modelOrMethod: For road e, D_e^(r,f)=sum_{i in U_e}(q_ie H_i^(r,f))/sum_{i in U_e}q_ie, where U_e requires positive
+      relief and downhill alignment and q_ie decreases with distance; matched concordance uses controls matched
+      on municipality, road class, emergency-route status, and length decile.
     outputs:
     - Road Disruption Exposure and Observed Restriction Evidence
-    - Hazard and Road-Disruption Validation
-    interpretation: Observed restrictions support relative screening performance, but the road score is not an empirically
-      calibrated closure probability.
+    - Road-Disruption Validation
+    interpretation: Matched restrictions support relative screening performance beyond road-length and warning-zone
+      comparators, but the road score is not an empirically calibrated closure probability.
   - levelName: Community isolation simulation
     levelAim: Estimate how ordered road-closure scenarios disconnect populated communities from external-road gateways.
     inputs:
@@ -2452,8 +2493,8 @@ analysisStructureBrief:
     outputs:
     - Basic Service Reachability Loss
     - Municipality Isolation and Service-Loss Summary
-    interpretation: Baseline-unreachable cases are non-evaluable; emergency-water results are a resolved-point lower
-      bound because only 10 of 36 announced points have usable coordinates.
+    interpretation: Baseline-unreachable cases are non-evaluable; emergency-water results are conditional sensitivity
+      evidence for 10 of 36 geolocated destinations, with indeterminate bias direction.
   - levelName: Robust intervention screening
     levelAim: Rank feasible road-access actions by population protection under budget and parameter uncertainty.
     inputs:
@@ -2464,11 +2505,12 @@ analysisStructureBrief:
     - Intervention Type
     - Intervention Cost
     modelOrMethod: Population-weighted avoided isolation is A_b(x)=sum_c N_c[P_hat_iso,c^base-P_hat_iso,c^int(x)]
-      subject to sum_e,a Cost_e,a,b x_e,a<=B. Priority Q_e is the median marginal protected population per cost
-      across actions and sensitivities.
+      subject to sum_e,a Cost_e,a,b x_e,a<=B. Each candidate road receives one feasible action, and Q_e is the
+      median assigned-action consequence proxy per relative cost across sensitivity settings.
     outputs:
     - Intervention Priorities and Budgeted Benefits
     - Priority Road Sections
-    - Intervention Portfolios and Robustness
-    interpretation: Results are scenario screening priorities, not engineering optima; assumed effects and planning
-      costs are compared with hazard-only, emergency-route-only, road-class-only, and equal-cost consequence baselines.
+    - Intervention Portfolios
+    - Comparator Robustness
+    interpretation: Results are scenario screening priorities, not engineering optima; Central equality with the
+      equal-cost consequence baseline is a consistency finding rather than evidence of incremental superiority.

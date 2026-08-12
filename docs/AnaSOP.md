@@ -134,17 +134,20 @@ hazard and consequence pathway.
   selection patterns are available; engineering costs and intervention-effect sizes
   are not yet observed.
 - Key readable variables or data scope: baseline isolation risk; communities and
-  population protected; older-population weight; road criticality and redundancy;
-  intervention type; cost proxy; assumed risk reduction; marginal benefit; and budget.
+  population protected; older-population exposure reported separately; road criticality
+  and redundancy; assigned intervention type; consequence proxy; cost proxy; assumed
+  risk reduction; and budget.
 - What would verify it: Benefits are monotone with budget, feasible under declared
-  constraints, reproducible, and superior to hazard-only, road-class-only, and equal-
-  cost baselines across sensitivity scenarios.
+  constraints, reproducible across Monte Carlo seeds, and compared under identical
+  assumptions with hazard-only, road-class-only, and equal-cost consequence baselines.
+  Equality with the equal-cost consequence baseline is an auditable consistency result,
+  not evidence of incremental superiority.
 - What would falsify or weaken it: Highly unstable rankings, negligible improvement,
   or choices determined primarily by unvalidated cost proxies would restrict the result
   to screening rather than optimization guidance.
-- Required next feasibility check: Define separate cost and effect ranges for inspection,
-  reinforcement, clearance, evacuation, and pre-positioning, and decide whether the
-  first version reports a multi-action optimization or a road-priority screening.
+- Required next feasibility check: Confirm separate cost and effect ranges for inspection,
+  reinforcement, clearance, evacuation, and pre-positioning, and validate the declared
+  assigned-action road-priority screening under repeated Monte Carlo seeds.
 
 ### Scope of Analysis
 
@@ -333,8 +336,10 @@ Variable naming convention: the `variable_name` and `full_name` columns below co
 | Station Slug | Station Slug | TBD | TBD | Retained and renamed according to confirmed preprocessing decisions; further analytical construction is TBD. | yes |
 | Station ID | JMA Station Identifier | TBD | TBD | Retained and renamed according to confirmed preprocessing decisions; further analytical construction is TBD. | yes |
 | Station Name (Japanese) | Station Name (Japanese) | TBD | TBD | Retained and renamed according to confirmed preprocessing decisions; further analytical construction is TBD. | yes |
+| Station Latitude | JMA Station Latitude (decimal degrees) | spatial linkage | Latitude of JMA station \(s\) in decimal degrees. | Converted from the official JMA station-metadata degrees and decimal-minutes fields and joined by Japanese station name; all seven retained stations must resolve. | yes |
+| Station Longitude | JMA Station Longitude (decimal degrees) | spatial linkage | Longitude of JMA station \(s\) in decimal degrees. | Converted from the official JMA station-metadata degrees and decimal-minutes fields and joined by Japanese station name; all seven retained stations must resolve. | yes |
 | Observation Time | Observation Time | TBD | TBD | Retained and renamed according to confirmed preprocessing decisions; further analytical construction is TBD. | yes |
-| Hourly Rainfall | Hourly Rainfall (mm) | main explanatory | \(R_{1h}(s,t)\), hourly rainfall at station \(s\) and time \(t\), measured in millimetres. | JMA station chunks concatenated, converted to numeric, timestamped in Asia/Tokyo, and deduplicated by station and observation time; no spatial interpolation or missing-value imputation. | yes |
+| Hourly Rainfall | Hourly Rainfall (mm) | main explanatory | \(R_{1h}(s,t)\), hourly rainfall at station \(s\) and time \(t\), measured in millimetres. | JMA station chunks concatenated, converted to numeric, timestamped in Asia/Tokyo, and deduplicated by station and observation time; event construction uses only quality-flag 8 observations and preserves missingness. | yes |
 | No-Phenomenon Flag | JMA No-Phenomenon Flag | TBD | TBD | Retained and renamed according to confirmed preprocessing decisions; further analytical construction is TBD. | yes |
 | Quality Flag | JMA Rainfall Quality Flag | TBD | TBD | Retained and renamed according to confirmed preprocessing decisions; further analytical construction is TBD. | yes |
 | Homogeneity Number | JMA Homogeneity Number | TBD | TBD | Retained and renamed according to confirmed preprocessing decisions; further analytical construction is TBD. | yes |
@@ -526,43 +531,52 @@ Variable naming convention: the `variable_name` and `full_name` columns below co
 | Municipality or Subarea (Japanese) | Municipality or Subarea Name (Japanese) | TBD | TBD | Retained and renamed according to confirmed preprocessing decisions; further analytical construction is TBD. | yes |
 | Source | Official Threshold Source | TBD | TBD | Retained and renamed according to confirmed preprocessing decisions; further analytical construction is TBD. | yes |
 | Cumulative Rainfall | Rolling Cumulative Rainfall (mm) | main explanatory | \(R_h(s,t)=\sum_{u=t-h+1}^{t}R_{1h}(s,u)\), for \(h\) in 3, 24, and 72 hours. | Computed within station after hourly quality screening; missing hours remain missing and no spatial interpolation is applied at preprocessing. | yes |
-| Rainfall Scenario | Rainfall Severity Scenario | main explanatory | Ordered category with levels Moderate, Heavy, and Extreme. | Assigned from historical rainfall distributions and official threshold context; exact cut points are declared in the estimation framework. | yes |
+| Rainfall Event ID | Independent Rainfall Event Identifier | analysis unit | Deterministic station-support identifier for rainfall event \(j\). | Wet hours belong to the same event until separated by at least 24 consecutive complete zero-rainfall hours; a missing hour breaks event eligibility and never counts as dry. | yes |
+| Event Maximum Rainfall | Independent-Event Maximum Rainfall (mm) | main explanatory | \(M_{h,s,j}=\max_{t\in j}R_h(s,t)\), for \(h\in\{1,3,24,72\}\). | Maximum complete accumulation for each station-event-window combination; incomplete rolling windows remain missing. | yes |
+| Rainfall Scenario | Rainfall Severity Scenario | main explanatory | Ordered category with event-maximum quantiles \(\tau_r\in\{0.75,0.90,0.99\}\) for Moderate, Heavy, and Extreme. | Assigned from station-specific independent-event maxima using the seven-station 2016-2020 common period centrally and five complete 2016-2025 stations as temporal-support sensitivity. | yes |
 | Terrain Slope | Terrain Slope (degrees) | main explanatory | \(S(x)=\arctan(\sqrt{z_x(x)^2+z_y(x)^2})180/\pi\). | Derived from Elevation at native terrain resolution using finite differences and retained in degrees. | yes |
 | Terrain Curvature | Terrain Curvature | main explanatory | \(C(x)=z_{xx}(x)+z_{yy}(x)\). | Derived as screening-scale terrain curvature from second finite differences of Elevation; sensitivity specifications may separate profile and plan curvature. | yes |
-| Landslide Disruption Score | Official-Threshold-Adjusted Landslide Disruption Score | intermediate outcome | \(H_i^{(r,f)}=\operatorname{logit}^{-1}(\theta_0+\theta_z Z_i+\theta_s S_i+\theta_c C_i+\theta_w W_i+\theta_r X_i^{(r,f)})\). | Scenario score for terrain unit \(i\), rainfall scenario \(r\), and threshold-retention setting \(f\); calibrated for ranking with 2016 inventory evidence and not labelled as occurrence probability. | yes |
-| Road Disruption Score | Scenario Road Disruption Score | intermediate outcome | \(D_e^{(r,f)}=1-\prod_{i\in U_e}(1-H_i^{(r,f)}q_{ie})\). | Aggregates upslope Landslide Disruption Score over influence set \(U_e\) using transfer weight \(q_{ie}\); validated against observed restriction evidence and interpreted as a score. | yes |
+| Landslide Disruption Score | Official-Threshold-Adjusted Landslide Disruption Score | intermediate outcome | \(H_i^{(r,f)}=\operatorname{logit}^{-1}(0.15Z_i+1.00S_i+0.35|C_i|+0.75W_i+\gamma\log X_i^{(r,f)})\). | Relative terrain score for unit \(i\), event-quantile rainfall scenario \(r\), and threshold-retention setting \(f\), with \(\gamma=1.00\). It is not an occurrence probability. | yes |
+| Road Disruption Score | Scenario Road Disruption Score | intermediate outcome | \(D_e^{(r,f)}=\sum_{i\in U_e}q_{ie}H_i^{(r,f)}/\sum_{i\in U_e}q_{ie}\). | Normalized directional aggregation of upslope Landslide Disruption Score; matched restriction evidence validates only relative ranking. | yes |
 | Community ID | Road-Connected Population Community Identifier | analysis unit | Deterministic identifier for a road-connected cluster of populated 125 m meshes. | Populated meshes are connected to eligible road nodes and grouped within the same accessible baseline network component; unresolved meshes remain explicit. | yes |
 | Community Isolation Frequency | Monte Carlo Community Isolation Frequency | primary outcome | \(\widehat{P}_{iso,c}=M^{-1}\sum_{m=1}^{M}I_{c,m}^{iso}\), with \(M=1000\). | Fraction of 1,000 scenario disruption draws in which community \(c\) loses connection to the declared external-road target; reported as simulation frequency, not calibrated probability. | yes |
 | Isolated Population | Expected Isolated Population | primary consequence | \(N^{iso}=\sum_c N_c\widehat{P}_{iso,c}\). | Population-weighted isolation exposure summed across communities using Total Population; older-population variants use the confirmed age variables. | yes |
-| Service Reachability Loss | Basic Service Reachability Loss | secondary outcome | \(L_c^{service}=\sum_k w_k\widehat{P}(T_{c,k}=\infty)\). | Weighted simulation frequency that service class \(k\) becomes unreachable from community \(c\); service weights are declared and varied in sensitivity analysis. | yes |
+| Service Reachability Loss | Basic Service Reachability Loss | secondary outcome | \(L_{c,k}^{service}=\widehat{P}(T_{c,k}=\infty)\). | Class-specific simulation frequency that service class \(k\) becomes unreachable from community \(c\); no cross-service composite is calculated without separately approved decision weights. | yes |
 | Excess Travel Time | Disruption-Induced Excess Travel Time (min) | secondary outcome | \(\Delta T_{c,k}=T_{c,k}^{disrupted}-T_{c,k}^{baseline}\). | Computed only when service \(k\) remains reachable; unreachable cases are reported separately and are not assigned arbitrary travel times. | yes |
 | Intervention Type | Scenario Intervention Type | decision variable | Categorical action: inspection, temporary reinforcement, clearance pre-positioning, preventive evacuation, resource pre-positioning, or alternative-route protection. | Intervention categories are scenario actions and do not imply completed engineering assessment. | yes |
 | Intervention Cost | Scenario Intervention Cost | decision constraint | \(Cost_{e,a}^{(l)}\), \(Cost_{e,a}^{(c)}\), and \(Cost_{e,a}^{(h)}\) are low, central, and high cost assumptions for road \(e\) and action \(a\). | Uses declared relative or planning-unit ranges because observed engineering costs are unavailable. | yes |
 | Avoided Isolation | Population-Weighted Avoided Isolation | intervention benefit | \(A(x)=\sum_c N_c[\widehat{P}_{iso,c}^{base}-\widehat{P}_{iso,c}^{int}(x)]\). | Difference between baseline and intervention simulation frequencies, weighted by population, under intervention set \(x\). | yes |
 | Protected Population | Expected Population Protected by Intervention | intervention benefit | \(N^{protected}(x)=A(x)\). | Expected population-equivalent reduction in isolation frequency; reported with older-population protection and scenario intervals. | yes |
-| Priority Score | Robust Intervention Priority Score | decision outcome | \(Q_e=\operatorname{median}_{a,b}[\Delta N_{e,a,b}^{protected}/Cost_{e,a,b}]\). | Median protected-population benefit per planning cost across intervention actions \(a\) and sensitivity settings \(b\), accompanied by rank-stability diagnostics rather than treated as an engineering optimum. | yes |
+| Priority Score | Assigned-Action Consequence-Based Screening Score | decision outcome | \(Q_e=\operatorname{median}_{b}[G_e\rho_{a(e),b}/Cost_{e,a(e),b}]\). | Auditable screening score for road section \(e\), using a pre-assigned feasible road-access action \(a(e)\), consequence proxy \(G_e\), and low, central, and high cost-effect settings \(b\). It is not a simulated cross-action marginal benefit or an engineering optimum. | yes |
 
 ## 5. Identification Strategy
 
 ### Design Principle
 
-The study uses an applied, scenario-based compound-hazard design rather than a causal design. Identification comes from transparent contrasts across Rainfall Scenario and Rainfall Threshold Retention Factor settings, spatial ranking calibration against Landslide Inventory ID locations, validation of Road Disruption Score against observed Restriction Reason and Restriction Status evidence, and repeated network disruption of the baseline road graph. The analysis does not identify the causal effect of earthquake shaking on landslide occurrence.
+The study uses an applied, scenario-based compound-hazard design rather than a causal design. Identification comes from transparent contrasts across independent-storm Rainfall Scenario and Rainfall Threshold Retention Factor settings, spatial ranking calibration against Landslide Inventory ID locations, matched presence-background validation of Road Disruption Score against observed Restriction Reason and Restriction Status evidence, and repeated network disruption of the baseline road graph. The analysis does not identify the causal effect of earthquake shaking on landslide occurrence.
+
+The audit-driven revision replaces quantiles of all positive rolling rainfall windows with maxima from independent rainfall events. An event is a sequence of rainfall hours separated from the next event by at least 24 consecutive complete hours with zero recorded rainfall; missing hours break event eligibility and never count as dry separation. The central spatial specification uses the seven-station common period from 2016 through 2020; a temporal-support sensitivity specification uses the five stations with complete 2016-2025 coverage. Station-specific event quantiles are propagated only at coarse station support using inverse-distance weights. No station-derived surface is interpreted as 10 m rainfall information.
+
+Official threshold-retention values are applied at their resolved spatial support. Yatsushiro contains official 0.70 and 0.80 subarea values, but the available municipality geometry cannot distinguish those subareas. The central municipality-wide assignment is therefore an analyst-defined midpoint of 0.75 rather than an official value. Municipality-wide 0.70 and 0.80 assignments provide bounding cases. Their effects are quantified at the slope, road, isolation, and service-consequence stages; intervention outputs are reopened only if those bounds materially change the candidate set, priority order, or protected-population result.
 
 The primary analytical units are terrain cells for Landslide Disruption Score, road sections for Road Disruption Score, road-connected clusters of populated 125 m meshes for Community ID, and service classes represented by Shelter ID, Evacuation Site ID, Water Point Name, Fire Facility Name, and Facility Name. Communities are defined before any disruption simulation, and baseline connectivity, population reconciliation, and service-node attachment must pass quality checks before scenario results are interpreted.
 
 ### Estimands and Evidence Contrasts
 
 - The threshold-adjustment estimand is the change in Landslide Disruption Score between baseline, 80 percent, and 70 percent Rainfall Threshold Retention Factor settings under the same Rainfall Scenario. This is a scenario contrast, not an estimated causal earthquake effect.
-- The road estimand is the change in Road Disruption Score across rainfall and threshold settings, together with its ranking correspondence to landslide-related Restriction Reason and Restriction Status observations.
-- The primary consequence estimand is Community Isolation Frequency from 1,000 Monte Carlo disruption draws. Isolated Population is the population-weighted consequence, and Population Age 65+, Population Age 75+, and Population Age 85+ support vulnerability heterogeneity.
-- Secondary consequence estimands are Service Reachability Loss and Excess Travel Time for reachable services.
-- The decision estimands are Avoided Isolation, Protected Population, and Priority Score under low, central, and high Intervention Cost and intervention-effect assumptions.
+- Rainfall-severity contrasts have two distinct estimands: change in score magnitude and change in spatial rank. If scenario rank correlation exceeds 0.95, the evidence supports magnitude scaling only and cannot be described as scenario-sensitive spatial prioritization.
+- The road estimand is the change in Road Disruption Score across rainfall and threshold settings, together with its matched-background ranking correspondence to landslide-related Restriction Reason and Restriction Status observations.
+- The primary consequence estimand is the mean Community Isolation Frequency across five predeclared, independently seeded sets of 1,000 Monte Carlo disruption draws. Isolated Population is the population-weighted consequence; between-seed ranges quantify Monte Carlo variation, and Population Age 65+, Population Age 75+, and Population Age 85+ support vulnerability heterogeneity.
+- Secondary consequence estimands are the five-seed mean Service Reachability Loss and Excess Travel Time for reachable services, with between-seed ranges reported separately.
+- The decision estimands are Avoided Isolation and Protected Population for simulated
+  portfolios, together with an assigned-action Priority Score used only to order candidate
+  road sections under low, central, and high Intervention Cost and effect assumptions.
 
 ### Calibration and Validation Strategy
 
-The 2016 interpreted landslide inventory is treated as incomplete presence evidence. Spatially blocked calibration evaluates a fitted terrain-plus-warning logistic score, terrain-only and Elevation-plus-warning-zone comparators, a warning-zone-only comparator, and a transparent fixed standardized score. The fitted score is retained only when its mean spatial AUC is at least 0.60, no evaluable fold is below 0.50, it beats the Elevation-plus-warning-zone comparator, and it is within 0.02 AUC of the transparent score. Otherwise the transparent score is selected for scenario screening. The selected Landslide Disruption Score is never labelled as an occurrence probability.
+The 2016 interpreted landslide inventory is treated as incomplete presence evidence. To enforce a strict temporal evidence boundary, its validation uses only warning-zone polygons with a known Designation Date on or before 2016-07-28; polygons designated later and records carrying an unknown or sentinel date are excluded from the 2016 validation. The complete current warning-zone layer remains the appropriate operational input for the 2026 screening application. Spatially blocked calibration evaluates a fitted terrain-plus-warning logistic score, terrain-only and Elevation-plus-warning-zone comparators, a warning-zone-only comparator, and a transparent fixed standardized score. The transparent specification reports its standardized weights explicitly: 0.15 for Elevation, 1.00 for Terrain Slope, 0.35 for absolute Terrain Curvature, and 0.75 for warning-zone exposure. Validation uses ten randomly sampled eligible background cells per unique presence cell, describes them as pseudo-background rather than confirmed absence, and reports the reproducible sampling seed. Selection reports mean and fold-specific AUC together with held-out top-quartile capture; no specification is described as unambiguously superior when stability and capture disagree. Warning-zone-only performance below chance triggers a layer-compatibility and hazard-type audit before warning-zone evidence is interpreted. The selected Landslide Disruption Score is never labelled as an occurrence probability.
 
-Road validation deduplicates repeated Restriction Observation ID and Snapshot Time records, restricts the validation target to landslide-, rockfall-, slope-collapse-, or sediment-related Restriction Reason categories, and uses Matched Road Edge ID and Road Edge Match Distance (m) to separate reliable from uncertain matches. Because unreported restrictions are not confirmed non-events, validation supports ranking and screening claims rather than calibrated failure probabilities.
+Road validation deduplicates repeated Restriction Observation ID and Snapshot Time records, restricts the validation target to landslide-, rockfall-, slope-collapse-, or sediment-related Restriction Reason categories, and uses Matched Road Edge ID and Road Edge Match Distance (m) to separate reliable from uncertain matches. The complete linkage funnel is reported from snapshot observations through candidate matches, reliable deduplicated observations, and retained road edges. Each reliably matched restriction edge is compared with pseudo-background road sections matched on municipality or ward, Road Category, Emergency Route Membership, and Road Section Length (m) decile. Matched concordance and bootstrap intervals are the primary road-validation metrics; prefecture-wide percentiles remain descriptive. Because unreported restrictions are not confirmed non-events, validation supports ranking and screening claims rather than calibrated failure probabilities.
 
 ### Relationship to Section 4 Variables and Section 8 Outputs
 
@@ -571,11 +585,14 @@ The identification strategy uses only the confirmed readable Section 4 variables
 ### Interpretation Limits
 
 - Rainfall is represented at station or declared product support. Resampling does not create 10 m rainfall information.
-- Official threshold retention is a municipal or subarea scenario adjustment, not a continuous ground-motion surface.
+- Official threshold retention is a municipal or subarea scenario adjustment, not a continuous ground-motion surface. The municipality-wide 0.75 assignment in unresolved Yatsushiro is an analyst midpoint bounded by separate 0.70 and 0.80 assignments; it is never labelled as an official Yatsushiro value.
 - Landslide Disruption Score and Road Disruption Score are relative scenario scores unless independent labels support calibration.
 - Community Isolation Frequency is a simulation frequency conditional on the score-to-closure mapping, network definition, and external-road target.
-- Service Reachability Loss is simulated network loss, not observed emergency-response failure. Emergency-water results use only resolved locations and are reported as a resolved-point lower bound.
-- Intervention Cost and intervention effects are planning assumptions. Priority Score supports robust screening and field inspection, not an engineering optimum or guaranteed benefit.
+- Service Reachability Loss is simulated network loss, not observed emergency-response failure. Emergency-water results are conditional on the resolved destination subset and remain a sensitivity result; incomplete destination geography is not described as a lower bound on loss magnitude.
+- Intervention Cost and intervention effects are planning assumptions. Priority Score is
+  an assigned-action consequence proxy for screening and field inspection, not a
+  cross-action marginal-benefit estimate, engineering optimum, or guaranteed benefit.
+- Consequence-aware intervention rankings are compared with every baseline under the same Conservative, Central, or Optimistic cost-effect setting. Superiority is claimed only when the increment is material and stable; otherwise the contribution is auditability and robustness relative to simpler rules.
 
 The confirmed Section 8 outputs cover the central question and all four supporting questions. Failure to achieve stable validation, baseline network quality, population reconciliation, Monte Carlo convergence, or intervention ranking stability restricts the corresponding claim to descriptive or inconclusive evidence.
 
@@ -593,33 +610,59 @@ R_h(s,t)=\sum_{u=t-h+1}^{t}R_{1h}(s,u), \qquad h \in \{3,24,72\}.
 
 Here, \(R_{1h}(s,u)\) is Hourly Rainfall at hour \(u\), and \(R_h(s,t)\) is Cumulative Rainfall over \(h\) hours. A window is missing when required hourly observations do not satisfy the declared completeness rule.
 
-Moderate, Heavy, and Extreme Rainfall Scenario values use station-specific historical quantiles \(\tau_r\) with central settings \(0.75\), \(0.90\), and \(0.99\), respectively. For terrain cell \(i\), scenario exceedance is
+Independent rainfall event \(j\) at station \(s\) is separated from adjacent events by at least 24 consecutive complete hours with zero Hourly Rainfall. Missing hours do not count as dry hours, do not contribute zero rainfall, and break eligibility for an accumulation window. For each event and accumulation window, event maximum is
 
 \[
-X_i^{(r,f)}=\sum_{h\in H}\omega_h\frac{Q_{h,s(i)}(\tau_r)}{f_iQ_{h,s(i)}(0.90)}, \qquad \sum_{h\in H}\omega_h=1.
+M_{h,s,j}=\max_{t\in j}R_h(s,t), \qquad h\in H=\{1,3,24,72\}.
 \]
 
-Here, \(H=\{1,3,24,72\}\) is the rainfall-window set, \(Q_{h,s}(\tau)\) is the historical quantile \(\tau\) for window \(h\) at station \(s\), \(s(i)\) is the declared station-support assignment for cell \(i\), \(f_i\) is Rainfall Threshold Retention Factor, \(\omega_h\) is the declared window weight, and \(X_i^{(r,f)}\) is the dimensionless scenario exceedance index. Station assignment is evaluated through nearest-station and coarse inverse-distance sensitivity specifications; neither is described as fine-resolution rainfall interpolation.
+Here, \(M_{h,s,j}\) is the largest complete accumulation observed during independent event \(j\). Moderate, Heavy, and Extreme Rainfall Scenario values use station-specific event-maximum quantiles \(Q_{h,s}^{event}(\tau_r)\) with central settings \(\tau_r=0.75\), \(0.90\), and \(0.99\), respectively. The empirical event count is reported for every station and window.
+
+For terrain cell \(i\), coarse inverse-distance station weights and the spatial event quantile are
+
+\[
+\lambda_{s,i}=\frac{(d_{s,i}+d_0)^{-2}}{\sum_v(d_{v,i}+d_0)^{-2}}, \qquad \widetilde{Q}_{h,i}(\tau_r)=\sum_s\lambda_{s,i}Q_{h,s}^{event}(\tau_r).
+\]
+
+Here, \(d_{s,i}\) is the distance between station \(s\) and cell \(i\), \(d_0\) is a small positive stabilizing distance fixed before analysis, \(\lambda_{s,i}\) is the normalized inverse-distance weight, and \(\widetilde{Q}_{h,i}(\tau_r)\) is a coarse station-supported rainfall surface. The Heavy reference for window \(h\) is \(B_h=\operatorname{median}_s[Q_{h,s}^{event}(0.90)]\). Scenario exceedance is
+
+\[
+X_i^{(r,f)}=\frac{1}{f_i}\sum_{h\in H}\omega_h\frac{\widetilde{Q}_{h,i}(\tau_r)}{B_h}, \qquad \sum_{h\in H}\omega_h=1.
+\]
+
+Here, \(f_i\) is Rainfall Threshold Retention Factor, \(\omega_h\) is the declared accumulation-window weight, and \(X_i^{(r,f)}\) is the dimensionless scenario exceedance index. Official 0.70 and 0.80 values are assigned only where their spatial support is resolved. Because the available geometry does not resolve the two official Yatsushiro subareas, the central municipality-wide assignment uses the analyst midpoint \(f_i=0.75\); municipality-wide \(f_i=0.70\) and \(f_i=0.80\) assignments form bounding sensitivity cases. The specification uses equal weights of 0.25 for the 1, 3, 24, and 72 hour windows. The five-station 2016-2025 support is compared with the central seven-station 2016-2020 support as a temporal-support sensitivity. Neither inverse-distance surface is described as fine-resolution rainfall interpolation.
 
 ### Terrain and Landslide Disruption Score
 
-Terrain Slope and Terrain Curvature are derived from Elevation at native terrain resolution. Let \(Z_i\), \(S_i\), \(C_i\), and \(W_i\) denote standardized Elevation, Terrain Slope, Terrain Curvature, and warning-zone exposure derived from Hazard Type and Geometry for cell \(i\). Landslide Disruption Score is
+Terrain Slope and Terrain Curvature are derived from Elevation at native terrain resolution. Let \(Z_i\), \(S_i\), \(C_i\), and \(W_i\) denote standardized Elevation, Terrain Slope, absolute Terrain Curvature, and warning-zone exposure derived from Hazard Type and Geometry for cell \(i\). The transparent terrain-context score and Landslide Disruption Score are
 
 \[
-H_i^{(r,f)}=\operatorname{logit}^{-1}\left(\theta_0+\theta_zZ_i+\theta_sS_i+\theta_cC_i+\theta_wW_i+\theta_rX_i^{(r,f)}\right).
+\eta_i=0.15Z_i+1.00S_i+0.35C_i+0.75W_i,
 \]
 
-Here, \(\theta_0\) is the intercept; \(\theta_z\), \(\theta_s\), \(\theta_c\), \(\theta_w\), and \(\theta_r\) are score weights; and \(H_i^{(r,f)}\) is Landslide Disruption Score under rainfall scenario \(r\) and threshold setting \(f\). Penalized presence-background calibration with spatial blocks provides the central weights when stable; otherwise standardized scenario weights and their low-high perturbations are reported. In both cases, \(H_i^{(r,f)}\) remains a score.
+\[
+H_i^{(r,f)}=\operatorname{logit}^{-1}\left(\eta_i+\gamma\log X_i^{(r,f)}\right).
+\]
+
+Here, \(\eta_i\) is the transparent terrain-context score; \(\gamma=1.00\) is the declared rainfall-loading coefficient; and \(H_i^{(r,f)}\) is Landslide Disruption Score. The logarithm represents threshold retention and rainfall intensity as multiplicative loading changes and reduces inverse-logit saturation. The fixed weights, standardization sample, pseudo-background design, and fitted comparators are reported in full. \(H_i^{(r,f)}\) remains a relative score.
 
 ### Slope-to-Road Translation
 
 For road section \(e\), Road Disruption Score is
 
 \[
-D_e^{(r,f)}=1-\prod_{i\in U_e}\left(1-H_i^{(r,f)}q_{ie}\right).
+D_e^{(r,f)}=\frac{\sum_{i\in U_e}q_{ie}H_i^{(r,f)}}{\sum_{i\in U_e}q_{ie}}.
 \]
 
-Here, \(U_e\) is the upslope influence set for road section \(e\), \(q_{ie}\) is a transfer weight based on Geometry, Elevation difference, distance, and terrain alignment between cell \(i\) and road section \(e\), and \(D_e^{(r,f)}\) is Road Disruption Score. Road Category, Road Section Length (m), Emergency Route Membership, and Hazard Type enter stratification and sensitivity analysis rather than being interpreted as causal controls.
+Here, \(U_e\) is the upslope influence set for road section \(e\), \(q_{ie}\) is a nonnegative transfer weight based on Geometry, Elevation difference, distance, and terrain alignment between cell \(i\) and road section \(e\), and \(D_e^{(r,f)}\) is the normalized directional Road Disruption Score. Normalization prevents longer sections from receiving larger scores solely because they intersect more sampled cells. Road Category, Road Section Length (m), Emergency Route Membership, and Hazard Type enter matched validation and stratification rather than being interpreted as causal controls.
+
+For reliably matched restriction edge \(a\) and its set of matched pseudo-background sections \(B_a\), matched concordance is
+
+\[
+C^{(r,f)}=\frac{1}{A}\sum_{a=1}^{A}\frac{1}{|B_a|}\sum_{b\in B_a}\mathbf{1}\left(D_a^{(r,f)}>D_b^{(r,f)}\right).
+\]
+
+Here, \(A\) is the number of reliably matched restriction edges, \(B_a\) contains pseudo-background sections matched on municipality or ward, Road Category, Emergency Route Membership, and Road Section Length (m) decile, and \(C^{(r,f)}\) is the share of matched comparisons in which the restriction edge scores higher. Cluster bootstrap intervals resample restriction observations rather than candidate edges.
 
 For Monte Carlo sensitivity setting \(b\), the score becomes a scenario closure propensity through a declared monotone mapping:
 
@@ -631,33 +674,41 @@ Here, \(g_b\) is a declared low, central, or high monotone calibration function 
 
 ### Community Isolation and Service Consequences
 
-For \(M=1000\) draws, Community Isolation Frequency is
+For seed replicate \(v\) and \(M=1000\) draws, Community Isolation Frequency is
 
 \[
-\widehat{P}_{iso,c}^{(r,f,b)}=\frac{1}{M}\sum_{m=1}^{M}I_{c,m}^{iso,(r,f,b)}.
+\widehat{P}_{iso,c,v}^{(r,f,b)}=\frac{1}{M}\sum_{m=1}^{M}I_{c,m,v}^{iso,(r,f,b)}.
 \]
 
-Here, \(I_{c,m}^{iso,(r,f,b)}\) equals one when Community ID \(c\) loses connection to the declared external-road target in draw \(m\), and \(\widehat{P}_{iso,c}^{(r,f,b)}\) is Community Isolation Frequency. The primary external target is the set of stable roots containing Primary Emergency Road nodes at prefectural boundary gateways. Robustness targets use all emergency-route boundary gateways and all Primary Emergency Road roots. Rainfall scenarios use common random numbers so ordered closure propensities generate ordered community frequencies.
+Here, \(I_{c,m,v}^{iso,(r,f,b)}\) equals one when Community ID \(c\) loses connection to the declared external-road target in draw \(m\) of seed replicate \(v\), and \(\widehat{P}_{iso,c,v}^{(r,f,b)}\) is the replicate-specific Community Isolation Frequency. The primary external target is the set of stable roots containing Primary Emergency Road nodes at prefectural boundary gateways. Robustness targets use all emergency-route boundary gateways and all Primary Emergency Road roots. Rainfall scenarios use common random numbers so ordered closure propensities generate ordered community frequencies.
+
+For \(K=5\) predeclared independently seeded common-random-number sets, the reported frequency is
+
+\[
+\overline{P}_{iso,c}^{(r,f,b)}=\frac{1}{K}\sum_{v=1}^{K}\widehat{P}_{iso,c,v}^{(r,f,b)}.
+\]
+
+Here, \(K\) is the number of seed replicates and \(\overline{P}_{iso,c}^{(r,f,b)}\) is the five-seed mean Community Isolation Frequency. Monte Carlo uncertainty is summarized by the between-seed standard deviation and range of total Isolated Population, while 500-, 1,000-, and 2,000-draw convergence remains a separate computational check.
 
 Isolated Population is
 
 \[
-N_{iso}^{(r,f,b)}=\sum_c N_c\widehat{P}_{iso,c}^{(r,f,b)}.
+\overline{N}_{iso}^{(r,f,b)}=\sum_c N_c\overline{P}_{iso,c}^{(r,f,b)}.
 \]
 
-Here, \(N_c\) is Total Population assigned to community \(c\), and \(N_{iso}^{(r,f,b)}\) is expected Isolated Population. Equivalent sums use Population Age 65+, Population Age 75+, and Population Age 85+.
+Here, \(N_c\) is Total Population assigned to community \(c\), and \(\overline{N}_{iso}^{(r,f,b)}\) is five-seed mean expected Isolated Population. Equivalent sums use Population Age 65+, Population Age 75+, and Population Age 85+; replicate-specific totals provide the reported range.
 
-For service class \(k\), Service Reachability Loss and Excess Travel Time are
+For service class \(k\), class-specific Service Reachability Loss and Excess Travel Time are
 
 \[
-L_c^{service,(r,f,b)}=\sum_k w_k\widehat{P}\left(T_{c,k}^{(r,f,b)}=\infty\right),
+L_{c,k,v}^{service,(r,f,b)}=\widehat{P}_v\left(T_{c,k,v}^{(r,f,b)}=\infty\right),
 \]
 
 \[
-\Delta T_{c,k}^{(r,f,b)}=T_{c,k}^{(r,f,b)}-T_{c,k}^{baseline}.
+\Delta T_{c,k,v}^{(r,f,b)}=T_{c,k,v}^{(r,f,b)}-T_{c,k}^{baseline}.
 \]
 
-Here, \(T_{c,k}^{(r,f,b)}\) is disrupted travel time from community \(c\) to the nearest reachable service in class \(k\); \(T_{c,k}^{baseline}\) is baseline travel time; \(w_k\) is a declared service weight; \(L_c^{service,(r,f,b)}\) is Service Reachability Loss; and \(\Delta T_{c,k}^{(r,f,b)}\) is Excess Travel Time for reachable cases. Service loss uses 1,000 connectivity draws, while Excess Travel Time uses 100 weighted rerouting draws on the complete road graph. Baseline-unreachable cases remain non-evaluable and are not converted to zero or assigned an arbitrary large travel time.
+Here, \(T_{c,k,v}^{(r,f,b)}\) is disrupted travel time from community \(c\) to the nearest reachable service in class \(k\) and seed replicate \(v\); \(T_{c,k}^{baseline}\) is baseline travel time; \(L_{c,k,v}^{service,(r,f,b)}\) is replicate-specific class-level Service Reachability Loss; and \(\Delta T_{c,k,v}^{(r,f,b)}\) is replicate-specific Excess Travel Time for reachable cases. For each service outcome, the reported central estimate is the arithmetic mean across the same \(K=5\) predeclared seed replicates and the replicate minimum and maximum form the Monte Carlo range. No cross-service composite is calculated without human-approved decision weights. Each seed replicate uses 1,000 connectivity draws and 100 weighted rerouting draws on the complete road graph. Baseline-unreachable cases remain non-evaluable and are not converted to zero or assigned an arbitrary large travel time. Emergency-water results are reported only as conditional sensitivity results for the resolved destination set.
 
 ### Robust Intervention Screening
 
@@ -677,23 +728,60 @@ A_b(x)=\sum_cN_c\left[\widehat{P}_{iso,c}^{base,b}-\widehat{P}_{iso,c}^{int,b}(x
 
 Here, \(x_{e,a}\) indicates selection of Intervention Type \(a\) for road section or community target \(e\); \(Cost_{e,a,b}\) is Intervention Cost; \(\widehat{P}_{iso,c}^{base,b}\) and \(\widehat{P}_{iso,c}^{int,b}(x)\) are baseline and intervention Community Isolation Frequency; and \(A_b(x)\) is Avoided Isolation, numerically equal to Protected Population under population weighting for eligible road-access actions.
 
-Priority Score for road section \(e\) is
+Candidate roads are pre-screened with a transparent consequence proxy
 
 \[
-Q_e=\operatorname{median}_{a,b}\left(\frac{\Delta N_{e,a,b}^{protected}}{Cost_{e,a,b}}\right).
+G_e=\Delta N_e^{single}+0.15B_e.
 \]
 
-Here, \(\Delta N_{e,a,b}^{protected}\) is the marginal Protected Population for road section \(e\), eligible road-access action \(a\), and sensitivity setting \(b\); and \(Q_e\) is Priority Score. Budget portfolios are assembled by robust ranking with feasibility constraints and compared with hazard-only, Emergency Route Membership-only, Road Category-only, and equal-cost consequence baselines. Road-access, information, life-safety, and service-continuity benefits are reported in separate columns and are not collapsed into one score without declared decision weights. Results are screening priorities rather than engineering optima.
+Here, \(\Delta N_e^{single}\) is the population disconnected when road section \(e\) is
+the only closed candidate section and \(B_e\) is the attachment-based community burden
+adjacent to that section. A deterministic feasibility rule assigns one road-access action
+\(a(e)\) to each candidate road. Priority Score is
+
+\[
+Q_e=\operatorname{median}_{b}\left[
+\frac{G_e\rho_{a(e),b}}{Cost_{e,a(e),b}}
+\right].
+\]
+
+Here, \(\rho_{a(e),b}\) is the assumed proportional effect of the assigned action under
+sensitivity setting \(b\), \(Cost_{e,a(e),b}\) is its relative planning cost, and \(Q_e\)
+is an assigned-action consequence-based screening score. It is not the simulated marginal
+Protected Population of every possible action. Budget portfolios are assembled in \(Q_e\)
+order with feasibility constraints and compared with hazard-only, Emergency Route
+Membership-only, Road Category-only, and equal-cost consequence baselines under the same
+sensitivity setting \(b\). Because the median low-central-high effect-cost ratio equals the
+central ratio in the declared assumptions, the Central \(Q_e\) order is expected to equal
+the Central equal-cost consequence order; this is reported as a consistency result rather
+than incremental superiority. At the central setting, the modeled cost of a one-kilometre
+road section is 5.0 relative planning units for temporary reinforcement, 2.0 for clearance
+pre-positioning, and 3.7 for alternative-route protection; these anchors are not currency.
+Road-access, information, life-safety, and service-continuity benefits are reported
+separately and are not collapsed into one score without declared decision weights. Results
+are screening priorities rather than engineering optima.
+
+The intervention baseline, assigned-action portfolios, and all comparator portfolios use
+five independently seeded common-random-number sets. Protected Population is reported as
+the mean and range across seeds; ranking stability and selected-road overlap are reported
+across the same seed sets. Community priority ranking uses Heavy-scenario expected isolated
+Total Population as the primary key and expected isolated Population Age 65+ only as a
+secondary key and separate vulnerability descriptor. No numeric age premium is added to
+Total Population.
 
 ### Robustness, Heterogeneity, and Failure Modes
 
-- Rainfall robustness varies scenario quantiles, accumulation-window weights, station-support assignment, and official threshold-retention settings.
-- Terrain and road-transfer robustness uses an upslope influence set requiring positive Elevation difference and downhill alignment toward sampled road points, with distance decay, warning-zone comparison, and low-central-high score-to-closure mappings.
-- The central network screen allows the upper 15 percent of positive Heavy-scenario road scores to fail. Network robustness varies external-road targets, closure mappings, service-node attachment, and \(M\) across 500, 1,000, and 2,000 draws.
+- Rainfall robustness compares the seven-station 2016-2020 and five-station 2016-2025 temporal supports and the Moderate, Heavy, and Extreme independent-event quantiles. The unresolved Yatsushiro assignment is separately bounded by municipality-wide 0.70 and 0.80 cases around the analyst midpoint of 0.75. Bounds are reported at the slope, road, isolation, and service-consequence stages; decision outputs are regenerated only if a material ranking or benefit change is detected.
+- Terrain and road-transfer checks use an upslope influence set requiring positive Elevation difference and downhill alignment toward sampled road points, with distance decay and normalized directional mean aggregation. Comparisons include warning-zone exposure and low-central-high score-to-closure mappings.
+- The central network screen allows the upper 15 percent of positive Heavy-scenario road scores to fail. Network robustness varies external-road targets, closure mappings, and \(M\) across 500, 1,000, and 2,000 draws using a common seed for the simulation-size comparison.
 - Vulnerability heterogeneity reports Total Population and age-specific populations separately and stratifies roads by Road Category and Emergency Route Membership.
-- Intervention robustness varies Intervention Cost, assumed effectiveness, service weights, and budget; rank correlations and selection frequencies accompany Priority Score.
+- Intervention robustness varies Intervention Cost, assumed effectiveness, budget, and
+  five Monte Carlo seed sets; each comparator is evaluated under the same cost-effect and
+  seed setting, and rank correlations, selection overlap, and seed ranges accompany
+  Priority Score. Central equality with the equal-cost consequence comparator is reported
+  explicitly.
 - Ablations compare the full framework with warning-zone-only, terrain-only, no-threshold-adjustment, hazard-only road ranking, and equal-cost intervention baselines.
-- Failure modes include weak held-out inventory capture, poor restriction correspondence, baseline-disconnected communities, unresolved service locations, non-converged simulation frequencies, or unstable intervention rankings.
+- Failure modes include below-chance warning-zone validation, disagreement between fold AUC and held-out inventory capture, matched road concordance that does not exceed simple baselines, scenario rank correlation above 0.95, baseline-disconnected communities, unresolved service locations, non-converged simulation frequencies, or intervention gains that are immaterial relative to equal-cost consequence ranking.
 
 ## 7. Analytical Workflow
 
@@ -701,14 +789,14 @@ Interpretation limits are enforced through the support-status column: each workf
 
 | step | variables used | formula/model used | generated figure/table title | theory or claim evaluated | support status |
 |---|---|---|---|---|---|
-| Confirm analytical coverage and spatial support | Geometry, Observation Time, Station ID, Road Section ID, Network Node ID, Mesh Code, Total Population, Location Resolution Status | Coverage, missingness, geometry validity, temporal range, population reconciliation, and baseline network checks | Analytical Data Coverage and Quality | Establishes whether the data chain is sufficiently complete for the central question | Inconclusive until all quality thresholds pass |
-| Define rainfall and threshold scenarios | Observation Time, Hourly Rainfall, Cumulative Rainfall, Rainfall Scenario, Rainfall Threshold Retention Factor, Municipality or Subarea (Japanese) | Rolling rainfall formula and quantile-based scenario exceedance \(X_i^{(r,f)}\) | Rainfall History and Official Threshold Adjustment; Rainfall and Threshold Scenarios | Evaluates the declared post-earthquake threshold-adjustment mechanism for RQ1 | Scenario support only; no causal earthquake claim |
-| Construct terrain context and landslide score | Elevation, Terrain Slope, Terrain Curvature, Hazard Type, Landslide Inventory ID, Landslide Size Class, Landslide Disruption Score | Terrain derivatives, spatial validation rule, and \(H_i^{(r,f)}\) | Terrain, Landslide Evidence, and Emergency Network Context; Official-Threshold-Adjusted Landslide Disruption Score | Tests whether score rankings align with interpreted landslide evidence and change monotonically across scenarios | Partially supported as a validation-selected transparent scenario ranking; not an occurrence model |
-| Validate slope-to-road translation | Road Section ID, Road Category, Road Section Length (m), Emergency Route Membership, Restriction Reason, Restriction Status, Matched Road Edge ID, Road Edge Match Distance (m), Road Disruption Score | Directional upslope aggregation \(D_e^{(r,f)}\) and observed-restriction ranking validation | Road Disruption Exposure and Observed Restriction Evidence; Hazard and Road-Disruption Validation | Evaluates RQ2 and the mechanism that hazardous upslope terrain affects specific roads | Supported for relative screening because restriction evidence ranks above warning-zone and road-length baselines; not a closure probability |
+| Confirm analytical coverage and spatial support | Geometry, Observation Time, Station ID, Road Section ID, Network Node ID, Mesh Code, Total Population, Location Resolution Status | Study-area coverage, missingness, geometry validity, temporal range, population reconciliation, and baseline network checks | Analytical Data Coverage and Quality | Establishes whether the data chain is sufficiently complete for the central question | Supported for the principal analytical layers; DEM noncoverage within Kumamoto is 0.000212%, while unresolved facilities remain explicit and excluded from primary routing claims |
+| Define rainfall and threshold scenarios | Observation Time, Hourly Rainfall, Cumulative Rainfall, Rainfall Scenario, Rainfall Threshold Retention Factor, Municipality or Subarea (Japanese), Latitude, Longitude | Independent-event maxima, event quantiles, coarse inverse-distance surface, \(X_i^{(r,f)}\), official resolved values, and Yatsushiro analyst-midpoint and bounding assignments | Rainfall History and Official Threshold Adjustment; Rainfall and Threshold Scenarios | Evaluates the declared post-earthquake threshold-adjustment mechanism for RQ1 | Supports ordered event-based loading magnitudes under declared station and threshold support; Yatsushiro is bounded rather than spatially resolved, and near-unity cross-scenario rank correlation precludes spatial reprioritization or a causal earthquake claim |
+| Construct terrain context and landslide score | Elevation, Terrain Slope, Terrain Curvature, Hazard Type, Landslide Inventory ID, Landslide Size Class, Landslide Disruption Score | Transparent fixed weights, logarithmic rainfall loading, temporally eligible spatial validation, and \(H_i^{(r,f)}\) | Terrain, Landslide Evidence, and Emergency Network Context; Official-Threshold-Adjusted Landslide Disruption Score | Tests whether score rankings align with interpreted landslide evidence without saturation or post-event warning-zone information | Partially supported as a transparent directional ranking: after restricting warning zones to 30,021 polygons designated by 2016-07-28, mean spatial AUC is 0.665 with 0.464 held-out top-quartile capture; incomplete presence evidence and fold variation preclude an occurrence-probability claim |
+| Validate slope-to-road translation | Road Section ID, Road Category, Road Section Length (m), Emergency Route Membership, Restriction Reason, Restriction Status, Matched Road Edge ID, Road Edge Match Distance (m), Road Disruption Score | Normalized directional aggregation \(D_e^{(r,f)}\), matched concordance \(C^{(r,f)}\), and cluster bootstrap | Road Disruption Exposure and Observed Restriction Evidence; Hazard Validation; Road-Disruption Validation | Evaluates RQ2 and whether directional exposure adds information beyond road length and designation | Supports relative road screening: Heavy matched concordance is 0.646, compared with 0.556 for road length and 0.494 for warning-zone exposure; the score is not a closure probability |
 | Define baseline communities and access targets | Community ID, Network Component ID, Mesh Code, Total Population, Population Age 65+, Population Age 75+, Population Age 85+, Network Analysis Eligible, Emergency Route Membership | Road-connected populated-mesh clustering and baseline reachability audit | Community Isolation Frequency and Exposed Population; High-Isolation-Risk Communities | Establishes a defensible consequence unit for RQ3 | Inconclusive if baseline disconnection or population mismatch remains material |
-| Simulate road closures and isolation | Road Disruption Score, Community ID, Community Isolation Frequency, Isolated Population, Total Population, Population Age 65+, Population Age 75+, Population Age 85+ | Monotone closure mapping, Bernoulli disruption draws, and \(\widehat{P}_{iso,c}^{(r,f,b)}\) with \(M=1000\) | Community Isolation Frequency and Exposed Population; Municipality Isolation and Service-Loss Summary; High-Isolation-Risk Communities | Evaluates which communities and populations are repeatedly isolated under declared scenarios | Supports simulation-conditional frequency claims only after convergence and network sensitivity checks |
-| Estimate service consequences | Shelter ID, Evacuation Site ID, Water Point Name, Fire Facility Name, Facility Name, Baseline Edge Travel Time (min), Service Reachability Loss, Excess Travel Time | 1,000-draw connectivity loss, 100-draw full-network weighted rerouting, \(L_c^{service,(r,f,b)}\), and \(\Delta T_{c,k}^{(r,f,b)}\) | Basic Service Reachability Loss; Municipality Isolation and Service-Loss Summary | Evaluates the secondary RQ3 claim on basic-service loss | Partially supported; water results are a resolved-point lower bound and baseline-unreachable cases remain explicit |
-| Screen road and community interventions | Road Section ID, Emergency Route Membership, Road Category, Intervention Type, Intervention Cost, Avoided Isolation, Protected Population, Priority Score, Total Population, Population Age 65+ | Action-specific effect assumptions, budget constraint, \(A_b(x)\), robust \(Q_e\) ranking, and four comparator portfolios | Intervention Priorities and Budgeted Benefits; Priority Road Sections; Intervention Portfolios and Robustness | Evaluates RQ4 and whether consequence-aware screening outperforms hazard-only priorities | Partially supported: benefits are monotone and all action classes are represented, but superiority varies by comparator and budget |
+| Simulate road closures and isolation | Road Disruption Score, Community ID, Community Isolation Frequency, Isolated Population, Total Population, Population Age 65+, Population Age 75+, Population Age 85+ | Monotone closure mapping, Bernoulli disruption draws, five-seed mean \(\overline{P}_{iso,c}^{(r,f,b)}\) with \(M=1000\) per seed, 500-2,000 draw convergence, and Yatsushiro 0.70-0.80 bounds | Community Isolation Frequency and Exposed Population; Municipality Isolation and Service-Loss Summary; High-Isolation-Risk Communities | Evaluates which communities and populations are repeatedly isolated under declared scenarios | Supports simulation-conditional frequency claims only after convergence, between-seed uncertainty, scenario-rank, network-target, and Yatsushiro-bound checks |
+| Estimate service consequences | Shelter ID, Evacuation Site ID, Water Point Name, Fire Facility Name, Facility Name, Baseline Edge Travel Time (min), Service Reachability Loss, Excess Travel Time | Five predeclared seed replicates, each with 1,000-draw class-specific connectivity loss \(L_{c,k,v}^{service,(r,f,b)}\) and 100-draw full-network weighted rerouting \(\Delta T_{c,k,v}^{(r,f,b)}\); municipality reporting remains class-specific and includes Yatsushiro bounds | Basic Service Reachability Loss; Municipality Isolation and Service-Loss Summary | Evaluates the secondary RQ3 claim on basic-service loss | Partially supported for shelters, fire services, and municipal facilities after between-seed and Yatsushiro-bound checks; emergency water is conditional sensitivity evidence for the resolved destination set |
+| Screen road and community interventions | Road Section ID, Emergency Route Membership, Road Category, Intervention Type, Intervention Cost, Avoided Isolation, Protected Population, Priority Score, Total Population, Population Age 65+ | Assigned-action consequence proxy \(G_e\), screening score \(Q_e\), budget constraint \(A_b(x)\), five-seed portfolio evaluation, and setting-matched comparator portfolios | Intervention Priorities and Budgeted Benefits; Priority Road Sections; Intervention Portfolios; Comparator Robustness | Evaluates RQ4 and whether assigned-action consequence screening is stable and auditable relative to simpler rules | Supports an assigned-action screening claim when seed stability is adequate; equality with equal-cost consequence ranking does not support incremental superiority |
 | Integrate the full evidence chain | Elevation, Hourly Rainfall, Rainfall Threshold Retention Factor, Landslide Disruption Score, Road Disruption Score, Community Isolation Frequency, Service Reachability Loss, Priority Score | Linked scenario, validation, network simulation, and intervention framework | Compound-Hazard Decision Pathway | Evaluates the central compound-hazard decision question | Supported only when every upstream checkpoint is supported or transparently bounded; otherwise partially supported or inconclusive |
 
 ## 8. Figure and Table Plan
@@ -719,26 +807,26 @@ Interpretation limits are enforced through the support-status column: each workf
 |---|---|---|---:|---|---|
 | Compound-Hazard Decision Pathway | Links official post-earthquake threshold adjustment and rainfall exposure to slope disruption, road failure, community isolation, service loss, and intervention choice across the central question and all supporting questions. | flowchart | 1 | Elevation, Hourly Rainfall, Rainfall Threshold Retention Factor, Road Section ID, Total Population | done |
 | Terrain, Landslide Evidence, and Emergency Network Context | Establishes the spatial evidence base for terrain, interpreted landslides, warning zones, roads, emergency routes, shelters, and water points. | map | 4 | Elevation, Landslide Inventory ID, Landslide Size Class, Hazard Type, Road Section ID, Emergency Route Membership, Shelter ID, Water Point Name, Geometry | done |
-| Rainfall History and Official Threshold Adjustment | Shows station rainfall history, cumulative rainfall, Moderate, Heavy, and Extreme scenarios, and official 70 percent and 80 percent threshold retention settings for the threshold-adjustment question. | line + map | 4 | Observation Time, Hourly Rainfall, Station ID, Rainfall Threshold Retention Factor, Municipality or Subarea (Japanese), Cumulative Rainfall, Rainfall Scenario | done |
-| Official-Threshold-Adjusted Landslide Disruption Score | Compares baseline and rainfall-scenario slope disruption scores while retaining score-based language unless event labels support probability calibration. | map | 4 | Elevation, Landslide Inventory ID, Hazard Type, Rainfall Threshold Retention Factor, Terrain Slope, Terrain Curvature, Rainfall Scenario, Landslide Disruption Score | done |
-| Road Disruption Exposure and Observed Restriction Evidence | Maps road disruption exposure under rainfall scenarios and compares it with observed rockfall, slope-collapse, and sediment-inflow restriction evidence. | map | 4 | Road Section ID, Road Category, Road Section Length (m), Emergency Route Membership, Hazard Type, Restriction Reason, Restriction Status, Matched Road Edge ID, Road Disruption Score | done |
-| Community Isolation Frequency and Exposed Population | Shows community isolation frequency and affected total and older populations under each disruption scenario. | map | 4 | Network Component ID, Mesh Code, Total Population, Population Age 65+, Population Age 75+, Geometry, Community ID, Community Isolation Frequency, Isolated Population | done |
-| Basic Service Reachability Loss | Shows loss of reachability to shelters, water points, fire services, and municipal facilities, together with excess travel time where routes remain available. | map + bar | 4 | Shelter ID, Evacuation Site ID, Water Point Name, Fire Facility Name, Facility Name, Baseline Edge Travel Time (min), Service Reachability Loss, Excess Travel Time | done |
-| Intervention Priorities and Budgeted Benefits | Identifies priority roads and communities and shows how protected population and avoided isolation change with intervention budget and sensitivity assumptions. | map + line | 3 | Road Section ID, Total Population, Population Age 65+, Emergency Route Membership, Intervention Type, Intervention Cost, Avoided Isolation, Protected Population, Priority Score | done |
+| Rainfall History and Official Threshold Adjustment | Shows station rainfall history, cumulative rainfall, Moderate, Heavy, and Extreme scenarios, official 70 percent and 80 percent threshold retention settings, and the explicitly analyst-defined 0.75 Yatsushiro midpoint with 0.70-0.80 bounds. | line + map | 4 | Observation Time, Hourly Rainfall, Station ID, Rainfall Threshold Retention Factor, Municipality or Subarea (Japanese), Cumulative Rainfall, Rainfall Scenario | done |
+| Official-Threshold-Adjusted Landslide Disruption Score | Compares baseline and rainfall-scenario slope disruption scores using official resolved threshold values, the analyst-defined 0.75 Yatsushiro midpoint, and municipality-wide 0.70-0.80 Yatsushiro bounds while retaining score-based language. | map | 4 | Elevation, Landslide Inventory ID, Hazard Type, Rainfall Threshold Retention Factor, Terrain Slope, Terrain Curvature, Rainfall Scenario, Landslide Disruption Score | done |
+| Road Disruption Exposure and Observed Restriction Evidence | Maps road disruption exposure under rainfall scenarios, compares it with observed rockfall, slope-collapse, and sediment-inflow restriction evidence, and carries Yatsushiro threshold-assignment bounds into road scores. | map | 4 | Road Section ID, Road Category, Road Section Length (m), Emergency Route Membership, Hazard Type, Restriction Reason, Restriction Status, Matched Road Edge ID, Road Disruption Score | done |
+| Community Isolation Frequency and Exposed Population | Shows five-seed mean community isolation frequency and affected total and older populations, with between-seed ranges and propagated Yatsushiro threshold-assignment bounds. | map | 4 | Network Component ID, Mesh Code, Total Population, Population Age 65+, Population Age 75+, Geometry, Community ID, Community Isolation Frequency, Isolated Population | done |
+| Basic Service Reachability Loss | Shows five-seed mean class-specific loss of reachability to shelters, fire services, and municipal facilities, together with between-seed ranges, Yatsushiro threshold-assignment bounds, and excess travel time where routes remain available; emergency water remains a conditional sensitivity for the 10 of 36 geolocated destinations. | map + bar | 4 | Shelter ID, Evacuation Site ID, Water Point Name, Fire Facility Name, Facility Name, Baseline Edge Travel Time (min), Service Reachability Loss, Excess Travel Time | done |
+| Intervention Priorities and Budgeted Benefits | Identifies assigned-action road priorities and total-population community priorities and shows how five-seed protected population changes with intervention budget under setting-matched cost-effect assumptions and comparator rankings. | map + line + bar | 4 | Road Section ID, Total Population, Population Age 65+, Emergency Route Membership, Intervention Type, Intervention Cost, Avoided Isolation, Protected Population, Priority Score | done |
 
 ### Tables
 
 | title | what it expresses | rows | columns | row meaning | column meaning | status |
 |---|---|---:|---:|---|---|---|
 | Analytical Data Coverage and Quality | Documents completeness, temporal coverage, spatial support, and interpretation limits for each analytical layer. | 22 | 10 | One analytical data layer | Record count, spatial type, temporal coverage, missingness, location completeness, resolution, and calibration or validation role | done |
-| Rainfall and Threshold Scenarios | Defines the combinations of Moderate, Heavy, and Extreme rainfall with baseline, 70 percent, and 80 percent threshold-retention settings. | 9 | 10 | One rainfall and threshold combination | One-hour, three-hour, 24-hour, and 72-hour rainfall, antecedent rainfall, threshold retention factor, scenario label, and interpretation boundary | done |
-| Hazard Validation | Compares the full specification, warning-zone baseline, and simplified hazard models using spatial validation. | 5 | 8 | One hazard model specification | Spatial folds, AUC, inventory capture, ranking stability, and interpretation boundary | done |
-| Road-Disruption Validation | Compares rainfall-scenario road scores and road baselines using observed restriction evidence. | 5 | 6 | One road-score specification | Restriction correspondence, hit rate, ranking stability, and interpretation boundary | done |
-| Municipality Isolation and Service-Loss Summary | Summarizes community isolation, exposed population, older population, and service loss for each administrative unit and scenario. | 49 | 16 | One municipality, ward, or comparable administrative unit | Isolation frequency, isolated population, older population, unreachable services, and excess travel time by scenario | done |
-| Priority Road Sections | Lists the 30 road sections with the largest consequence-aware intervention relevance. | 30 | 12 | One road section | Municipality or ward, road category and length, disruption score, alternative scarcity, affected communities, total and older population, dependent services, assigned intervention, planning cost, and robust priority score | done |
-| High-Isolation-Risk Communities | Lists the 30 communities with the highest Heavy-scenario population and older-population isolation burden. | 30 | 11 | One community | English municipality or ward, centroid coordinates, mesh count, total and older population, candidate gateway sections, scenario isolation frequencies, expected isolated population, and principal service loss | done |
-| Intervention Portfolios | Compares budget-feasible intervention portfolios and their protective benefits across sensitivity settings. | 21 | 10 | One budget and sensitivity-setting combination | Budget, selected roads, intervention mix, realized cost, protected communities, protected total and older population, avoided isolation share, unit-cost benefit, and selection overlap | done |
-| Comparator Robustness | Compares the consequence-aware intervention ranking with hazard-only, emergency-route-only, road-class-only, and equal-cost baselines. | 28 | 7 | One comparator and budget combination | Comparator, budget, selected roads, realized cost, protected population, avoided isolation share, and unit-cost benefit | done |
+| Rainfall and Threshold Scenarios | Defines Moderate, Heavy, and Extreme event-based rainfall with official 70 percent and 80 percent retention settings and the analyst-defined 0.75 Yatsushiro midpoint and bounds. | 12 | 10 | One rainfall, threshold, or Yatsushiro spatial-support combination | One-hour, three-hour, 24-hour, and 72-hour event rainfall, threshold retention factor, spatial-support label, scenario label, and interpretation boundary | done |
+| Hazard Validation | Compares the pre-specified transparent score and diagnostic alternatives using spatial validation. | 5 | 8 | One hazard-score specification | Spatial folds, AUC, inventory capture, ranking stability, and interpretation boundary | done |
+| Road-Disruption Validation | Compares rainfall-scenario road scores and road baselines using matched observed-restriction evidence and reports the effect of Yatsushiro threshold-assignment bounds. | 7 | 6 | One road-score or Yatsushiro-bound specification | Matched concordance, uncertainty interval, ranking stability, threshold-support case, and interpretation boundary | done |
+| Municipality Isolation and Service-Loss Summary | Summarizes five-seed mean community isolation, exposed population, older population, class-specific service loss, and shelter-specific excess travel time for each administrative unit and scenario. | 49 | 16 | One municipality, ward, or comparable administrative unit | Isolation frequency, isolated population, older population, class-specific unreachable services, and shelter excess travel time under the Heavy scenario | done |
+| Priority Road Sections | Lists the 30 road sections with the largest assigned-action consequence-based intervention relevance. | 30 | 12 | One road section | Municipality or ward, road category and length, disruption score, alternative scarcity, affected communities, total and older population, dependent services, assigned intervention, planning cost, and assigned-action screening score | done |
+| High-Isolation-Risk Communities | Lists the 30 communities with the highest five-seed mean Heavy-scenario expected isolated Total Population, using expected isolated Population Age 65+ only as a secondary ranking key and separate descriptor. | 30 | 11 | One community | English municipality or ward, centroid coordinates, mesh count, total and older population, candidate gateway sections, scenario isolation frequencies, expected isolated population, and principal service loss | done |
+| Intervention Portfolios | Compares five-seed budget-feasible intervention portfolios and their protective benefits across cost-effect settings. | 21 | 10 | One budget and sensitivity-setting combination | Budget, selected roads, intervention mix, realized cost, protected communities, protected total and older population, avoided isolation share, unit-cost benefit, and selection overlap | done |
+| Comparator Robustness | Compares the assigned-action consequence-based screening ranking with hazard-only, emergency-route-only, road-class-only, and equal-cost consequence baselines under matched cost-effect and seed settings. | 84 | 8 | One comparator, sensitivity setting, and budget combination | Setting, comparator, budget, selected roads, realized cost, protected population, avoided isolation share, and unit-cost benefit | done |
 
 ### Variable Coverage Check
 

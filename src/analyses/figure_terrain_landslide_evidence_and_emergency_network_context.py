@@ -10,6 +10,7 @@ This figure is descriptive and does not display an estimated disruption score.
 from __future__ import annotations
 
 import os
+import math
 from pathlib import Path
 
 # Prevent an external Anaconda PROJ database from overriding Rasterio's bundled data.
@@ -25,6 +26,7 @@ from matplotlib.ticker import FuncFormatter
 import numpy as np
 import pandas as pd
 import rasterio
+import resvg_py
 from rasterio.features import rasterize
 from rasterio.transform import from_bounds
 from rasterio.warp import Resampling, reproject
@@ -35,10 +37,12 @@ import shapely
 ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data/processed"
 OUT = ROOT / "data/results/figures/Figure_terrain_landslide_evidence_and_emergency_network_context.png"
+SVG_OUT = OUT.with_suffix(".svg")
 
 ADMIN_PATH = PROCESSED / "administrative_areas_preprocessed.parquet"
 LANDSLIDE_PATH = PROCESSED / "gsi_2016_landslide_inventory_preprocessed.parquet"
 DEM_PATH = PROCESSED / "gsi_dem10b_elevation_preprocessed.tif"
+DEM_MANIFEST = ROOT / "data/raw/_manifests/gsi_dem10b_png_tiles.csv"
 WARNING_PATH = PROCESSED / "landslide_warning_zones_preprocessed.parquet"
 ROAD_PATH = PROCESSED / "road_edges_preprocessed.parquet"
 SHELTER_PATH = PROCESSED / "designated_shelters_preprocessed.parquet"
@@ -171,6 +175,36 @@ def prepare_dem(
     return destination, destination_transform
 
 
+def web_tile_bounds(zoom: int, x: int, y: int) -> object:
+    """Return one slippy-map tile footprint in WGS84 coordinates."""
+    scale = 2**zoom
+    west = x / scale * 360.0 - 180.0
+    east = (x + 1) / scale * 360.0 - 180.0
+
+    def latitude(row: int) -> float:
+        return math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * row / scale))))
+
+    return shapely.box(west, latitude(y + 1), east, latitude(y))
+
+
+def dem_uncovered_geometry(admin_union: object) -> tuple[object, float]:
+    """Calculate true prefecture coverage from the authoritative tile manifest."""
+    manifest = pd.read_csv(DEM_MANIFEST)
+    available = manifest[manifest["status"].ne("failed")]
+    coverage = shapely.union_all(
+        np.array(
+            [
+                web_tile_bounds(int(row.zoom), int(row.x), int(row.y))
+                for row in available.itertuples(index=False)
+            ],
+            dtype=object,
+        )
+    )
+    uncovered = shapely.difference(admin_union, coverage)
+    uncovered_pct = 100.0 * shapely.area(uncovered) / shapely.area(admin_union)
+    return uncovered, float(uncovered_pct)
+
+
 def rasterize_categories(
     geometry: np.ndarray,
     values: np.ndarray,
@@ -222,6 +256,7 @@ def main() -> None:
     unmapped_water_count = water_record_count - len(water)
 
     dem, grid_transform = prepare_dem(extent, admin_union)
+    uncovered_dem_geometry, uncovered_dem_pct = dem_uncovered_geometry(admin_union)
     grid_shape = dem.shape
     west, east, south, north = extent
 
@@ -241,6 +276,14 @@ def main() -> None:
 
     finite_dem = dem[np.isfinite(dem)]
     elevation_min, elevation_max = np.nanpercentile(finite_dem, [1, 99])
+    uncovered_dem_grid = rasterize(
+        [(uncovered_dem_geometry, 1)],
+        out_shape=grid_shape,
+        transform=grid_transform,
+        fill=0,
+        all_touched=True,
+        dtype="uint8",
+    )
 
     fig = plt.figure(figsize=(14.5, 11), constrained_layout=True)
     grid = fig.add_gridspec(
@@ -273,6 +316,16 @@ def main() -> None:
         interpolation="bilinear",
         zorder=1,
     )
+    axes[0].imshow(
+        uncovered_dem_grid,
+        extent=image_extent,
+        origin="upper",
+        cmap=ListedColormap(["#FFFFFF00", "#D92D20"]),
+        vmin=0,
+        vmax=1,
+        interpolation="nearest",
+        zorder=3,
+    )
     size_class = landslides["Landslide Size Class"].fillna("Unknown")
     large = size_class.astype(str).str.contains("大", regex=False).to_numpy()
     coordinates = shapely.get_coordinates(landslide_geometry)
@@ -301,7 +354,17 @@ def main() -> None:
     colorbar = fig.colorbar(elevation_image, cax=colorbar_axis)
     colorbar.set_label("Elevation (m)", fontsize=9)
     colorbar.ax.tick_params(labelsize=8)
-    axes[0].legend(loc="lower left", frameon=True, framealpha=0.92, fontsize=8)
+    axes[0].legend(
+        handles=[
+            Line2D([0], [0], marker="o", color="none", markerfacecolor="#F59E0B", markeredgecolor="white", markersize=5, label="Smaller interpreted landslide"),
+            Line2D([0], [0], marker="o", color="none", markerfacecolor="#B42318", markeredgecolor="white", markersize=7, label="Larger interpreted landslide"),
+            Patch(facecolor="#D92D20", label=f"DEM uncovered in prefecture: {uncovered_dem_pct:.6f}%"),
+        ],
+        loc="lower left",
+        frameon=True,
+        framealpha=0.92,
+        fontsize=8,
+    )
     add_north_arrow(axes[0])
 
     # b: official warning-zone types, rasterized for legible prefecture-scale coverage.
@@ -422,9 +485,18 @@ def main() -> None:
         add_panel_label(ax, label)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT, dpi=150, bbox_inches="tight", facecolor="white")
+    fig.savefig(SVG_OUT, format="svg", bbox_inches="tight", facecolor="white")
     plt.close(fig)
-    print(f"Saved: {OUT.relative_to(ROOT)}")
+    OUT.write_bytes(
+        resvg_py.svg_to_bytes(
+            svg_path=str(SVG_OUT),
+            dpi=300.0,
+            background="white",
+        )
+    )
+    print(f"Saved SVG: {SVG_OUT.relative_to(ROOT)}")
+    print(f"Converted PNG (300 dpi): {OUT.relative_to(ROOT)}")
+    print(f"DEM uncovered within prefecture geometry: {uncovered_dem_pct:.6f}%")
     print(f"Interpreted landslides shown: {len(landslides):,}")
     print(f"Warning zones shown: {len(warning):,}")
     print(f"Road edges shown: {len(roads):,}")

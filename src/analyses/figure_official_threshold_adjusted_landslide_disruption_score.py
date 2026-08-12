@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Official-Threshold-Adjusted Landslide Disruption Score.
 
-Plan: Compare baseline and rainfall-scenario slope disruption scores while
-retaining score-based language unless independent event labels support
-probability calibration.
+Plan: Compare baseline and rainfall-scenario slope disruption scores using
+official resolved threshold values, an analyst-defined 0.75 municipality-wide
+Yatsushiro midpoint, and municipality-wide 0.70-0.80 Yatsushiro bounds while
+retaining score-based language.
 Framework: Section 5 presence-background spatial ranking calibration; Section 6
 terrain derivatives, warning-zone exposure, rainfall scenario loading, and the
 logistic Landslide Disruption Score; Section 7 terrain-score workflow.
@@ -14,6 +15,7 @@ not calibrated landslide occurrence probabilities.
 """
 from __future__ import annotations
 
+import gc
 import os
 from pathlib import Path
 import warnings
@@ -29,11 +31,13 @@ from matplotlib.ticker import FuncFormatter
 import numpy as np
 import pandas as pd
 import rasterio
+import resvg_py
 from rasterio.features import rasterize
 from rasterio.transform import from_bounds
 from rasterio.warp import Resampling, reproject
 from rasterio.windows import Window
 from scipy.special import expit
+from scipy.stats import spearmanr
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import GroupKFold
@@ -49,9 +53,10 @@ DEM_PATH = PROCESSED / "gsi_dem10b_elevation_preprocessed.tif"
 ADMIN_PATH = PROCESSED / "administrative_areas_preprocessed.parquet"
 LANDSLIDE_PATH = PROCESSED / "gsi_2016_landslide_inventory_preprocessed.parquet"
 WARNING_PATH = PROCESSED / "landslide_warning_zones_preprocessed.parquet"
-RAIN_PATH = PROCESSED / "jma_hourly_rainfall_preprocessed.parquet"
+SCENARIO_PATH = PROCESSED / "jma_rainfall_scenario_quantiles_preprocessed.parquet"
 THRESHOLD_PATH = PROCESSED / "official_threshold_factors_preprocessed.parquet"
 OUT = ROOT / "data/results/figures/Figure_official_threshold_adjusted_landslide_disruption_score.png"
+SVG_OUT = OUT.with_suffix(".svg")
 
 AGGREGATION_FACTOR = 16
 CHUNK_OUTPUT_ROWS = 32
@@ -62,6 +67,10 @@ SCENARIO_QUANTILES = {
     "Heavy": 0.90,
     "Extreme": 0.99,
 }
+CENTRAL_SUPPORT = "Central: 7 stations, 2016-2020"
+DISTANCE_STABILIZER_DEGREES = 0.02
+RAINFALL_LOADING_GAMMA = 1.0
+LANDSLIDE_VALIDATION_DATE = pd.Timestamp("2016-07-28")
 FEATURE_NAMES = ["Elevation", "Terrain Slope", "Terrain Curvature", "Warning-Zone Exposure"]
 FALLBACK_WEIGHTS = {
     "Elevation": 0.15,
@@ -86,8 +95,7 @@ class TransparentStandardizedScore:
     def decision_function(self, matrix: np.ndarray) -> np.ndarray:
         """Return the weighted standardized index on a stable logit-like scale."""
         standardized = self.scaler.transform(matrix)
-        denominator = np.sum(np.abs(self.weights))
-        return standardized @ self.weights / denominator
+        return standardized @ self.weights
 
 
 def decode_geometry(series: pd.Series) -> np.ndarray:
@@ -95,6 +103,47 @@ def decode_geometry(series: pd.Series) -> np.ndarray:
     geometry = shapely.from_wkb(series.to_numpy())
     valid = ~shapely.is_missing(geometry) & ~shapely.is_empty(geometry)
     return geometry[valid]
+
+
+def warning_zone_geometry(
+    as_of: pd.Timestamp | None = None,
+) -> tuple[np.ndarray, dict[str, int]]:
+    """Return current or temporally eligible warning-zone geometry.
+
+    The historical landslide validation may use only designations available by
+    the validation event date. Current operational screening continues to use
+    the complete reference layer.
+    """
+    warning = pd.read_parquet(WARNING_PATH, columns=["Designation Date", "Geometry"])
+    designation_date = pd.to_datetime(warning["Designation Date"], errors="coerce")
+    known = designation_date.notna() & designation_date.lt(pd.Timestamp("9999-01-01"))
+    if as_of is None:
+        selected = np.ones(len(warning), dtype=bool)
+    else:
+        selected = known & designation_date.le(as_of)
+    counts = {
+        "total": int(len(warning)),
+        "selected": int(selected.sum()),
+        "post_event": int((known & designation_date.gt(as_of)).sum()) if as_of is not None else 0,
+        "unknown_or_sentinel": int((~known).sum()),
+    }
+    return decode_geometry(warning.loc[selected, "Geometry"]), counts
+
+
+def warning_zone_grid(
+    geometry: np.ndarray,
+    shape: tuple[int, int],
+    transform: Affine,
+) -> np.ndarray:
+    """Rasterize warning zones to the common binary exposure grid."""
+    return rasterize(
+        ((feature, 1) for feature in geometry),
+        out_shape=shape,
+        transform=transform,
+        fill=0,
+        all_touched=True,
+        dtype="uint8",
+    ).astype("float32")
 
 
 def line_segments(geometry: np.ndarray) -> list[np.ndarray]:
@@ -206,26 +255,66 @@ def reproject_feature(
     return destination
 
 
-def wet_window_scenario_loads(rain: pd.DataFrame) -> dict[str, float]:
-    """Return equal-window mean scenario loads relative to the Heavy quantile."""
-    station_window_quantiles: list[dict[str, float | str | int]] = []
-    for station_id, group in rain.groupby("Station ID", sort=True):
-        values = group.sort_values("Observation Time").set_index("Observation Time")["Hourly Rainfall"]
-        full_index = pd.date_range(values.index.min(), values.index.max(), freq="h", tz=values.index.tz)
-        values = values.reindex(full_index).astype(float)
-        for window in WINDOWS:
-            accumulated = values if window == 1 else values.rolling(window, min_periods=window).sum()
-            wet = accumulated.loc[accumulated > 0].dropna()
-            record: dict[str, float | str | int] = {"Station ID": str(station_id), "Window": window}
-            for scenario, quantile in SCENARIO_QUANTILES.items():
-                record[scenario] = float(wet.quantile(quantile))
-            station_window_quantiles.append(record)
+def event_scenario_loads(
+    scenario_values: pd.DataFrame,
+    extent: tuple[float, float, float, float],
+    shape: tuple[int, int],
+) -> dict[str, np.ndarray]:
+    """Build coarse inverse-distance event-quantile rainfall loading surfaces."""
+    central = scenario_values.loc[
+        scenario_values["Support Specification"].eq(CENTRAL_SUPPORT)
+    ].copy()
+    if central["Station ID"].nunique() != 7:
+        raise RuntimeError("Central rainfall loading requires seven stations.")
 
-    quantiles = pd.DataFrame(station_window_quantiles)
-    ratios: dict[str, float] = {}
+    stations = (
+        central[
+            ["Station ID", "Station Latitude", "Station Longitude"]
+        ]
+        .drop_duplicates()
+        .sort_values("Station ID")
+        .reset_index(drop=True)
+    )
+    west, east, south, north = extent
+    rows, columns = shape
+    longitude = west + (np.arange(columns) + 0.5) / columns * (east - west)
+    latitude = north - (np.arange(rows) + 0.5) / rows * (north - south)
+    longitude_grid, latitude_grid = np.meshgrid(longitude, latitude)
+
+    station_longitude = stations["Station Longitude"].to_numpy(dtype=float)
+    station_latitude = stations["Station Latitude"].to_numpy(dtype=float)
+    cosine = np.cos(np.deg2rad(latitude_grid))[..., None]
+    distance_squared = (
+        ((longitude_grid[..., None] - station_longitude) * cosine) ** 2
+        + (latitude_grid[..., None] - station_latitude) ** 2
+        + DISTANCE_STABILIZER_DEGREES**2
+    )
+    inverse_distance = 1.0 / distance_squared
+    station_weights = inverse_distance / inverse_distance.sum(axis=2, keepdims=True)
+
+    heavy = central.loc[central["Rainfall Scenario"].eq("Heavy")]
+    references = {
+        window: float(heavy[f"Scenario {window} h Rainfall"].median())
+        for window in WINDOWS
+    }
+    loads: dict[str, np.ndarray] = {}
     for scenario in SCENARIO_QUANTILES:
-        ratios[scenario] = float((quantiles[scenario] / quantiles["Heavy"]).mean())
-    return ratios
+        subset = (
+            central.loc[central["Rainfall Scenario"].eq(scenario)]
+            .set_index("Station ID")
+            .reindex(stations["Station ID"])
+        )
+        window_surfaces = []
+        for window in WINDOWS:
+            station_ratio = (
+                subset[f"Scenario {window} h Rainfall"].to_numpy(dtype=float)
+                / references[window]
+            )
+            window_surfaces.append(
+                np.sum(station_weights * station_ratio[None, None, :], axis=2)
+            )
+        loads[scenario] = np.mean(window_surfaces, axis=0).astype("float32")
+    return loads
 
 
 def threshold_categories(admin: pd.DataFrame, threshold: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
@@ -289,7 +378,7 @@ def fit_presence_background_model(
     landslide_geometry: np.ndarray,
     extent: tuple[float, float, float, float],
 ) -> tuple[object, dict[str, float], int, int, str]:
-    """Fit a validated model or transparently fall back to a fixed terrain score."""
+    """Evaluate comparators and fit the pre-specified transparent terrain score."""
     shape = valid.shape
     coordinates = shapely.get_coordinates(landslide_geometry)
     row, column, inside = grid_indices(coordinates, extent, shape)
@@ -325,16 +414,38 @@ def fit_presence_background_model(
     logistic_auc_values: list[float] = []
     fallback_auc_values: list[float] = []
     elevation_warning_auc_values: list[float] = []
+    warning_only_auc_values: list[float] = []
+    logistic_capture_values: list[float] = []
+    fallback_capture_values: list[float] = []
     for train, test in splitter.split(matrix, outcome, groups):
         if len(np.unique(outcome[test])) < 2:
             continue
         logistic.fit(matrix[train], outcome[train])
+        logistic_prediction = logistic.decision_function(matrix[test])
         logistic_auc_values.append(
-            float(roc_auc_score(outcome[test], logistic.decision_function(matrix[test])))
+            float(roc_auc_score(outcome[test], logistic_prediction))
         )
         fallback_fold = TransparentStandardizedScore(FALLBACK_WEIGHTS).fit(matrix[train])
+        fallback_prediction = fallback_fold.decision_function(matrix[test])
         fallback_auc_values.append(
-            float(roc_auc_score(outcome[test], fallback_fold.decision_function(matrix[test])))
+            float(roc_auc_score(outcome[test], fallback_prediction))
+        )
+        test_presence = outcome[test].eq(1) if isinstance(outcome[test], pd.Series) else outcome[test] == 1
+        logistic_capture_values.append(
+            float(
+                np.mean(
+                    logistic_prediction[test_presence]
+                    >= np.quantile(logistic_prediction, 0.75)
+                )
+            )
+        )
+        fallback_capture_values.append(
+            float(
+                np.mean(
+                    fallback_prediction[test_presence]
+                    >= np.quantile(fallback_prediction, 0.75)
+                )
+            )
         )
         elevation_warning = make_pipeline(
             StandardScaler(),
@@ -354,6 +465,9 @@ def fit_presence_background_model(
                 )
             )
         )
+        warning_only_auc_values.append(
+            float(roc_auc_score(outcome[test], matrix[test, 3]))
+        )
     if len(logistic_auc_values) < 4:
         raise RuntimeError("Spatial validation produced fewer than four evaluable folds.")
     logistic_mean_auc = float(np.mean(logistic_auc_values))
@@ -365,36 +479,18 @@ def fit_presence_background_model(
         "Logistic Maximum Spatial AUC": float(np.max(logistic_auc_values)),
         "Fixed Score Mean Spatial AUC": fallback_mean_auc,
         "Fixed Score Minimum Spatial AUC": float(np.min(fallback_auc_values)),
+        "Fixed Score Maximum Spatial AUC": float(np.max(fallback_auc_values)),
+        "Fixed Score Mean Held-Out Top-Quartile Capture": float(np.mean(fallback_capture_values)),
+        "Logistic Mean Held-Out Top-Quartile Capture": float(np.mean(logistic_capture_values)),
         "Elevation + Warning Mean Spatial AUC": elevation_warning_mean_auc,
+        "Warning-Only Mean Spatial AUC": float(np.mean(warning_only_auc_values)),
     }
-    # Pre-declared conservative selection: retain the fitted logistic score only when
-    # it clears 0.60 mean AUC, has no fold below 0.50, beats the required
-    # elevation-plus-warning comparator, and is within 0.02 AUC of the transparent
-    # fixed score. Otherwise use the more spatially stable transparent scenario score.
-    logistic_supported = (
-        logistic_mean_auc >= 0.60
-        and float(np.min(logistic_auc_values)) >= 0.50
-        and logistic_mean_auc >= elevation_warning_mean_auc
-        and logistic_mean_auc >= fallback_mean_auc - 0.02
-    )
-    if logistic_supported:
-        logistic.fit(matrix, outcome)
-        model = logistic
-        coefficients = dict(
-            zip(
-                (f"Calibrated {name} Coefficient" for name in FEATURE_NAMES),
-                model.named_steps["logisticregression"].coef_[0].astype(float),
-            )
-        )
-        metrics = {**validation_metrics, **coefficients}
-        mode = "Validation-selected presence-background score"
-    else:
-        model = TransparentStandardizedScore(FALLBACK_WEIGHTS).fit(matrix)
-        metrics = {
-            **validation_metrics,
-            **{f"Fixed {name} Weight": value for name, value in FALLBACK_WEIGHTS.items()},
-        }
-        mode = "Validation-selected transparent scenario score"
+    model = TransparentStandardizedScore(FALLBACK_WEIGHTS).fit(matrix)
+    metrics = {
+        **validation_metrics,
+        **{f"Fixed {name} Weight": value for name, value in FALLBACK_WEIGHTS.items()},
+    }
+    mode = "Pre-specified transparent terrain-context score"
     return model, metrics, len(presence_flat), len(background_flat), mode
 
 
@@ -470,17 +566,21 @@ def main() -> None:
         dtype="uint8",
     ).astype(bool)
 
-    warning = pd.read_parquet(WARNING_PATH, columns=["Geometry"])
-    warning_geometry = decode_geometry(warning["Geometry"])
-    warning_grid = rasterize(
-        ((geometry, 1) for geometry in warning_geometry),
-        out_shape=display_shape,
-        transform=display_transform,
-        fill=0,
-        all_touched=True,
-        dtype="uint8",
-    ).astype("float32")
-    features["Warning-Zone Exposure"] = warning_grid
+    current_warning_geometry, current_warning_counts = warning_zone_geometry()
+    validation_warning_geometry, validation_warning_counts = warning_zone_geometry(
+        LANDSLIDE_VALIDATION_DATE
+    )
+    features["Warning-Zone Exposure"] = warning_zone_grid(
+        current_warning_geometry,
+        display_shape,
+        display_transform,
+    )
+    validation_features = features.copy()
+    validation_features["Warning-Zone Exposure"] = warning_zone_grid(
+        validation_warning_geometry,
+        display_shape,
+        display_transform,
+    )
 
     curvature_scale = np.nanpercentile(np.abs(features["Terrain Curvature"]), 99.5)
     if not np.isfinite(curvature_scale) or curvature_scale <= 0:
@@ -488,6 +588,7 @@ def main() -> None:
     features["Terrain Curvature"] = np.clip(
         features["Terrain Curvature"], -curvature_scale, curvature_scale
     )
+    validation_features["Terrain Curvature"] = features["Terrain Curvature"]
 
     valid = admin_mask.copy()
     for feature in FEATURE_NAMES:
@@ -502,7 +603,7 @@ def main() -> None:
     landslide_geometry = landslide_geometry[inside]
 
     model, metrics, presence_count, background_count, model_mode = fit_presence_background_model(
-        features,
+        validation_features,
         valid,
         landslide_geometry,
         extent,
@@ -514,12 +615,8 @@ def main() -> None:
     terrain_logit = np.full(display_shape, np.nan, dtype="float32")
     terrain_logit[valid] = model.decision_function(all_matrix).astype("float32")
 
-    rain = pd.read_parquet(
-        RAIN_PATH,
-        columns=["Station ID", "Observation Time", "Hourly Rainfall"],
-    )
-    rain = rain.loc[rain["Hourly Rainfall"].notna()].copy()
-    scenario_loads = wet_window_scenario_loads(rain)
+    scenario_values = pd.read_parquet(SCENARIO_PATH)
+    scenario_loads = event_scenario_loads(scenario_values, extent, display_shape)
 
     threshold = pd.read_parquet(THRESHOLD_PATH)
     factors, mixed = threshold_categories(admin, threshold)
@@ -533,17 +630,116 @@ def main() -> None:
     )
     factor_grid[~admin_mask] = np.nan
 
+    yatsushiro_grid = rasterize(
+        ((geometry, 1) for geometry in admin_geometry[mixed]),
+        out_shape=display_shape,
+        transform=display_transform,
+        fill=0,
+        all_touched=True,
+        dtype="uint8",
+    ).astype(bool)
+    yatsushiro_grid &= valid
+    if not yatsushiro_grid.any():
+        raise RuntimeError("Yatsushiro threshold-support geometry was not resolved on the score grid.")
+    factor_grid_070 = factor_grid.copy()
+    factor_grid_080 = factor_grid.copy()
+    factor_grid_070[yatsushiro_grid] = 0.70
+    factor_grid_080[yatsushiro_grid] = 0.80
+
     panels = [
-        ("Baseline threshold\nHeavy rainfall", np.ones(display_shape, dtype="float32")),
-        ("Official threshold\nModerate rainfall", scenario_loads["Moderate"] / factor_grid),
-        ("Official threshold\nHeavy rainfall", scenario_loads["Heavy"] / factor_grid),
-        ("Official threshold\nExtreme rainfall", scenario_loads["Extreme"] / factor_grid),
+        ("Baseline threshold\nHeavy rainfall", scenario_loads["Heavy"]),
+        ("Adjusted threshold\nModerate rainfall", scenario_loads["Moderate"] / factor_grid),
+        ("Adjusted threshold\nHeavy rainfall", scenario_loads["Heavy"] / factor_grid),
+        ("Adjusted threshold\nExtreme rainfall", scenario_loads["Extreme"] / factor_grid),
     ]
     score_maps: list[np.ndarray] = []
     for _, rainfall_loading in panels:
-        score = expit(terrain_logit + rainfall_loading - 1.0).astype("float32")
+        score = expit(
+            terrain_logit
+            + RAINFALL_LOADING_GAMMA * np.log(np.clip(rainfall_loading, 1e-6, None))
+        ).astype("float32")
         score[~valid] = np.nan
         score_maps.append(score)
+
+    yatsushiro_summaries: list[tuple[float, float, float] | None] = [None]
+    for scenario in ("Moderate", "Heavy", "Extreme"):
+        scenario_scores: dict[str, np.ndarray] = {}
+        for label, scenario_factor_grid in (
+            ("0.70", factor_grid_070),
+            ("0.75", factor_grid),
+            ("0.80", factor_grid_080),
+        ):
+            score = expit(
+                terrain_logit
+                + RAINFALL_LOADING_GAMMA
+                * np.log(
+                    np.clip(
+                        scenario_loads[scenario] / scenario_factor_grid,
+                        1e-6,
+                        None,
+                    )
+                )
+            ).astype("float32")
+            score[~valid] = np.nan
+            scenario_scores[label] = score
+        midpoint_mean = float(np.nanmean(scenario_scores["0.75"][yatsushiro_grid]))
+        bound_means = [
+            float(np.nanmean(scenario_scores[label][yatsushiro_grid]))
+            for label in ("0.70", "0.80")
+        ]
+        yatsushiro_summaries.append(
+            (midpoint_mean, min(bound_means), max(bound_means))
+        )
+
+    print(f"Score construction: {model_mode}")
+    print(
+        "Warning-zone temporal support: "
+        f"2016 validation={validation_warning_counts['selected']:,} designated by "
+        f"{LANDSLIDE_VALIDATION_DATE.date()}; "
+        f"post-event excluded={validation_warning_counts['post_event']:,}; "
+        f"unknown/sentinel excluded={validation_warning_counts['unknown_or_sentinel']:,}; "
+        f"2026 screening={current_warning_counts['selected']:,} current polygons"
+    )
+    print(f"Unique presence cells: {presence_count:,}; background cells: {background_count:,}")
+    print("Spatial validation and standardized coefficients:")
+    for key, value in metrics.items():
+        print(f"  {key}: {value:.4f}")
+    print("Scenario loading and score diagnostics:")
+    for scenario, value in scenario_loads.items():
+        finite_loading = value[valid]
+        print(
+            f"  {scenario} loading: median={np.median(finite_loading):.4f}; "
+            f"p05={np.quantile(finite_loading, 0.05):.4f}; "
+            f"p95={np.quantile(finite_loading, 0.95):.4f}"
+        )
+    for (annotation, _), score in zip(panels, score_maps):
+        finite_score = score[valid]
+        print(
+            f"  {annotation.replace(chr(10), ' ')}: "
+            f"median={np.median(finite_score):.4f}; "
+            f"score<0.01={np.mean(finite_score < 0.01):.4%}; "
+            f"score>0.99={np.mean(finite_score > 0.99):.4%}"
+        )
+    print("Yatsushiro municipality-wide threshold-support sensitivity:")
+    for scenario, summary in zip(("Moderate", "Heavy", "Extreme"), yatsushiro_summaries[1:]):
+        if summary is None:
+            continue
+        midpoint_mean, lower_mean, upper_mean = summary
+        print(
+            f"  {scenario}: analyst midpoint 0.75 mean={midpoint_mean:.4f}; "
+            f"0.70-0.80 bounding means={lower_mean:.4f}-{upper_mean:.4f}"
+        )
+    official_scores = score_maps[1:]
+    for left_index, left_name in enumerate(("Moderate", "Heavy", "Extreme")):
+        for right_index, right_name in enumerate(("Moderate", "Heavy", "Extreme")):
+            if right_index <= left_index:
+                continue
+            correlation = spearmanr(
+                official_scores[left_index][valid],
+                official_scores[right_index][valid],
+            ).statistic
+            print(f"  Rank correlation {left_name} vs {right_name}: {correlation:.6f}")
+    print("Interpretation: relative scenario score; not an occurrence probability", flush=True)
 
     fig = plt.figure(figsize=(14.5, 11), constrained_layout=True)
     grid = fig.add_gridspec(
@@ -569,7 +765,9 @@ def main() -> None:
     landslide_coordinates = shapely.get_coordinates(landslide_geometry)
 
     image = None
-    for index, (axis, (annotation, _), score) in enumerate(zip(axes, panels, score_maps)):
+    for index, (axis, (annotation, _), score, yatsushiro_summary) in enumerate(
+        zip(axes, panels, score_maps, yatsushiro_summaries)
+    ):
         image = axis.imshow(
             score,
             extent=image_extent,
@@ -612,6 +810,29 @@ def main() -> None:
             bbox={"boxstyle": "round,pad=0.28", "facecolor": "white", "edgecolor": "#D0D5DD", "alpha": 0.92},
             zorder=20,
         )
+        if yatsushiro_summary is not None:
+            midpoint_mean, lower_mean, upper_mean = yatsushiro_summary
+            axis.text(
+                0.982,
+                0.018,
+                "Yatsushiro mean score\n"
+                f"analyst midpoint 0.75: {midpoint_mean:.3f}\n"
+                f"0.70-0.80 bounds: {lower_mean:.3f}-{upper_mean:.3f}",
+                transform=axis.transAxes,
+                ha="right",
+                va="bottom",
+                fontsize=7.0,
+                color="#344054",
+                linespacing=1.18,
+                bbox={
+                    "boxstyle": "round,pad=0.28",
+                    "facecolor": "white",
+                    "edgecolor": "#98A2B3",
+                    "linewidth": 0.65,
+                    "alpha": 0.93,
+                },
+                zorder=20,
+            )
         style_map_axis(axis, extent)
         add_panel_label(axis, "abcd"[index])
 
@@ -636,7 +857,14 @@ def main() -> None:
     if mixed.any():
         axes[2].legend(
             handles=[
-                Line2D([0], [0], color="#5E3C99", linewidth=1.4, linestyle=(0, (4, 2)), label="Yatsushiro 0.70–0.80 midpoint display")
+                Line2D(
+                    [0],
+                    [0],
+                    color="#5E3C99",
+                    linewidth=1.4,
+                    linestyle=(0, (4, 2)),
+                    label="Yatsushiro: official subarea boundary unresolved",
+                )
             ],
             loc="lower left",
             fontsize=7.2,
@@ -654,19 +882,36 @@ def main() -> None:
     colorbar.ax.tick_params(labelsize=8)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT, dpi=150, bbox_inches="tight", facecolor="white")
+    fig.savefig(SVG_OUT, format="svg", bbox_inches="tight", facecolor="white")
     plt.close(fig)
 
-    print(f"Saved: {OUT.relative_to(ROOT)}")
-    print(f"Score construction: {model_mode}")
-    print(f"Unique presence cells: {presence_count:,}; background cells: {background_count:,}")
-    print("Spatial validation and standardized coefficients:")
-    for key, value in metrics.items():
-        print(f"  {key}: {value:.4f}")
-    print("Scenario loads relative to Heavy:")
-    for scenario, value in scenario_loads.items():
-        print(f"  {scenario}: {value:.4f}")
-    print("Interpretation: relative scenario score; not an occurrence probability")
+    print(f"Saved SVG: {SVG_OUT.relative_to(ROOT)}")
+
+    del (
+        fig,
+        image,
+        native_features,
+        features,
+        all_matrix,
+        terrain_logit,
+        scenario_loads,
+        score_maps,
+        official_scores,
+        panels,
+        yatsushiro_summaries,
+        yatsushiro_grid,
+        factor_grid_070,
+        factor_grid_080,
+    )
+    gc.collect()
+    OUT.write_bytes(
+        resvg_py.svg_to_bytes(
+            svg_path=str(SVG_OUT),
+            dpi=300.0,
+            background="white",
+        )
+    )
+    print(f"Converted PNG (300 dpi): {OUT.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

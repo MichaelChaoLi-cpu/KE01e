@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
+import math
 
 import numpy as np
 from openpyxl import load_workbook
@@ -20,10 +21,12 @@ from openpyxl.worksheet.page import PageMargins
 from openpyxl.worksheet.table import Table, TableStyleInfo
 import pandas as pd
 import rasterio
+import shapely
 
 
 ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data/processed"
+DEM_MANIFEST = ROOT / "data/raw/_manifests/gsi_dem10b_png_tiles.csv"
 OUT = ROOT / "data/results/tables/Table_analytical_data_coverage_and_quality.xlsx"
 SHEET_NAME = "Data Coverage"
 TABLE_TITLE = "Analytical Data Coverage and Quality"
@@ -51,12 +54,12 @@ LAYER_SPECS = [
     LayerSpec("Earthquake damage evidence", "earthquake_damage_evidence_preprocessed.parquet", "Point", "Reported damage location", ("Observation Time",), "Evidence ID", ("Evidence ID", "Observation Time", "Observed Damage Type", "Evidence Tier"), ("Latitude", "Longitude"), "Earthquake-context evidence", "Evidence is selectively reported and cannot be interpreted as a complete damage inventory."),
     LayerSpec("Emergency evacuation sites", "emergency_evacuation_sites_preprocessed.parquet", "Point", "Facility location", tuple(), "Evacuation Site ID", ("Evacuation Site ID", "Evacuation Site Name"), ("Geometry",), "Evacuation reachability target", "Designation categories do not establish real-time opening or accessibility."),
     LayerSpec("Emergency transport roads", "emergency_transport_roads_preprocessed.parquet", "Line", "Declared route segment", ("Source Date",), "Route ID + Branch ID", ("Route ID", "Branch ID", "Emergency Road Class"), ("Geometry",), "External-road targets and intervention stratification", "Plan membership is a functional designation, not observed passability."),
-    LayerSpec("Emergency water points", "emergency_water_points_preprocessed.parquet", "Point when resolved", "Current supply point", ("Valid From Date", "Valid To Date", "Source Status Time"), "Water Point Name", ("Water Point Name", "Source Status Time"), ("Latitude", "Longitude"), "Emergency-water reachability target", "Only resolved current points enter routing; unmatched records make results a lower bound."),
-    LayerSpec("Evacuation facilities", "evacuation_facilities_preprocessed.parquet", "Point", "Facility location", tuple(), "Source Record ID", ("Source Record ID", "Facility Name", "Facility Type"), ("Geometry",), "Supplementary evacuation-facility context", "Source vintages and facility labels may not describe current operating conditions."),
+    LayerSpec("Emergency water points", "emergency_water_points_preprocessed.parquet", "Point when resolved", "Current supply point", ("Valid From Date", "Valid To Date", "Source Status Time"), "Water Point Name", ("Water Point Name", "Source Status Time"), ("Latitude", "Longitude"), "Emergency-water reachability target", "Only the resolved current subset enters routing; missing destinations make the direction of bias indeterminate."),
+    LayerSpec("Independent rainfall-event maxima", "jma_rainfall_event_maxima_preprocessed.parquet", "Station-event table", "Independent wet event at one station", ("Event Start", "Event End"), "Rainfall Event ID", ("Rainfall Event ID", "Support Specification", "Event Maximum 1 h Rainfall", "Event Maximum 3 h Rainfall", "Event Maximum 24 h Rainfall", "Event Maximum 72 h Rainfall"), ("Station Latitude", "Station Longitude"), "Event-based scenario quantiles and station-level spatial loading", "Central estimates use seven stations over 2016–2020; five continuously observed stations over 2016–2025 define support sensitivity."),
     LayerSpec("Fire stations", "fire_stations_preprocessed.parquet", "Point", "Fire facility", tuple(), "Fire Facility Name", ("Fire Facility Name", "Fire Facility Type"), ("Geometry",), "Fire-service reachability target", "Facility presence does not imply vehicle, staff, or dispatch availability."),
     LayerSpec("2016 landslide inventory", "gsi_2016_landslide_inventory_preprocessed.parquet", "Point", "Interpreted landslide placemark", ("Observation Date",), "Landslide Inventory ID", ("Landslide Inventory ID", "Observation Date"), ("Geometry",), "Presence-background calibration evidence", "Incomplete presence evidence; absence of a point is not a confirmed non-event."),
     LayerSpec("GSI DEM 10B elevation", "gsi_dem10b_elevation_preprocessed.tif", "Raster", "Approximately 10 m terrain cell", tuple(), "Raster cell", tuple(), tuple(), "Elevation, slope, and curvature derivation", "DEM support does not imply rainfall or hazard information at 10 m resolution."),
-    LayerSpec("JMA hourly rainfall", "jma_hourly_rainfall_preprocessed.parquet", "Station time series", "Station-hour", ("Observation Time",), "Station ID + Observation Time", ("Station ID", "Observation Time", "Hourly Rainfall"), ("Station ID",), "Rainfall history and scenario quantiles", "Station support is not fine-resolution rainfall interpolation."),
+    LayerSpec("JMA hourly rainfall", "jma_hourly_rainfall_preprocessed.parquet", "Station time series", "Station-hour", ("Observation Time",), "Station ID + Observation Time", ("Station ID", "Observation Time", "Hourly Rainfall", "Quality Flag"), ("Station Latitude", "Station Longitude"), "Rainfall history and independent-event construction", "Station observations support event-based interpolation but do not constitute fine-resolution radar rainfall."),
     LayerSpec("Landslide warning zones", "landslide_warning_zones_preprocessed.parquet", "Polygon", "Official warning-zone polygon", ("Designation Date",), "Zone ID", ("Zone ID", "Hazard Type", "Warning Zone Class"), ("Geometry",), "Warning-zone exposure baseline", "Official zoning is a screening layer and does not represent event occurrence."),
     LayerSpec("Official threshold factors", "official_threshold_factors_preprocessed.parquet", "Area-linked table", "Municipality or named subarea", tuple(), "Municipality or Subarea (Japanese)", ("Municipality or Subarea (Japanese)", "Rainfall Threshold Retention Factor"), ("Municipality or Subarea (Japanese)",), "Post-earthquake threshold scenario adjustment", "Factors are area-level official settings, not a continuous shaking surface."),
     LayerSpec("Population disclosure groups", "population_disclosure_groups_preprocessed.parquet", "Polygon", "Disclosure group of 125 m meshes", tuple(), "Disclosure Group Code", ("Disclosure Group Code", "Total Population", "Population Age 65+"), ("Geometry",), "Age-structured vulnerability allocation", "Suppressed meshes require group-level allocation and do not reveal exact small-cell age counts."),
@@ -115,16 +118,44 @@ def temporal_coverage(frame: pd.DataFrame, columns: tuple[str, ...]) -> str:
     return minimum if minimum == maximum else f"{minimum} to {maximum}"
 
 
+def web_tile_bounds(zoom: int, x: int, y: int) -> object:
+    """Return the WGS84 footprint of one web-map tile."""
+    scale = 2**zoom
+    west = x / scale * 360.0 - 180.0
+    east = (x + 1) / scale * 360.0 - 180.0
+
+    def latitude(row: int) -> float:
+        return math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * row / scale))))
+
+    return shapely.box(west, latitude(y + 1), east, latitude(y))
+
+
+def dem_prefecture_coverage() -> float:
+    """Calculate DEM tile coverage within the prefecture geometry."""
+    admin = pd.read_parquet(PROCESSED / "administrative_areas_preprocessed.parquet")
+    admin_geometry = shapely.from_wkb(admin["Geometry"].to_numpy())
+    admin_union = shapely.union_all(admin_geometry)
+    manifest = pd.read_csv(DEM_MANIFEST)
+    available = manifest.loc[manifest["status"].ne("failed")]
+    tile_geometry = np.asarray(
+        [
+            web_tile_bounds(int(row.zoom), int(row.x), int(row.y))
+            for row in available.itertuples(index=False)
+        ],
+        dtype=object,
+    )
+    coverage_geometry = shapely.union_all(tile_geometry)
+    uncovered = shapely.difference(admin_union, coverage_geometry)
+    uncovered_fraction = float(shapely.area(uncovered) / shapely.area(admin_union))
+    return 1.0 - uncovered_fraction
+
+
 def raster_row(spec: LayerSpec) -> dict[str, object]:
-    """Build the DEM row from raster metadata and the precomputed tile audit."""
+    """Build the DEM row using prefecture-intersection coverage, not raster bounds."""
     path = PROCESSED / spec.file_name
     with rasterio.open(path) as source:
         total_cells = int(source.width * source.height)
-    tile_summary = pd.read_parquet(
-        PROCESSED / "gsi_dem10b_tile_summary_preprocessed.parquet",
-        columns=["Valid Pixel Count"],
-    )
-    valid_cells = int(tile_summary["Valid Pixel Count"].sum())
+    coverage = dem_prefecture_coverage()
     return {
         "Analytical Data Layer": spec.label,
         "Record Count": total_cells,
@@ -132,8 +163,8 @@ def raster_row(spec: LayerSpec) -> dict[str, object]:
         "Spatial Resolution / Support": spec.spatial_support,
         "Temporal Coverage": "Static terrain surface",
         "Key Identifier": spec.key_identifier,
-        "Required-Field Missingness": 1.0 - valid_cells / total_cells,
-        "Location Completeness": valid_cells / total_cells,
+        "Required-Field Missingness": 1.0 - coverage,
+        "Location Completeness": coverage,
         "Analytical Role": spec.analytical_role,
         "Interpretation Boundary": spec.interpretation_boundary,
     }
@@ -178,11 +209,11 @@ def style_workbook(path: Path) -> None:
     workbook = load_workbook(path)
     worksheet = workbook[SHEET_NAME]
     worksheet.sheet_view.showGridLines = False
-    worksheet.freeze_panes = "A2"
-    worksheet.auto_filter.ref = f"A1:J{worksheet.max_row}"
+    worksheet.freeze_panes = "A3"
+    worksheet.auto_filter.ref = f"A2:J{worksheet.max_row}"
     worksheet.sheet_view.zoomScale = 85
     worksheet.print_area = f"A1:J{worksheet.max_row}"
-    worksheet.print_title_rows = "1:1"
+    worksheet.print_title_rows = "1:2"
     worksheet.page_setup.orientation = "landscape"
     worksheet.page_setup.paperSize = worksheet.PAPERSIZE_A3
     worksheet.page_setup.fitToWidth = 1
@@ -201,13 +232,21 @@ def style_workbook(path: Path) -> None:
     header_font = Font(name="Aptos", size=10, bold=True, color="FFFFFF")
     body_font = Font(name="Aptos", size=9, color="172033")
     subtle_border = Border(bottom=Side(style="thin", color="D0D5DD"))
-    for cell in worksheet[1]:
+    worksheet.merge_cells("A1:J1")
+    title_cell = worksheet["A1"]
+    title_cell.value = TABLE_TITLE
+    title_cell.fill = PatternFill("solid", fgColor="D9EAF7")
+    title_cell.font = Font(name="Aptos Display", size=15, bold=True, color="17365D")
+    title_cell.alignment = Alignment(horizontal="left", vertical="center")
+    worksheet.row_dimensions[1].height = 28
+
+    for cell in worksheet[2]:
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    worksheet.row_dimensions[1].height = 34
+    worksheet.row_dimensions[2].height = 36
 
-    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row):
+    for row in worksheet.iter_rows(min_row=3, max_row=worksheet.max_row):
         for cell in row:
             cell.font = body_font
             cell.alignment = Alignment(vertical="top", wrap_text=True)
@@ -215,6 +254,9 @@ def style_workbook(path: Path) -> None:
         row[1].number_format = "#,##0"
         row[6].number_format = "0.0%"
         row[7].number_format = "0.0%"
+        if row[0].value == "GSI DEM 10B elevation":
+            row[6].number_format = "0.0000%"
+            row[7].number_format = "0.0000%"
         row[1].alignment = Alignment(horizontal="right", vertical="top")
         row[6].alignment = Alignment(horizontal="right", vertical="top")
         row[7].alignment = Alignment(horizontal="right", vertical="top")
@@ -236,7 +278,7 @@ def style_workbook(path: Path) -> None:
         worksheet.column_dimensions[column].width = width
 
     worksheet.conditional_formatting.add(
-        f"G2:G{worksheet.max_row}",
+        f"G3:G{worksheet.max_row}",
         ColorScaleRule(
             start_type="num",
             start_value=0,
@@ -250,7 +292,7 @@ def style_workbook(path: Path) -> None:
         ),
     )
     worksheet.conditional_formatting.add(
-        f"H2:H{worksheet.max_row}",
+        f"H3:H{worksheet.max_row}",
         ColorScaleRule(
             start_type="num",
             start_value=0,
@@ -263,7 +305,7 @@ def style_workbook(path: Path) -> None:
             end_color="63BE7B",
         ),
     )
-    excel_table = Table(displayName="AnalyticalDataCoverage", ref=f"A1:J{worksheet.max_row}")
+    excel_table = Table(displayName="AnalyticalDataCoverage", ref=f"A2:J{worksheet.max_row}")
     excel_table.tableStyleInfo = TableStyleInfo(
         name="TableStyleMedium2",
         showFirstColumn=False,
@@ -281,9 +323,9 @@ def verify_workbook(path: Path) -> None:
     if workbook.sheetnames != [SHEET_NAME]:
         raise RuntimeError(f"Unexpected workbook sheets: {workbook.sheetnames}")
     worksheet = workbook[SHEET_NAME]
-    if worksheet.max_row != 23 or worksheet.max_column != 10:
+    if worksheet.max_row != 24 or worksheet.max_column != 10:
         raise RuntimeError(
-            f"Expected 23 worksheet rows including the header and 10 columns; found "
+            f"Expected 24 worksheet rows including title and header and 10 columns; found "
             f"{worksheet.max_row} × {worksheet.max_column}."
         )
     error_tokens = {"#REF!", "#DIV/0!", "#VALUE!", "#NAME?", "#N/A"}
@@ -291,7 +333,9 @@ def verify_workbook(path: Path) -> None:
         for cell in row:
             if isinstance(cell.value, str) and cell.value in error_tokens:
                 raise RuntimeError(f"Spreadsheet error token in {cell.coordinate}: {cell.value}")
-    for row in range(2, worksheet.max_row + 1):
+    if worksheet["A1"].value != TABLE_TITLE:
+        raise RuntimeError("Workbook title row is missing or incorrect.")
+    for row in range(3, worksheet.max_row + 1):
         if not isinstance(worksheet.cell(row, 2).value, int):
             raise RuntimeError(f"Record Count must be integer at B{row}.")
         for column in (7, 8):
@@ -303,7 +347,7 @@ def verify_workbook(path: Path) -> None:
 def main() -> None:
     table = build_table()
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    table.to_excel(OUT, index=False, sheet_name=SHEET_NAME, engine="openpyxl")
+    table.to_excel(OUT, index=False, sheet_name=SHEET_NAME, engine="openpyxl", startrow=1)
     style_workbook(OUT)
     verify_workbook(OUT)
     print(f"Saved: {OUT.relative_to(ROOT)}")

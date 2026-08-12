@@ -4,8 +4,8 @@
 Plan: Compare seven budget-feasible road-access intervention portfolios under
 Conservative, Central, and Optimistic cost-effect assumptions.
 Framework: AnaSOP Sections 5-7 use the accepted Heavy-scenario closure mapping,
-consequence-aware robust road ranking, action-specific proportional effects,
-relative planning costs, 1,000 common-random-number network draws, avoided
+consequence-aware assigned-action road ranking, action-specific proportional effects,
+relative planning costs, five independently seeded sets of 1,000 paired network draws, avoided
 isolation, protected population, and selection overlap. Results are planning
 screening outputs rather than engineering optima or guaranteed benefits.
 """
@@ -34,10 +34,12 @@ import table_priority_road_sections as priority_roads
 ROOT = Path(__file__).resolve().parents[2]
 PORTFOLIO_OUT = ROOT / "data/results/tables/Table_intervention_portfolios.xlsx"
 COMPARATOR_OUT = ROOT / "data/results/tables/Table_comparator_robustness.xlsx"
-PREVIEW_OUT = ROOT / "data/exp/table_previews/Table_intervention_portfolios_and_robustness.png"
+PREVIEW_OUT = ROOT / "data/exp/table_previews/Table_intervention_portfolios.png"
+COMPARATOR_PREVIEW_OUT = ROOT / "data/exp/table_previews/Table_comparator_robustness.png"
 SHEET_NAME = "Portfolio Robustness"
 COMPARATOR_SHEET = "Comparator Baselines"
-TABLE_TITLE = "Intervention Portfolios and Robustness"
+TABLE_TITLE = "Intervention Portfolios"
+COMPARATOR_TITLE = "Comparator Robustness"
 SETTINGS = ("Conservative", "Central", "Optimistic")
 BUDGET_COUNT = 7
 PORTFOLIO_CANDIDATES = 150
@@ -48,7 +50,7 @@ def portfolio_selections(
     base_cost: np.ndarray,
     budgets: np.ndarray,
 ) -> dict[tuple[str, int], tuple[np.ndarray, float]]:
-    """Return greedy robust-ranking portfolios and realized setting-specific spend."""
+    """Return greedy assigned-action portfolios and realized setting-specific spend."""
     positions = priority_order[:PORTFOLIO_CANDIDATES]
     selections: dict[tuple[str, int], tuple[np.ndarray, float]] = {}
     for setting in SETTINGS:
@@ -77,7 +79,11 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
     section_propensity = context["Section Propensity"]
     community_population = context["Community Population"]
     community_older = context["Community Population Age 65+"]
-    baseline_frequency = context["Baseline Frequency"].astype(float)
+    baseline_frequencies = {
+        int(seed): np.asarray(frequency, dtype=float)
+        for seed, frequency in context["Baseline Frequencies"].items()
+    }
+    baseline_frequency = np.mean(np.vstack(list(baseline_frequencies.values())), axis=0)
     baseline_expected = float(np.sum(community_population * baseline_frequency))
     portfolio_positions = priority_order[:PORTFOLIO_CANDIDATES]
     max_budget = float(base_cost[portfolio_positions[:100]].sum())
@@ -96,26 +102,30 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
                     dtype=float,
                 )
                 adjusted_propensity[selected] *= 1.0 - effects
-            adjusted_frequency = intervention.quiet_isolation_frequency(
-                context["Candidate U"],
-                context["Candidate V"],
-                context["Candidate Edge Section"],
-                adjusted_propensity,
-                int(context["Root Count"]),
-                context["Target Roots"],
-                context["Attachment Community"],
-                context["Attachment Root"],
-                len(community_population),
-                intervention.INTERVENTION_RANDOM_SEED,
-            ).astype(float)
-            frequency_reduction = np.maximum(
-                baseline_frequency - adjusted_frequency,
-                0.0,
-            )
-            protected_population = float(
-                np.sum(community_population * frequency_reduction)
-            )
-            protected_older = float(np.sum(community_older * frequency_reduction))
+            protected_by_seed: list[float] = []
+            protected_older_by_seed: list[float] = []
+            reduction_by_seed: list[np.ndarray] = []
+            for seed in isolation.REPLICATE_SEEDS:
+                adjusted_frequency = intervention.cached_intervention_frequency(
+                    f"assigned_{setting.lower()}_b{budget_index}_seed_{seed}",
+                    context["Candidate U"],
+                    context["Candidate V"],
+                    context["Candidate Edge Section"],
+                    adjusted_propensity,
+                    int(context["Root Count"]),
+                    context["Target Roots"],
+                    context["Attachment Community"],
+                    context["Attachment Root"],
+                    len(community_population),
+                    seed,
+                ).astype(float)
+                reduction = np.maximum(baseline_frequencies[seed] - adjusted_frequency, 0.0)
+                reduction_by_seed.append(reduction)
+                protected_by_seed.append(float(np.sum(community_population * reduction)))
+                protected_older_by_seed.append(float(np.sum(community_older * reduction)))
+            protected_population = float(np.mean(protected_by_seed))
+            protected_older = float(np.mean(protected_older_by_seed))
+            frequency_reduction = np.mean(np.vstack(reduction_by_seed), axis=0)
             protected_communities = int(np.count_nonzero(frequency_reduction >= 0.001))
             selected_set = set(selected.tolist())
             union = selected_set | central_selected
@@ -143,20 +153,21 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
             rows.append(
                 {
                     "Sensitivity Setting": setting,
-                    "Budget (Planning Units)": float(budget),
+                    "Budget (Relative Planning Units)": float(budget),
                     "Selected Road Count": int(selected.size),
                     "Intervention Mix (Reinforcement / Clearance / Alternative)": mix,
-                    "Realized Portfolio Cost": float(spent),
+                    "Realized Cost (Relative Planning Units)": float(spent),
                     "Protected Community Count": protected_communities,
-                    "Protected Population (Total / Age 65+)": (
-                        f"{protected_population:,.1f} / {protected_older:,.1f}"
+                    "Protected Population Mean [Seed Range] (Total / Age 65+)": (
+                        f"{protected_population:,.1f} [{min(protected_by_seed):,.1f}–{max(protected_by_seed):,.1f}] / "
+                        f"{protected_older:,.1f} [{min(protected_older_by_seed):,.1f}–{max(protected_older_by_seed):,.1f}]"
                     ),
                     "Avoided Isolation Share": (
                         protected_population / baseline_expected
                         if baseline_expected > 0
                         else np.nan
                     ),
-                    "Protected Population per Cost": (
+                    "Protected Population per Relative Cost": (
                         protected_population / spent if spent > 0 else np.nan
                     ),
                     "Selection Overlap vs Central": float(overlap),
@@ -166,20 +177,16 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
     table = pd.DataFrame(rows)
     if table.shape != (BUDGET_COUNT * len(SETTINGS), 10):
         raise RuntimeError(f"Unexpected portfolio-table shape: {table.shape}.")
-    orders = intervention.comparator_orders(
+    comparator = intervention.evaluate_comparator_portfolios(
+        budgets,
+        base_cost,
+        actions,
         context["Candidate Score"],
         context["Emergency Candidate"],
         context["Candidate Road Category"],
         context["Consequence Proxy"],
-        actions,
-    )
-    comparator = intervention.evaluate_comparator_portfolios(
-        orders,
-        budgets,
-        base_cost,
-        actions,
         section_propensity,
-        baseline_frequency,
+        baseline_frequencies,
         community_population,
         community_older,
         context["Candidate U"],
@@ -190,35 +197,47 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
         context["Attachment Community"],
         context["Attachment Root"],
     )
-    comparator["Protected Population (Total / Age 65+)"] = comparator.apply(
-        lambda row: f"{row['Protected Population']:,.1f} / {row['Protected Population Age 65+']:,.1f}",
+    comparator["Protected Population Mean [Seed Range] (Total / Age 65+)"] = comparator.apply(
+        lambda row: (
+            f"{row['Protected Population']:,.1f} "
+            f"[{row['Protected Population Low']:,.1f}–{row['Protected Population High']:,.1f}] / "
+            f"{row['Protected Population Age 65+']:,.1f} "
+            f"[{row['Protected Population Age 65+ Low']:,.1f}–{row['Protected Population Age 65+ High']:,.1f}]"
+        ),
         axis=1,
     )
     comparator["Avoided Isolation Share"] = comparator["Protected Population"] / baseline_expected
-    comparator["Protected Population per Cost"] = np.divide(
+    comparator["Protected Population per Relative Cost"] = np.divide(
         comparator["Protected Population"],
         comparator["Realized Portfolio Cost"],
         out=np.full(len(comparator), np.nan, dtype=float),
         where=comparator["Realized Portfolio Cost"].to_numpy(dtype=float) > 0,
     )
+    comparator = comparator.rename(
+        columns={
+            "Budget (Planning Units)": "Budget (Relative Planning Units)",
+            "Realized Portfolio Cost": "Realized Cost (Relative Planning Units)",
+        }
+    )
     comparator = comparator.loc[
         :,
         [
             "Comparator",
-            "Budget (Planning Units)",
+            "Setting",
+            "Budget (Relative Planning Units)",
             "Selected Road Count",
-            "Realized Portfolio Cost",
-            "Protected Population (Total / Age 65+)",
+            "Realized Cost (Relative Planning Units)",
+            "Protected Population Mean [Seed Range] (Total / Age 65+)",
             "Avoided Isolation Share",
-            "Protected Population per Cost",
+            "Protected Population per Relative Cost",
         ],
     ]
     diagnostics = {
         "Baseline Expected Isolation": baseline_expected,
         "Maximum Budget": max_budget,
         "Maximum Protected Population": float(
-            table["Protected Population (Total / Age 65+)"]
-            .str.split(" / ")
+            table["Protected Population Mean [Seed Range] (Total / Age 65+)"]
+            .str.split(" ")
             .str[0]
             .str.replace(",", "", regex=False)
             .astype(float)
@@ -235,11 +254,11 @@ def style_workbooks(portfolio_path: Path, comparator_path: Path) -> None:
     workbook = load_workbook(portfolio_path)
     worksheet = workbook[SHEET_NAME]
     worksheet.sheet_view.showGridLines = False
-    worksheet.freeze_panes = "B2"
-    worksheet.auto_filter.ref = f"A1:J{worksheet.max_row}"
+    worksheet.freeze_panes = "B3"
+    worksheet.auto_filter.ref = f"A2:J{worksheet.max_row}"
     worksheet.sheet_view.zoomScale = 90
     worksheet.print_area = f"A1:J{worksheet.max_row}"
-    worksheet.print_title_rows = "1:1"
+    worksheet.print_title_rows = None
     worksheet.page_setup.orientation = "landscape"
     worksheet.page_setup.paperSize = worksheet.PAPERSIZE_A3
     worksheet.page_setup.fitToWidth = 1
@@ -258,13 +277,21 @@ def style_workbooks(portfolio_path: Path, comparator_path: Path) -> None:
         "Central": PatternFill("solid", fgColor="FCE5D9"),
         "Optimistic": PatternFill("solid", fgColor="D9EDE9"),
     }
-    for cell in worksheet[1]:
+    worksheet.merge_cells("A1:J1")
+    title_cell = worksheet["A1"]
+    title_cell.value = TABLE_TITLE
+    title_cell.fill = PatternFill("solid", fgColor="D9EAF7")
+    title_cell.font = Font(name="Aptos Display", size=15, bold=True, color="17365D")
+    title_cell.alignment = Alignment(horizontal="left", vertical="center")
+    worksheet.row_dimensions[1].height = 28
+
+    for cell in worksheet[2]:
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    worksheet.row_dimensions[1].height = 50
+    worksheet.row_dimensions[2].height = 54
 
-    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row):
+    for row in worksheet.iter_rows(min_row=3, max_row=worksheet.max_row):
         for cell in row:
             cell.font = body_font
             cell.alignment = Alignment(vertical="top", wrap_text=True)
@@ -297,7 +324,7 @@ def style_workbooks(portfolio_path: Path, comparator_path: Path) -> None:
         worksheet.column_dimensions[column].width = width
     for column in ("H", "I", "J"):
         worksheet.conditional_formatting.add(
-            f"{column}2:{column}{worksheet.max_row}",
+            f"{column}3:{column}{worksheet.max_row}",
             ColorScaleRule(
                 start_type="min",
                 start_color="FFFFFF",
@@ -310,7 +337,7 @@ def style_workbooks(portfolio_path: Path, comparator_path: Path) -> None:
         )
     excel_table = Table(
         displayName="InterventionPortfolioRobustness",
-        ref=f"A1:J{worksheet.max_row}",
+        ref=f"A2:J{worksheet.max_row}",
     )
     excel_table.tableStyleInfo = TableStyleInfo(
         name="TableStyleMedium2",
@@ -326,41 +353,51 @@ def style_workbooks(portfolio_path: Path, comparator_path: Path) -> None:
     workbook = load_workbook(comparator_path)
     comparator = workbook[COMPARATOR_SHEET]
     comparator.sheet_view.showGridLines = False
-    comparator.freeze_panes = "B2"
-    comparator.auto_filter.ref = f"A1:G{comparator.max_row}"
+    comparator.freeze_panes = "C3"
+    comparator.auto_filter.ref = f"A2:H{comparator.max_row}"
     comparator.page_setup.orientation = "landscape"
     comparator.page_setup.paperSize = comparator.PAPERSIZE_A3
     comparator.page_setup.fitToWidth = 1
+    comparator.page_setup.fitToHeight = 0
     comparator.sheet_properties.pageSetUpPr.fitToPage = True
-    comparator.print_title_rows = "1:1"
-    for cell in comparator[1]:
+    comparator.print_area = f"A1:H{comparator.max_row}"
+    comparator.print_title_rows = None
+    comparator.merge_cells("A1:H1")
+    comparator_title = comparator["A1"]
+    comparator_title.value = COMPARATOR_TITLE
+    comparator_title.fill = PatternFill("solid", fgColor="D9EAF7")
+    comparator_title.font = Font(name="Aptos Display", size=15, bold=True, color="17365D")
+    comparator_title.alignment = Alignment(horizontal="left", vertical="center")
+    comparator.row_dimensions[1].height = 28
+    for cell in comparator[2]:
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    comparator.row_dimensions[1].height = 42
-    for row in comparator.iter_rows(min_row=2, max_row=comparator.max_row):
+    comparator.row_dimensions[2].height = 48
+    for row in comparator.iter_rows(min_row=3, max_row=comparator.max_row):
         for cell in row:
             cell.font = body_font
             cell.alignment = Alignment(vertical="top", wrap_text=True)
             cell.border = subtle_border
-        row[1].number_format = "0.00"
-        row[2].number_format = "#,##0"
-        row[3].number_format = "0.00"
-        row[5].number_format = "0.0%"
-        row[6].number_format = "0.00"
+        row[2].number_format = "0.00"
+        row[3].number_format = "#,##0"
+        row[4].number_format = "0.00"
+        row[6].number_format = "0.0%"
+        row[7].number_format = "0.00"
     for column, width in {
         "A": 27,
-        "B": 20,
-        "C": 18,
-        "D": 21,
-        "E": 31,
-        "F": 20,
-        "G": 24,
+        "B": 17,
+        "C": 20,
+        "D": 18,
+        "E": 21,
+        "F": 31,
+        "G": 20,
+        "H": 24,
     }.items():
         comparator.column_dimensions[column].width = width
     comparator_table = Table(
         displayName="InterventionComparatorBaselines",
-        ref=f"A1:G{comparator.max_row}",
+        ref=f"A2:H{comparator.max_row}",
     )
     comparator_table.tableStyleInfo = TableStyleInfo(
         name="TableStyleMedium2",
@@ -377,9 +414,9 @@ def render_preview(path: Path, output: Path = PREVIEW_OUT) -> None:
     """Render the full 21-row title-first table as one PNG."""
     workbook = load_workbook(path, data_only=True)
     values = list(workbook[SHEET_NAME].values)
-    title = TABLE_TITLE
-    headers = [str(value) for value in values[0]]
-    rows = [list(row) for row in values[1:]]
+    title = str(values[0][0])
+    headers = [str(value) for value in values[1]]
+    rows = [list(row) for row in values[2:]]
     widths = [175, 145, 140, 260, 155, 170, 255, 175, 195, 190]
     margin = 22
     title_height = 84
@@ -494,6 +531,120 @@ def render_preview(path: Path, output: Path = PREVIEW_OUT) -> None:
     image.save(output, optimize=True)
 
 
+def render_comparator_preview(
+    path: Path,
+    output: Path = COMPARATOR_PREVIEW_OUT,
+) -> None:
+    """Render all 84 matched comparator rows as one readable continuous PNG."""
+    workbook = load_workbook(path, data_only=True)
+    values = list(workbook[COMPARATOR_SHEET].values)
+    title = str(values[0][0])
+    headers = [str(value) for value in values[1]]
+    rows = [list(row) for row in values[2:]]
+    widths = [235, 145, 175, 145, 190, 260, 175, 210]
+    margin = 22
+    title_height = 84
+    header_height = 100
+    row_height = 48
+    table_width = sum(widths)
+    image = Image.new(
+        "RGB",
+        (table_width + 2 * margin, title_height + header_height + row_height * len(rows) + margin),
+        "white",
+    )
+    draw = ImageDraw.Draw(image)
+    title_font = priority_roads._preview_font(28, bold=True)
+    note_font = priority_roads._preview_font(16)
+    header_font = priority_roads._preview_font(15, bold=True)
+    body_font = priority_roads._preview_font(15)
+    draw.text((margin, 16), title, font=title_font, fill="#17365D")
+    draw.text(
+        (margin, 52),
+        "Four comparator rankings under matched costs and effects; Heavy-scenario screening",
+        font=note_font,
+        fill="#52606D",
+    )
+    x_positions = [margin]
+    for width in widths:
+        x_positions.append(x_positions[-1] + width)
+    for column, header in enumerate(headers):
+        x0, x1 = x_positions[column], x_positions[column + 1]
+        draw.rectangle((x0, title_height, x1, title_height + header_height), fill="#17365D")
+        wrapped = priority_roads._wrap_preview_text(
+            draw, header, header_font, widths[column] - 14
+        )
+        bbox = draw.multiline_textbbox((0, 0), wrapped, font=header_font, spacing=3)
+        text_height = bbox[3] - bbox[1]
+        draw.multiline_text(
+            ((x0 + x1) / 2, title_height + (header_height - text_height) / 2),
+            wrapped,
+            font=header_font,
+            fill="white",
+            spacing=3,
+            anchor="ma",
+            align="center",
+        )
+
+    setting_colours = {
+        "Conservative": "#DCE9FA",
+        "Central": "#FCE5D9",
+        "Optimistic": "#D9EDE9",
+    }
+    comparator_colours = {
+        "Hazard only": "#F2F4F7",
+        "Emergency route only": "#F3E8FF",
+        "Road class only": "#FFF4D6",
+        "Equal-cost consequence": "#E5E7EB",
+    }
+    numeric_right = {2, 3, 4, 6, 7}
+    formats = {
+        2: lambda value: f"{float(value):,.2f}",
+        3: lambda value: f"{int(value):,}",
+        4: lambda value: f"{float(value):,.2f}",
+        6: lambda value: f"{float(value):.1%}",
+        7: lambda value: "—" if value is None else f"{float(value):,.3f}",
+    }
+    for row_number, row in enumerate(rows):
+        y0 = title_height + header_height + row_number * row_height
+        y1 = y0 + row_height
+        for column, value in enumerate(row):
+            x0, x1 = x_positions[column], x_positions[column + 1]
+            if column == 0:
+                fill = comparator_colours[str(row[0])]
+            elif column == 1:
+                fill = setting_colours[str(row[1])]
+            else:
+                fill = "#FFFFFF" if row_number % 2 == 0 else "#F8FAFC"
+            draw.rectangle((x0, y0, x1, y1), fill=fill, outline="#D0D5DD", width=1)
+            display_value = formats.get(
+                column,
+                lambda item: "" if item is None else str(item),
+            )(value)
+            wrapped = priority_roads._wrap_preview_text(
+                draw, display_value, body_font, widths[column] - 14
+            )
+            if column in numeric_right:
+                draw.multiline_text(
+                    (x1 - 7, y0 + 7),
+                    wrapped,
+                    font=body_font,
+                    fill="#172033",
+                    spacing=2,
+                    anchor="ra",
+                    align="right",
+                )
+            else:
+                draw.multiline_text(
+                    (x0 + 7, y0 + 7),
+                    wrapped,
+                    font=body_font,
+                    fill="#172033",
+                    spacing=2,
+                )
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output, optimize=True)
+
+
 def verify_workbook(path: Path, sheet_name: str, rows: int, columns: int) -> None:
     """Verify one Word-safe workbook, dimensions, and metric ranges."""
     workbook = load_workbook(path, data_only=False)
@@ -509,8 +660,10 @@ def verify_workbook(path: Path, sheet_name: str, rows: int, columns: int) -> Non
         for cell in row:
             if isinstance(cell.value, str) and cell.value in error_tokens:
                 raise RuntimeError(f"Spreadsheet error token in {cell.coordinate}: {cell.value}")
-    share_columns = (8, 10) if sheet_name == SHEET_NAME else (6,)
-    for row in range(2, worksheet.max_row + 1):
+    if worksheet["A1"].value not in {TABLE_TITLE, COMPARATOR_TITLE}:
+        raise RuntimeError("Workbook title row is missing or incorrect.")
+    share_columns = (8, 10) if sheet_name == SHEET_NAME else (7,)
+    for row in range(3, worksheet.max_row + 1):
         for column in share_columns:
             value = worksheet.cell(row, column).value
             if value is not None and not 0 <= float(value) <= 1:
@@ -521,15 +674,29 @@ def main() -> None:
     table, diagnostics = build_table()
     comparator = diagnostics["Comparator Table"]
     PORTFOLIO_OUT.parent.mkdir(parents=True, exist_ok=True)
-    table.to_excel(PORTFOLIO_OUT, index=False, sheet_name=SHEET_NAME, engine="openpyxl")
-    comparator.to_excel(COMPARATOR_OUT, index=False, sheet_name=COMPARATOR_SHEET, engine="openpyxl")
+    table.to_excel(
+        PORTFOLIO_OUT,
+        index=False,
+        sheet_name=SHEET_NAME,
+        engine="openpyxl",
+        startrow=1,
+    )
+    comparator.to_excel(
+        COMPARATOR_OUT,
+        index=False,
+        sheet_name=COMPARATOR_SHEET,
+        engine="openpyxl",
+        startrow=1,
+    )
     style_workbooks(PORTFOLIO_OUT, COMPARATOR_OUT)
-    verify_workbook(PORTFOLIO_OUT, SHEET_NAME, BUDGET_COUNT * len(SETTINGS) + 1, 10)
-    verify_workbook(COMPARATOR_OUT, COMPARATOR_SHEET, len(comparator) + 1, 7)
+    verify_workbook(PORTFOLIO_OUT, SHEET_NAME, BUDGET_COUNT * len(SETTINGS) + 2, 10)
+    verify_workbook(COMPARATOR_OUT, COMPARATOR_SHEET, len(comparator) + 2, 8)
     render_preview(PORTFOLIO_OUT)
+    render_comparator_preview(COMPARATOR_OUT)
     print(f"Saved: {PORTFOLIO_OUT.relative_to(ROOT)}")
     print(f"Saved: {COMPARATOR_OUT.relative_to(ROOT)}")
     print(f"Preview: {PREVIEW_OUT.relative_to(ROOT)}")
+    print(f"Preview: {COMPARATOR_PREVIEW_OUT.relative_to(ROOT)}")
     print(f"Rows: {len(table):,}; columns: {len(table.columns):,}")
     print(
         f"Heavy baseline expected isolated population: "

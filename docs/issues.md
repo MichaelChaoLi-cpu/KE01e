@@ -4,30 +4,27 @@
 
 | # | item | type | severity | description |
 |---|---|---|---|---|
-| — | None | — | — | No unresolved critical, major, or minor issue was identified in the final re-audit. |
+| 1 | `Table_hazard_validation.xlsx`; `Figure_official_threshold_adjusted_landslide_disruption_score.png`; `_hazard_validation_shared.py` | analysis | critical | The 2016 presence–pseudo-background validation rasterizes all 56,424 polygons from the 2025 warning-zone layer without filtering `Designation Date`. Of these records, 24,478 have valid designation dates after the inventory date of 2016-07-28, and another 1,925 use the sentinel date 9999-01-01. Consequently, the warning-zone feature, the reported AUC/capture metrics, and selection of the fixed score are temporally contaminated by information unavailable at the validation date. The 2025 layer remains legitimate context for 2026 screening, but it cannot be used unchanged as a predictor in an independent 2016 validation. Because the selected score propagates into road, isolation, service, and intervention outputs, the linked evidence chain must be regenerated after a temporally eligible validation design is adopted, or the historical validation claim must be explicitly withdrawn and the score treated as an unvalidated expert index. |
+| 2 | `docs/AnaSOP.md`, Sections 6–7; current analysis scripts and outputs | plan / analysis | major | The declared robustness framework is materially broader than the implemented evidence. AnaSOP states that the analysis varies accumulation-window weights, inverse-distance versus nearest-station assignment, leave-one-station-out rainfall surfaces, rainfall coefficient gamma, normalized-mean versus weighted-90th-percentile and maximum-cell road pooling, and service-node attachment. The current scripts and formal outputs implement the central equal-weight inverse-distance surface, gamma = 1.00, normalized directional mean pooling, a five-station temporal-support comparison, threshold bounds, gateway targets, closure mappings, simulation size, and intervention settings, but do not implement or report the other declared alternatives. Therefore the full-chain robustness claim is unsupported. Either implement and persist the missing analyses or revise AnaSOP and manuscript claims to the sensitivity checks actually completed. |
+| 3 | `Figure_community_isolation_frequency_and_exposed_population.png`; `figure_community_isolation_frequency_and_exposed_population.py` | figure / script | major | The reported 500/1,000/2,000-draw convergence statistic is not calculated on comparable estimators. The 500- and 2,000-draw arrays use one seed (`RANDOM_SEED`), whereas the 1,000-draw array is assigned the five-seed mean Heavy frequency. The resulting 95th-percentile difference mixes Monte Carlo sample-size variation with seed averaging and cannot establish convergence. Recompute all three draw counts with the same seed and random-number design, or compare five-seed means at every draw count. |
+| 4 | `Figure_basic_service_reachability_loss.png`; `Table_municipality_isolation_and_service_loss_summary.xlsx` | figure / table | major | The service script calculates class-specific Yatsushiro 0.70–0.80 affected-population bounds, but the values are written only to transient console output. The figure merely says that bounds are “reported in diagnostics,” and the municipality workbook contains no bound fields. This does not satisfy the Section 8 plan to present propagated Yatsushiro bounds with service consequences and leaves the uncertainty result unauditable from the formal outputs. Persist the numeric bounds in panel d, a table note, or a dedicated appendix table. |
+| 5 | `Figure_compound_hazard_decision_pathway.png` | figure | major | The threshold box uses the stale labels “Baseline 1.00 | Central 0.80” and “High 0.70.” In the current framework, 0.70 and 0.80 are official area-specific retention values, while the central municipality-wide Yatsushiro assignment is the analyst midpoint 0.75 with 0.70–0.80 bounds. The flowchart therefore misstates the scenario design and conflicts with the rainfall figure, tables, and AnaSOP. |
+| 6 | `Figure_intervention_priorities_and_budgeted_benefits.png`; `Table_priority_road_sections.xlsx`; `Table_intervention_portfolios.xlsx` | figure / table | major | AnaSOP states that central planning-unit anchors report the modeled cost of a one-kilometre road section for each action, but no formal figure or workbook reports those anchors. The implemented cost equations imply 5.0 units for temporary reinforcement, 3.7 for alternative-route protection, and 2.0 for clearance pre-positioning at 1 km. Without this anchor, the budget axis and road-level costs remain difficult to interpret or reproduce from the outputs alone. |
+| 7 | `Figure_rainfall_history_and_official_threshold_adjustment.png` | figure | minor | In panel a, the station legend crowds and partially covers the upper-right 2025 annual-maximum endpoints. Moving it outside the data region or adding upper/right plotting clearance would improve readability without changing the analysis. |
+| 8 | `_hazard_validation_shared.py` | script | minor | The shared module still retains an obsolete combined-workbook builder, legacy article-facing output paths, and a dead reference to the removed `wet_window_scenario_loads` function. The module is currently imported only for shared utilities and has no executable main guard, so present outputs are unaffected, but the dead code creates a future reproducibility and maintenance hazard. |
 
 ## Severity Summary
 
 | severity | count |
 |---|---:|
-| critical | 0 |
-| major | 0 |
-| minor | 0 |
+| critical | 1 |
+| major | 5 |
+| minor | 2 |
 
-## Resolved in This Revision
+## Recommended Next Steps
 
-- Replaced the unstable fitted hazard specification with the validation-selected transparent scenario score and added the exact Elevation-plus-warning-zone comparator.
-- Implemented directional upslope-to-road transfer using relative elevation, downslope alignment, distance decay, and survival aggregation.
-- Defined community isolation against prefectural-boundary Primary Emergency Road gateways and evaluated two alternative external-target definitions.
-- Added common random numbers, 500/1,000/2,000-draw convergence checks, closure-mapping sensitivity, and ordered-scenario checks.
-- Calculated excess travel time on the full weighted road graph, kept baseline-unreachable cases explicit, and labelled emergency-water estimates as a resolved-point lower bound.
-- Added hazard-only, emergency-route-only, road-class-only, and equal-cost consequence comparator portfolios; all three intervention classes now appear in the selected portfolio.
-- Harmonized community burden weights and English municipality names across outputs.
-
-## Accepted Presentation Decision
-
-The reader-facing priority-road workbook intentionally omits the internal Road Section ID at the user's direction. This is treated as an accepted presentation constraint rather than an unresolved research-output issue.
-
-## Recommended Next Step
-
-The revised output set is ready to proceed to `build-content-dictionary`, followed by `audit-content-compliance` before manuscript drafting.
+- 先返回 `figure-table-generation` 修复阻断项：为 2016 滑坡验证构建截至 2016-07-28 的警戒区快照，或在历史验证中移除警戒区特征；将 `9999-01-01` 视为未知日期而非真实时间。随后重算 Hazard Validation，并重新生成所有继承该评分的坡体、道路、社区、服务和干预输出。
+- 对 AnaSOP 声明但尚未实现的稳健性分析作出一致处理：若这些检验仍属于研究设计，就补跑窗口权重、空间分配、留一站、gamma、道路池化和服务挂接敏感性；若不准备实施，就同步收缩 AnaSOP 和稿件中的相应声明，不能继续写成已经完成。
+- 用同一组种子和同一估计口径重算 500、1,000、2,000 次抽样的收敛诊断，并更新 Figure 6 的数值标注。
+- 将服务后果的 Yatsushiro 0.70–0.80 数值边界写入正式图或附录表；同时修正 Figure 1 的阈值标签，并在干预图或表中明确三类行动的 1 km 中央成本锚点。
+- 最后处理两项非阻断性问题：移动 Figure 3 panel a 图例，并清理 `_hazard_validation_shared.py` 的遗留代码。完成全部重生成后，再次运行 `critique-research-outputs`；通过后才进入 `build-content-dictionary`。

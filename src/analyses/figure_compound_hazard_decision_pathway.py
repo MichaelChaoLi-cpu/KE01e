@@ -5,11 +5,11 @@ Plan: Link official post-earthquake threshold adjustment and rainfall exposure t
 slope disruption, road failure, community isolation, service loss, and
 intervention choice.
 Framework: Section 5 scenario identification; Section 6 linked rainfall,
-landslide-score, road-score, Monte Carlo network, consequence, and robust
+landslide-score, road-score, Monte Carlo network, consequence, and assigned-action
 intervention framework; Section 7 integration workflow and evidence gates.
 
 The SVG is the authoritative editable figure. The planned PNG is rendered from
-that SVG at 150 dpi by the same reproducible script.
+that SVG and tagged at 300 dpi by the same reproducible script.
 """
 from __future__ import annotations
 
@@ -182,7 +182,7 @@ def build_svg() -> str:
                 235,
                 115,
                 ["Rainfall exposure"],
-                ["Hourly Rainfall", "1, 3, 24, 72 h accumulation", "Moderate  |  Heavy  |  Extreme"],
+                ["Independent-event maxima", "7 stations  |  2016–2020", "75th  |  90th  |  99th percentile"],
                 face=COLORS["blue"],
                 edge=COLORS["blue_edge"],
                 heading_size=14.0,
@@ -194,7 +194,11 @@ def build_svg() -> str:
                 235,
                 115,
                 ["Earthquake-adjusted", "threshold"],
-                ["Threshold Retention Factor", "Baseline 1.00  |  Central 0.80", "High 0.70"],
+                [
+                    "Baseline 1.00  |  official 0.70/0.80",
+                    "Yatsushiro midpoint 0.75",
+                    "Bounds 0.70–0.80",
+                ],
                 face=COLORS["amber"],
                 edge=COLORS["amber_edge"],
                 heading_size=12.5,
@@ -234,31 +238,31 @@ def build_svg() -> str:
     stages = [
         (
             ["Scenario", "exceedance"],
-            ["Xᵢ⁽ʳ,ᶠ⁾", "Rainfall load relative", "to retained threshold"],
+            ["Xᵢ⁽ʳ,ᶠ⁾", "Coarse station-supported load", "relative to retained threshold"],
             COLORS["blue"],
             COLORS["blue_edge"],
         ),
         (
             ["Slope", "disruption"],
-            ["Hᵢ⁽ʳ,ᶠ⁾", "Relative landslide", "disruption score"],
+            ["Hᵢ⁽ʳ,ᶠ⁾", "Terrain context + logarithmic", "rainfall loading"],
             COLORS["amber"],
             COLORS["amber_edge"],
         ),
         (
             ["Road", "disruption"],
-            ["Dₑ⁽ʳ,ᶠ⁾", "Upslope transfer to", "each Road Section ID"],
+            ["Dₑ⁽ʳ,ᶠ⁾", "Normalized directional", "upslope aggregation"],
             COLORS["red"],
             COLORS["red_edge"],
         ),
         (
             ["Network", "disruption"],
-            ["1,000 closure draws", "Low  |  Central  |  High", "closure mappings"],
+            ["1,000 draws × 5 seed sets", "Low  |  Central  |  High", "closure mappings"],
             COLORS["purple"],
             COLORS["purple_edge"],
         ),
         (
             ["Community and", "service consequences"],
-            ["Isolation frequency", "Total Population exposed", "Service reachability loss"],
+            ["Isolation frequency", "Total Population exposed", "Class-specific service loss"],
             COLORS["red"],
             COLORS["red_edge"],
         ),
@@ -313,7 +317,7 @@ def build_svg() -> str:
         (
             160,
             ["Landslide evidence gate"],
-            ["2016 interpreted inventory", "Spatial blocks  |  held-out capture"],
+            ["2016 interpreted inventory", "AUC  |  capture  |  saturation"],
             400,
             COLORS["amber_edge"],
             "arrow-amber",
@@ -321,7 +325,7 @@ def build_svg() -> str:
         (
             620,
             ["Road evidence gate"],
-            ["Observed restrictions", "Reliable matches  |  ranking stability"],
+            ["Observed restrictions", "Matched concordance  |  bootstrap"],
             665,
             COLORS["red_edge"],
             "arrow-red",
@@ -329,7 +333,7 @@ def build_svg() -> str:
         (
             1080,
             ["Network quality gate"],
-            ["Baseline connectivity  |  population", "service attachment  |  convergence"],
+            ["Baseline connectivity  |  population", "service attachment  |  seed stability"],
             1195,
             COLORS["purple_edge"],
             "arrow-purple",
@@ -396,7 +400,7 @@ def find_chrome() -> Path:
 
 
 def render_png_from_svg() -> None:
-    """Rasterize the authoritative SVG and attach 150 dpi metadata."""
+    """Rasterize the authoritative SVG and attach 300 dpi metadata."""
     chrome = find_chrome()
     command = [
         str(chrome),
@@ -417,7 +421,7 @@ def render_png_from_svg() -> None:
                 f"Unexpected PNG size {rendered.size}; expected {(PNG_WIDTH, PNG_HEIGHT)}."
             )
         output = rendered.convert("RGB")
-    output.save(PNG_PATH, format="PNG", dpi=(150, 150), optimize=True)
+    output.save(PNG_PATH, format="PNG", dpi=(300, 300), optimize=True)
 
 
 def main() -> None:
