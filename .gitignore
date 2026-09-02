@@ -6,6 +6,9 @@ CLAUDE.md
 AGENTS.md
 /article
 
+# macOS filesystem metadata
+.DS_Store
+
 # Python runtime artifacts
 __pycache__/
 *.py[cod]
