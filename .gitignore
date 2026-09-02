@@ -1,6 +1,7 @@
 # MiliFrame local agent/runtime files
 .codex/
 .claude/
+.frame-control/
 .env
 CLAUDE.md
 AGENTS.md
