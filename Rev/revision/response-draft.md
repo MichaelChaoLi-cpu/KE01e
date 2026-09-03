@@ -358,10 +358,26 @@ Reviewer 4: This paper proposes a composite disaster framework that couples post
 1. The 2016 landslide inventory is used solely for validating historical slope rankings, while the 2026 restricted records are employed for road ranking validation. Please further discuss the comparability of these two events in terms of earthquake magnitude, rainfall patterns, and soil disturbance depth, and clarify why the spatial distribution of 2016 landslides remains suitable for validating 2026 slope susceptibility scores.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for asking us to clarify the relationship between the two event datasets. We now state explicitly that the 2016 and 2026 earthquakes are geographically relevant but physically non-interchangeable. The revised manuscript reports the JMA magnitudes, depths, intensities, approximate epicentral separation, and the rainfall observations associated with the two evidence windows. It also states that neither dataset contains measurements of slip-surface depth, soil-profile disturbance, or post-earthquake shear-strength change, so the analysis does not assume equivalent subsurface disturbance.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+We also corrected the historical inventory chronology and support definition. The date 28 July 2016 is the inventory update date, not the earthquake date. Historical slope-ranking evaluation is now restricted to the union of the official April and July GSI air-photo interpretation footprints, and warning-zone exposure is limited to polygons designated before the 2016 earthquake sequence. Pseudo-background cells are sampled only inside that mapped support. The propagated terrain-context score was frozen before this correction and was not refitted; therefore, the correction changes the historical-alignment evidence but not the downstream 2026 scenario results.
+
+The revised manuscript now separates the evidential roles of the two datasets throughout the Methods, Results, Discussion, limitations, Figure 2, Figure 4, and Appendix Tables A1 and B1. The 2016 inventory provides a same-region test of whether persistent terrain covariates rank mapped mass-movement locations higher across held-out spatial blocks. The 2026 records provide only supplementary road-ranking correspondence after terrain-to-road translation. The datasets are not pooled, and neither check validates transfer of the 2016 shaking state, a 2026 rainfall trigger, disturbance depth, closure probability, or calibrated physical susceptibility. Official JMA and GSI source URLs have also been added to the Data Availability statement.
+
+"The two earthquakes are geographically relevant but not physically interchangeable. Official JMA records identify the 16 April 2016 main shock as magnitude 7.3 (Mw 7.0) at 12 km depth and the 28 July 2026 earthquake as magnitude 7.1 at 16 km depth; both reached JMA intensity 7, and their epicentres were approximately 16.3 km apart. At the 2016 main-shock time, seven project stations recorded 0 mm over the preceding 24 h and 1.0–6.5 mm over the preceding 72 h, whereas all ten retained 2026 road-restriction episodes had 0 mm over the preceding 72 h across the ten-station audit."
+(Page 7, Lines 139–146)
+
+"Historical alignment with the interpreted 2016 landslide inventory is evaluated only within the union of the official April and July GSI air-photo interpretation footprints. Because 28 July 2016 is the inventory update date rather than the earthquake date, warning-zone exposure is restricted to 29,632 polygons designated on or before the earthquake sequence began on 14 April 2016; later and unknown-date polygons are excluded, while the complete current warning-zone layer remains available for 2026 screening."
+(Page 16, Lines 333–338)
+
+"Within the GSI interpretation footprint, the corrected historical comparison uses 857 unique presence cells, 8,570 pseudo-background cells, and 29,632 warning-zone polygons designated before the 2016 earthquake sequence. The frozen transparent terrain score has a mean spatial area under the curve of 0.705, a fold range of 0.550–0.787, and held-out top-quartile capture of 46.5%; the fitted full terrain-plus-warning comparator has a mean of 0.685 and a fold range of 0.500–0.804."
+(Page 25, Lines 529–534)
+
+"The 2016 and 2026 evidence checks are deliberately non-pooled and do not constitute cross-event validation. Within the GSI interpretation footprint, the 2016 inventory tests whether the frozen terrain-context score ranks mapped earthquake-generated mass-movement centres higher across held-out spatial blocks. That same-region check is relevant because the terrain covariates are persistent, but it does not establish transfer of the 2016 shaking or disturbance state to 2026."
+(Page 33, Lines 712–717)
+
+"The station-supported rainfall surface cannot reproduce local variability between gauges, and the official retention factors are area-level settings rather than a measured shaking or soil-strength field. Neither event dataset measures slip-surface depth, soil-profile disturbance, or post-earthquake change in shear strength, so no equivalence of subsurface damage is assumed between 2016 and 2026."
+(Page 37, Lines 805–810)
 
 ## Comment 2
 

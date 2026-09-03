@@ -33,6 +33,8 @@ from rasterio.warp import Resampling, reproject
 import seaborn as sns
 import shapely
 
+import _hazard_validation_shared as validation_shared
+
 
 ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data/processed"
@@ -233,9 +235,12 @@ def main() -> None:
     extent = (min_x - pad_x, max_x + pad_x, min_y - pad_y, max_y + pad_y)
 
     landslides, landslide_geometry = read_geometry_frame(LANDSLIDE_PATH, ["Landslide Size Class"])
-    landslide_inside = shapely.intersects(landslide_geometry, admin_union)
-    landslides = landslides.loc[landslide_inside].reset_index(drop=True)
-    landslide_geometry = landslide_geometry[landslide_inside]
+    interpretation_footprint = validation_shared.gsi_interpretation_footprint()
+    footprint_pct = float(
+        100
+        * shapely.area(shapely.intersection(interpretation_footprint, admin_union))
+        / shapely.area(admin_union)
+    )
 
     warning, warning_geometry = read_geometry_frame(WARNING_PATH, ["Hazard Type"])
     roads, road_geometry = read_geometry_frame(
@@ -326,6 +331,16 @@ def main() -> None:
         interpolation="nearest",
         zorder=3,
     )
+    axes[0].add_collection(
+        LineCollection(
+            line_segments(shapely.boundary(np.asarray([interpretation_footprint], dtype=object))),
+            colors="#0B6E75",
+            linewidths=1.05,
+            linestyles=(0, (4, 2)),
+            alpha=0.95,
+            zorder=12,
+        )
+    )
     size_class = landslides["Landslide Size Class"].fillna("Unknown")
     large = size_class.astype(str).str.contains("大", regex=False).to_numpy()
     coordinates = shapely.get_coordinates(landslide_geometry)
@@ -358,6 +373,7 @@ def main() -> None:
         handles=[
             Line2D([0], [0], marker="o", color="none", markerfacecolor="#F59E0B", markeredgecolor="white", markersize=5, label="Smaller interpreted landslide"),
             Line2D([0], [0], marker="o", color="none", markerfacecolor="#B42318", markeredgecolor="white", markersize=7, label="Larger interpreted landslide"),
+            Line2D([0], [0], color="#0B6E75", linewidth=1.5, linestyle=(0, (4, 2)), label=f"GSI interpretation footprint ({footprint_pct:.1f}%)"),
             Patch(facecolor="#D92D20", label=f"DEM uncovered in prefecture: {uncovered_dem_pct:.6f}%"),
         ],
         loc="lower left",
@@ -498,6 +514,7 @@ def main() -> None:
     print(f"Converted PNG (300 dpi): {OUT.relative_to(ROOT)}")
     print(f"DEM uncovered within prefecture geometry: {uncovered_dem_pct:.6f}%")
     print(f"Interpreted landslides shown: {len(landslides):,}")
+    print(f"GSI interpretation footprint within prefecture: {footprint_pct:.1f}%")
     print(f"Warning zones shown: {len(warning):,}")
     print(f"Road edges shown: {len(roads):,}")
     print(f"Designated shelters shown: {len(shelters):,}")

@@ -81,16 +81,18 @@ datasetDictionary:
       resulting service estimates as conditional sensitivity evidence with indeterminate bias direction.
   gsi_airphoto_interpreted_landslides:
     datasetSourceName: GSI 2016 air-photo-interpreted landslides
-    datasetDescription: Interpreted landslide points used as incomplete presence evidence for spatial validation.
+    datasetDescription: Interpreted mass-movement centre points used as incomplete presence evidence for footprint-bounded
+      historical alignment of the persistent terrain-context ranking.
     datasetAttribute: other
     datasetProvider: Geospatial Information Authority of Japan (GSI)
-    datasetGenerationInfo: Official KML placemarks were parsed into point records with size classes and source provenance.
-    datasetPeriod: 2016 Kumamoto earthquake inventory; observation date 2016-07-28
+    datasetGenerationInfo: Official KML placemarks were parsed into point records with size classes, source-photo
+      acquisition intervals, the inventory update date, and source provenance.
+    datasetPeriod: Air photographs acquired 2016-04-16 to 2016-07-24; inventory updated 2016-07-28
     datasetScale: 1,044 interpreted landslide points
-    datasetSpatialResolution: Mapped landslide point
+    datasetSpatialResolution: Mapped centre point within an official interpretation footprint covering 57.8% of Kumamoto Prefecture
     datasetTemporalResolution: Single interpreted inventory
-    datasetPreprocessingInfo: Parsed KML points, assigned stable inventory identifiers, retained source size classes,
-      and did not create absence labels.
+    datasetPreprocessingInfo: Parsed KML points and source-photo timing, assigned stable inventory identifiers, retained
+      source size classes, distinguished the update date from observation timing, and did not create absence labels.
   kumamoto_administrative_areas_preprocessed:
     datasetSourceName: MLIT National Land Numerical Information N03 administrative areas
     datasetDescription: Municipality and ward polygons used for spatial linkage, threshold assignment, and reporting.
@@ -1985,13 +1987,36 @@ variableDictionary:
       the compound-hazard analysis; missing values are preserved.
     variableSource: gsi_airphoto_interpreted_landslides
     observationNumber: 1044
-  observation_date:
-    variableNameInDataset: observation_date
-    variableNameInArticle: Inventory Observation Date
+  source_photo_date_label:
+    variableNameInDataset: source_photo_date_label
+    variableNameInArticle: GSI Source-Photo Date Label
+    variableAttribute: categorical
+    variableUnit: date or date interval
+    variableDescription: Official air-photo acquisition day or interval parsed from each GSI placemark description.
+    variableSource: gsi_airphoto_interpreted_landslides
+    observationNumber: 1044
+  source_photo_start_date:
+    variableNameInDataset: source_photo_start_date
+    variableNameInArticle: GSI Source-Photo Start Date
     variableAttribute: categorical
     variableUnit: date or datetime
-    variableDescription: Inventory Observation Date retained from gsi_airphoto_interpreted_landslides for the compound-hazard
-      analysis; missing values are preserved.
+    variableDescription: First day of the official air-photo acquisition interval used for interpretation.
+    variableSource: gsi_airphoto_interpreted_landslides
+    observationNumber: 1044
+  source_photo_end_date:
+    variableNameInDataset: source_photo_end_date
+    variableNameInArticle: GSI Source-Photo End Date
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Last day of the official air-photo acquisition interval used for interpretation.
+    variableSource: gsi_airphoto_interpreted_landslides
+    observationNumber: 1044
+  inventory_update_date:
+    variableNameInDataset: inventory_update_date
+    variableNameInArticle: GSI Inventory Update Date
+    variableAttribute: categorical
+    variableUnit: date or datetime
+    variableDescription: Official 2016-07-28 inventory update date; it is not treated as a uniform observation date.
     variableSource: gsi_airphoto_interpreted_landslides
     observationNumber: 1044
   temporary_threshold_group:
@@ -2440,8 +2465,10 @@ analysisStructureBrief:
     outputs:
     - Official-Threshold-Adjusted Landslide Disruption Score
     - Hazard Validation
-    interpretation: The selected result has moderate spatial discrimination against incomplete presence evidence
-      and remains a transparent disruption ranking, not a landslide occurrence probability.
+    interpretation: Within the 57.8% official GSI interpretation footprint, the frozen propagated terrain-context
+      score has mean spatial AUC 0.705, fold range 0.550-0.787, and held-out top-quartile capture 0.465 against
+      857 presence cells and 8,570 pseudo-background cells using 29,632 warning zones designated by 2016-04-14.
+      This is historical alignment of a transparent ranking, not cross-event validation or a landslide occurrence probability.
   - levelName: Directional slope-to-road translation
     levelAim: Identify road sections exposed to hazardous terrain located above and aligned toward the road.
     inputs:

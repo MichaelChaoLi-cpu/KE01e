@@ -1919,3 +1919,482 @@ The 2026 restriction evidence comprises only 10 physical episodes in a dry earth
      - Before: ""
      - After: "The 2026 restriction evidence comprises only 10 physical episodes in a dry earthquake-proximate window; repeated snapshots and multiple linked sections are not independent events, and the source reasons do not explicitly code the trigger. Consequently, these records cannot validate rainfall-triggered road disruption, and a future target-mechanism validation requires event-deduplicated road impacts with confirmed rainfall timing, event rainfall fields, and credible unaffected-road comparators. "
 
+## reviewer-4/comment-1
+
+### part-01
+
+- Location: Study Area and Data > Terrain, Rainfall, Earthquake, and Landslide Evidence, first paragraph
+- Reason: Directly compare earthquake magnitude, rainfall background, mapped support, and unavailable disturbance-depth evidence without treating the events as interchangeable.
+- Kila decisions: KILA-D-20260903-023
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T12:43:15Z
+- Author: Kila
+- Markup SHA-256 before: `81296ac670959dc569a41720ca56160aa12041c9d40271303041f3066eb1ad65`
+- Markup SHA-256 after: `5ca5af8bd390f7a3bf7f29e252d9b971f29b225aeb58f79a4764bfe66de392a5`
+- Revision IDs: `165, 166`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T214315293496.reviewer-4-comment-1.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The project-specific hazard evidence comprises terrain elevation, derived slope and curvature, official landslide warning zones, historical station rainfall, 2026 threshold-retention settings, and the interpreted 2016 landslide inventory. Regional studies establish rainfall and hydrologic information, post-event inventories, and satellite-supported inventories as complementary landslide evidence classes (Santangelo et al., 2023). Figure 2 places these layers in a common geographic frame. Panel a combines elevation and interpreted landslides, panel b shows warning-zone types, panel c locates the analysis-eligible and emergency road networks, and panel d shows designated shelters and resolved emergency water points. Their co-location clarifies the potential path from exposed terrain to roads and destinations, but the analytical layers retain their original spatial support, event role, and evidential function.
+~~~~
+
+- After:
+
+~~~~text
+The project-specific hazard evidence comprises terrain elevation, derived slope and curvature, official landslide warning zones, historical station rainfall, 2026 threshold-retention settings, and the interpreted 2016 landslide inventory. The two earthquakes are geographically relevant but not physically interchangeable. Official JMA records identify the 16 April 2016 main shock as magnitude 7.3 (Mw 7.0) at 12 km depth and the 28 July 2026 earthquake as magnitude 7.1 at 16 km depth; both reached JMA intensity 7, and their epicentres were approximately 16.3 km apart. At the 2016 main-shock time, seven project stations recorded 0 mm over the preceding 24 h and 1.0–6.5 mm over the preceding 72 h, whereas all ten retained 2026 road-restriction episodes had 0 mm over the preceding 72 h across the ten-station audit. These attributes support a bounded same-region comparison of persistent terrain context, but not equivalence of shaking fields, rainfall response, or subsurface disturbance. The GSI inventory contains 1,044 mass-movement centre points interpreted from air photographs acquired on 16–20 April and 5–24 July 2016 within a footprint covering 57.8% of the prefecture; it does not report point-specific failure times or disturbance depths. Regional studies establish rainfall and hydrologic information, post-event inventories, and satellite-supported inventories as complementary landslide evidence classes (Santangelo et al., 2023). Figure 2 places these layers in a common geographic frame. Panel a combines elevation, the interpretation footprint, and interpreted landslides, panel b shows warning-zone types, panel c locates the analysis-eligible and emergency road networks, and panel d shows designated shelters and resolved emergency water points. Their co-location clarifies the potential path from exposed terrain to roads and destinations, but the analytical layers retain their original spatial support, event role, and evidential function.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: ". The two earthquakes are geographically relevant but not physically interchangeable. Official JMA records identify the 16 April 2016 main shock as magnitude 7.3 (Mw 7.0) at 12 km depth and the 28 July 2026 earthquake as magnitude 7.1 at 16 km depth; both reached JMA intensity 7, and their epicentres were approximately 16.3 km apart. At the 2016 main-shock time, seven project stations recorded 0 mm over the preceding 24 h and 1.0–6.5 mm over the preceding 72 h, whereas all ten retained 2026 road-restriction episodes had 0 mm over the preceding 72 h across the ten-station audit. These attributes support a bounded same-region comparison of persistent terrain context, but not equivalence of shaking fields, rainfall response, or subsurface disturbance. The GSI inventory contains 1,044 mass-movement centre points interpreted from air photographs acquired on 16–20 April and 5–24 July 2016 within a footprint covering 57.8% of the prefecture; it does not report point-specific failure times or disturbance depths"
+  2. `insert`
+     - Before: ""
+     - After: ", the interpretation footprint,"
+
+### part-02
+
+- Location: Study Area and Data > Terrain, Rainfall, Earthquake, and Landslide Evidence, paragraph beginning 'We treat the interpreted landslide locations'
+- Reason: Explain the official GSI inventory limitations and restrict pseudo-background support to the interpreted footprint.
+- Kila decisions: KILA-D-20260903-023
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T12:43:27Z
+- Author: Kila
+- Markup SHA-256 before: `5ca5af8bd390f7a3bf7f29e252d9b971f29b225aeb58f79a4764bfe66de392a5`
+- Markup SHA-256 after: `ce3fa553deff44aef37795b0f2f77b43fa892429553b1399eb9ffa5c9f8956d2`
+- Revision IDs: `167, 168`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T214327919179.reviewer-4-comment-1.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+We treat the interpreted landslide locations as incomplete presence evidence rather than a census because inventory incompleteness and mapping limitations can affect susceptibility modeling (Fusco et al., 2023; Steger et al., 2017). A location without an interpreted point is therefore not labeled as stable terrain, and the validation sample cannot supply an event-wide prevalence.
+~~~~
+
+- After:
+
+~~~~text
+We treat the interpreted landslide locations as incomplete presence evidence rather than a census because inventory incompleteness and mapping limitations can affect susceptibility modeling (Fusco et al., 2023; Steger et al., 2017). The GSI source combines steep-slope collapses, landslides, and debris flows, maps centre points rather than source or deposit polygons, and reports neither field verification nor subsurface disturbance depth. A location without an interpreted point is therefore not labeled as stable terrain, and the validation sample cannot supply an event-wide prevalence. Pseudo-background cells are sampled only within the official air-photo interpretation footprint so that terrain outside the mapped support is not treated as background.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: "The GSI source combines steep-slope collapses, landslides, and debris flows, maps centre points rather than source or deposit polygons, and reports neither field verification nor subsurface disturbance depth. "
+  2. `insert`
+     - Before: ""
+     - After: " Pseudo-background cells are sampled only within the official air-photo interpretation footprint so that terrain outside the mapped support is not treated as background."
+
+### part-03
+
+- Location: Methods > Landslide Disruption Score, validation paragraph beginning 'To limit temporal and spatial dependence'
+- Reason: Correct the temporal cutoff and spatial support, freeze the propagated score, and define the non-pooling boundary.
+- Kila decisions: KILA-D-20260903-023, KILA-D-20260903-025
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T12:59:38Z
+- Author: Kila
+- Markup SHA-256 before: `ce3fa553deff44aef37795b0f2f77b43fa892429553b1399eb9ffa5c9f8956d2`
+- Markup SHA-256 after: `9faac8e22ec0a2eee6e4b4d0a8f9d86a6cabcf7952d80842e018b5cbfdfdf1a2`
+- Revision IDs: `169, 170, 171, 172`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T215939082020.reviewer-4-comment-1.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+To limit temporal and spatial dependence, validation of the interpreted 2016 landslide inventory uses only warning zones with a known designation date on or before 28 July 2016; later and unknown-date polygons are excluded, while the complete current warning-zone layer remains available for 2026 screening. Independent later landslide occurrences can assess the predictive capability of susceptibility maps (Pareek et al., 2025). We therefore use held-out spatial blocks to compare the fitted terrain-plus-warning specification with terrain-only, elevation-plus-warning, warning-zone-only, and fixed standardized scores. Ten eligible pseudo-background cells are sampled for each unique presence cell.
+~~~~
+
+- After:
+
+~~~~text
+Historical alignment with the interpreted 2016 landslide inventory is evaluated only within the union of the official April and July GSI air-photo interpretation footprints. Because 28 July 2016 is the inventory update date rather than the earthquake date, warning-zone exposure is restricted to 29,632 polygons designated on or before the earthquake sequence began on 14 April 2016; later and unknown-date polygons are excluded, while the complete current warning-zone layer remains available for 2026 screening. Independent later landslide occurrences can assess the predictive capability of susceptibility maps (Pareek et al., 2025). We use held-out spatial blocks to compare the fitted terrain-plus-warning specification with terrain-only, elevation-plus-warning, warning-zone-only, and fixed standardized scores. Ten eligible pseudo-background cells are sampled for each unique presence cell inside the interpretation footprint. The fixed score propagated through the scenario analysis is frozen before this support audit and is evaluated without reviewer-driven refitting. The 2016 locations assess only historical alignment of the terrain-context ranking; they are not pooled with the 2026 road records and do not validate 2026 shaking, threshold retention, rainfall loading, or closure propensity.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "To limit temporal and spatial dependence, validation of the interpreted 2016 landslide inventory uses only warning zones with a known designation date on or before 28 July 2016; later and unknown-date polygons are excluded, while the complete current warning-zone layer remains available for 2026 screening. Independent later landslide occurrences can assess the predictive capability of susceptibility maps "
+     - After: "Historical alignment with the interpreted 2016 landslide inventory is evaluated only within the union of the official April and July GSI air-photo interpretation footprints. Because 28 July 2016 is the inventory update date rather than the earthquake date, warning-zone exposure is restricted to 29,632 polygons designated on or before the earthquake sequence began on 14 April 2016; later and unknown-date polygons are excluded, while the complete current warning-zone layer remains available for 2026 screening. Independent later landslide occurrences can assess the predictive capability of susceptibility maps "
+  2. `structured-replace`
+     - Before: ". We therefore use held-out spatial blocks to compare the fitted terrain-plus-warning specification with terrain-only, elevation-plus-warning, warning-zone-only, and fixed standardized scores. Ten eligible pseudo-background cells are sampled for each unique presence cell."
+     - After: ". We use held-out spatial blocks to compare the fitted terrain-plus-warning specification with terrain-only, elevation-plus-warning, warning-zone-only, and fixed standardized scores. Ten eligible pseudo-background cells are sampled for each unique presence cell inside the interpretation footprint. The fixed score propagated through the scenario analysis is frozen before this support audit and is evaluated without reviewer-driven refitting. The 2016 locations assess only historical alignment of the terrain-context ranking; they are not pooled with the 2026 road records and do not validate 2026 shaking, threshold retention, rainfall loading, or closure propensity."
+
+### part-04
+
+- Location: Results > Analytical Coverage and Validation, first historical-validation sentences
+- Reason: Report corrected footprint-bounded support and metrics and state why downstream results remain unchanged.
+- Kila decisions: KILA-D-20260903-023, KILA-D-20260903-025
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T12:59:54Z
+- Author: Kila
+- Markup SHA-256 before: `9faac8e22ec0a2eee6e4b4d0a8f9d86a6cabcf7952d80842e018b5cbfdfdf1a2`
+- Markup SHA-256 after: `e9aac829961d457adc6fa2a72dec41fafe94a1065acc12f452434dc76e9743b2`
+- Revision IDs: `173, 174`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T215955074391.reviewer-4-comment-1.part-04.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+After the temporal eligibility restriction is applied, the spatial validation rule selects the transparent terrain score, which has a mean area under the curve of 0.665, a fold range of 0.581–0.745, and held-out top-quartile capture of 46.4%. Its selection follows the prespecified stability gate rather than choosing the most complex specification by fitted performance.
+~~~~
+
+- After:
+
+~~~~text
+Within the GSI interpretation footprint, the corrected historical comparison uses 857 unique presence cells, 8,570 pseudo-background cells, and 29,632 warning-zone polygons designated before the 2016 earthquake sequence. The frozen transparent terrain score has a mean spatial area under the curve of 0.705, a fold range of 0.550–0.787, and held-out top-quartile capture of 46.5%; the fitted full terrain-plus-warning comparator has a mean of 0.685 and a fold range of 0.500–0.804. The transparent specification remains the selected screening score under the prespecified stability rule. Because the propagated score is not refitted, this support correction changes the historical-alignment evidence but not the downstream slope, road, community, service, or intervention results.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "After the temporal eligibility restriction is applied, the spatial validation rule selects the transparent terrain score, which has a mean area under the curve of 0.665, a fold range of 0.581–0.745, and held-out top-quartile capture of 46.4%. Its selection follows the prespecified stability gate rather than choosing the most complex specification by fitted performance."
+     - After: "Within the GSI interpretation footprint, the corrected historical comparison uses 857 unique presence cells, 8,570 pseudo-background cells, and 29,632 warning-zone polygons designated before the 2016 earthquake sequence. The frozen transparent terrain score has a mean spatial area under the curve of 0.705, a fold range of 0.550–0.787, and held-out top-quartile capture of 46.5%; the fitted full terrain-plus-warning comparator has a mean of 0.685 and a fold range of 0.500–0.804. The transparent specification remains the selected screening score under the prespecified stability rule. Because the propagated score is not refitted, this support correction changes the historical-alignment evidence but not the downstream slope, road, community, service, or intervention results."
+
+### part-05
+
+- Location: Discussion > Interpreting Scenario-Conditional Evidence, paragraph beginning 'The validation evidence supports'
+- Reason: Separate the historical terrain-ranking and 2026 terrain-to-road evidence roles and reject physical interchangeability or cross-event validation.
+- Kila decisions: KILA-D-20260903-023
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T13:00:10Z
+- Author: Kila
+- Markup SHA-256 before: `e9aac829961d457adc6fa2a72dec41fafe94a1065acc12f452434dc76e9743b2`
+- Markup SHA-256 after: `8aa1301efc42a97baea0099cf14435f54cf39c7ec0e6ed2b4709ad2af163137e`
+- Revision IDs: `175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T220010541024.reviewer-4-comment-1.part-05.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The validation evidence supports the landslide and road scores as relative rankings. Held-out landslide occurrences can assess whether susceptibility rankings transfer beyond their fitting evidence (Pareek et al., 2025). Separately, our spatial folds test the terrain ranking across held-out areas, and independent restrictions test whether road sections with evidence tend to rank highly. The two checks address different failure modes: spatial blocking limits dependence on local clustering in the landslide inventory, while restriction correspondence tests the slope-to-road translation on a separate infrastructure support. Incomplete inventories and event-reporting gaps can prevent calibration (Ghoreishi et al., 2025; Steger et al., 2017). In this study, repeated reporting, uncertain edge matching, and the absence of confirmed non-events reinforce that limitation. It also carries into the closure mappings, which are conditional scenario devices rather than empirical failure models. Validation therefore improves confidence in which locations rank higher, but it does not convert the later isolation frequency into a forecast probability.
+~~~~
+
+- After:
+
+~~~~text
+The 2016 and 2026 evidence checks are deliberately non-pooled and do not constitute cross-event validation. Within the GSI interpretation footprint, the 2016 inventory tests whether the frozen terrain-context score ranks mapped earthquake-generated mass-movement centres higher across held-out spatial blocks. That same-region check is relevant because the terrain covariates are persistent, but it does not establish transfer of the 2016 shaking or disturbance state to 2026. Separately, the 2026 dry restriction episodes test only whether road sections with evidence tend to rank highly after directional terrain-to-road translation. Similar event magnitudes and nearby epicentres support geographical relevance, whereas different shaking footprints, absent point-specific 2016 failure timing, and unavailable disturbance-depth measurements preclude claims of comparable physical susceptibility or rainfall response. Held-out landslide occurrences can assess whether susceptibility rankings transfer beyond their fitting evidence (Pareek et al., 2025), but incomplete inventories and event-reporting gaps can prevent calibration (Ghoreishi et al., 2025; Steger et al., 2017). Repeated reporting, uncertain edge matching, and the absence of confirmed non-events reinforce that limitation here. It also carries into the closure mappings, which are conditional scenario devices rather than empirical failure models. The two checks therefore provide transition-specific ranking evidence; neither converts the later isolation frequency into a forecast probability.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "validation"
+     - After: "2016 and 2026"
+  2. `replace`
+     - Before: "supports"
+     - After: "checks are deliberately non-pooled and do not constitute cross-event validation. Within"
+  3. `replace`
+     - Before: "landslide"
+     - After: "GSI interpretation footprint, the 2016 inventory tests whether the frozen terrain-context score ranks mapped earthquake-generated mass-movement centres higher across held-out spatial blocks. That same-region check is relevant because the terrain covariates are persistent, but it does not establish transfer of the 2016 shaking or disturbance state to 2026. Separately, the 2026 dry restriction episodes test only whether road sections with evidence tend to rank highly after directional terrain-to-road translation. Similar event magnitudes"
+  4. `replace`
+     - Before: "road"
+     - After: "nearby"
+  5. `replace`
+     - Before: "scores"
+     - After: "epicentres"
+  6. `replace`
+     - Before: "as"
+     - After: "support"
+  7. `replace`
+     - Before: "relative"
+     - After: "geographical"
+  8. `replace`
+     - Before: "rankings"
+     - After: "relevance, whereas different shaking footprints, absent point-specific 2016 failure timing, and unavailable disturbance-depth measurements preclude claims of comparable physical susceptibility or rainfall response"
+  9. `delete`
+     - Before: ". Separately"
+     - After: ""
+  10. `replace`
+     - Before: "our"
+     - After: "but"
+  11. `replace`
+     - Before: "spatial folds test the terrain ranking across held-out areas, and independent restrictions test whether road sections with evidence tend to rank highly. The two checks address different failure modes: spatial blocking limits dependence on local clustering in the landslide inventory, while restriction correspondence tests the slope-to-road translation on a separate infrastructure support. Incomplete"
+     - After: "incomplete"
+  12. `replace`
+     - Before: "In this study, repeated"
+     - After: "Repeated"
+  13. `insert`
+     - Before: ""
+     - After: " here"
+  14. `replace`
+     - Before: "Validation"
+     - After: "The two checks"
+  15. `replace`
+     - Before: "improves"
+     - After: "provide"
+  16. `replace`
+     - Before: "confidence"
+     - After: "transition-specific"
+  17. `replace`
+     - Before: "in"
+     - After: "ranking"
+  18. `replace`
+     - Before: "which"
+     - After: "evidence;"
+  19. `replace`
+     - Before: "locations"
+     - After: "neither"
+  20. `replace`
+     - Before: "rank higher, but it does not convert"
+     - After: "converts"
+
+### part-06
+
+- Location: Discussion > Strengths, Limitations, and Future Research, sentence beginning 'The station-supported rainfall surface'
+- Reason: State explicitly that neither event dataset supports an equivalence claim about subsurface disturbance depth or strength loss.
+- Kila decisions: KILA-D-20260903-023
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T13:00:25Z
+- Author: Kila
+- Markup SHA-256 before: `8aa1301efc42a97baea0099cf14435f54cf39c7ec0e6ed2b4709ad2af163137e`
+- Markup SHA-256 after: `737a30c9fceb8db730192f0ac1efceddcc3d8b440d744e5fdd91e786feec78ac`
+- Revision IDs: `213`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T220025962194.reviewer-4-comment-1.part-06.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The station-supported rainfall surface cannot reproduce local variability between gauges, and the official retention factors are area-level settings rather than a measured shaking or soil-strength field.
+~~~~
+
+- After:
+
+~~~~text
+The station-supported rainfall surface cannot reproduce local variability between gauges, and the official retention factors are area-level settings rather than a measured shaking or soil-strength field. Neither event dataset measures slip-surface depth, soil-profile disturbance, or post-earthquake change in shear strength, so no equivalence of subsurface damage is assumed between 2016 and 2026.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " Neither event dataset measures slip-surface depth, soil-profile disturbance, or post-earthquake change in shear strength, so no equivalence of subsurface damage is assumed between 2016 and 2026."
+
+### part-07
+
+- Location: Data Availability, opening source-data sentence
+- Reason: Provide direct official source URLs for both earthquake records and the GSI inventory used in the comparison.
+- Kila decisions: KILA-D-20260903-023
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T13:00:41Z
+- Author: Kila
+- Markup SHA-256 before: `737a30c9fceb8db730192f0ac1efceddcc3d8b440d744e5fdd91e786feec78ac`
+- Markup SHA-256 after: `fd7c9044f4e92478e404dc9c654ee516b6fce9a5a599474b0190c3ffac64deaf`
+- Revision IDs: `214`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T220041271047.reviewer-4-comment-1.part-07.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Principal source data are available through the Japan Meteorological Agency Historical Weather Data service (https://www.data.jma.go.jp/obd/stats/etrn/), the Geospatial Information Authority of Japan Fundamental Geospatial Data Download Service (https://service.gsi.go.jp/kiban/), the Ministry of Land, Infrastructure, Transport and Tourism National Land Numerical Information Download Service (https://nlftp.mlit.go.jp/ksj/), and e-Stat (https://www.e-stat.go.jp/) under Regional Mesh Statistics.
+~~~~
+
+- After:
+
+~~~~text
+Principal source data are available through the Japan Meteorological Agency Historical Weather Data service (https://www.data.jma.go.jp/obd/stats/etrn/), the official JMA event pages for the 2016 main shock (https://www.data.jma.go.jp/eqev/data/mech/cmt/fig/cmt20160416012505.html) and the 2026 earthquake (https://ds.data.jma.go.jp/eew/data/nc/fc_hist/2026/07/20260728162718/index.html), the GSI 2016 air-photo-interpreted mass-movement inventory and coverage files (https://www.gsi.go.jp/common/000143456.zip), the Geospatial Information Authority of Japan Fundamental Geospatial Data Download Service (https://service.gsi.go.jp/kiban/), the Ministry of Land, Infrastructure, Transport and Tourism National Land Numerical Information Download Service (https://nlftp.mlit.go.jp/ksj/), and e-Stat (https://www.e-stat.go.jp/) under Regional Mesh Statistics.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: "), the official JMA event pages for the 2016 main shock (https://www.data.jma.go.jp/eqev/data/mech/cmt/fig/cmt20160416012505.html) and the 2026 earthquake (https://ds.data.jma.go.jp/eew/data/nc/fc_hist/2026/07/20260728162718/index.html), the GSI 2016 air-photo-interpreted mass-movement inventory and coverage files (https://www.gsi.go.jp/common/000143456.zip"
+
+### part-08-caption
+
+- Location: Figures > Figure 2 caption note
+- Reason: Identify the GSI interpretation footprint and its historical-validation support in the Figure 2 caption.
+- Kila decisions: KILA-D-20260903-023
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T13:00:57Z
+- Author: Kila
+- Markup SHA-256 before: `fd7c9044f4e92478e404dc9c654ee516b6fce9a5a599474b0190c3ffac64deaf`
+- Markup SHA-256 after: `9addf0e3b2b4cb60b5fe0584ef9ea03c1dc75ada3a0737d848bae7e5110bcff8`
+- Revision IDs: `215, 216, 217, 218, 219, 220, 221, 222, 223`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T220057451334.reviewer-4-comment-1.part-08-caption.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `8cc96e2185dbabd7f935b2bba2d43f75fae7c302a7fde587a64321d22c581c27`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Note: Panel a maps elevation and interpreted landslide locations; panel b maps official steep-slope, debris-flow, and landslide warning zones; panel c maps the analysis- eligible road network and primary and secondary emergency roads; panel d maps designated shelters and the subset of emergency water points with resolved locations.
+~~~~
+
+- After:
+
+~~~~text
+Note: Panel a maps elevation, the GSI air-photo interpretation footprint, and 1,044 interpreted mass-movement centre points; panel b maps official steep-slope, debris-flow, and landslide warning zones; panel c maps the analysis-eligible road network and primary and secondary emergency roads; panel d maps designated shelters and the subset of emergency water points with resolved locations. The interpretation footprint covers 57.8% of Kumamoto Prefecture and defines the support for the historical terrain-ranking comparison.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: ", the GSI air-photo interpretation footprint,"
+  2. `insert`
+     - Before: ""
+     - After: "1,044 "
+  3. `replace`
+     - Before: "landslide"
+     - After: "mass-movement"
+  4. `replace`
+     - Before: "locations"
+     - After: "centre points"
+  5. `replace`
+     - Before: "analysis- eligible"
+     - After: "analysis-eligible"
+  6. `insert`
+     - Before: ""
+     - After: " The interpretation footprint covers 57.8% of Kumamoto Prefecture and defines the support for the historical terrain-ranking comparison."
+
+### part-09-title
+
+- Location: Figures > Figure 4 title
+- Reason: Remove the overbroad validated label from the Figure 4 title.
+- Kila decisions: KILA-D-20260903-023, KILA-D-20260903-025
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T13:01:12Z
+- Author: Kila
+- Markup SHA-256 before: `9addf0e3b2b4cb60b5fe0584ef9ea03c1dc75ada3a0737d848bae7e5110bcff8`
+- Markup SHA-256 after: `bc1b07acc3d891a54f037a9882bc9f64fa24edf1dafbed8f1b10d1131bf0588e`
+- Revision IDs: `224, 225`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T220112986335.reviewer-4-comment-1.part-09-title.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `3ed02e454dab3dedfb8d6f75472db6dd289f38cf7eb0541008bf00b626a56413`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Figure 4. Validated landslide disruption scores across rainfall scenarios
+~~~~
+
+- After:
+
+~~~~text
+Figure 4. Relative landslide disruption scores across rainfall scenarios
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "Validated"
+     - After: "Relative"
+
+### part-09-note
+
+- Location: Figures > Figure 4 note
+- Reason: State the footprint-bounded historical-alignment boundary in the Figure 4 note.
+- Kila decisions: KILA-D-20260903-023, KILA-D-20260903-025
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T13:01:27Z
+- Author: Kila
+- Markup SHA-256 before: `bc1b07acc3d891a54f037a9882bc9f64fa24edf1dafbed8f1b10d1131bf0588e`
+- Markup SHA-256 after: `3f7dd9398ad5e174816cc23e297a85cd3d313a993e1e6b65c6ad56fcad5d0305`
+- Revision IDs: `226`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T220127686039.reviewer-4-comment-1.part-09-note.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `8cc96e2185dbabd7f935b2bba2d43f75fae7c302a7fde587a64321d22c581c27`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Note: Panel a shows the Heavy-rainfall score under the baseline threshold and overlays interpreted landslides; panels b and c show Moderate and Heavy rainfall under the official threshold settings; panel d shows the Extreme-rainfall score, all on the same relative disruption-score scale.
+~~~~
+
+- After:
+
+~~~~text
+Note: Panel a shows the Heavy-rainfall score under the baseline threshold and overlays interpreted landslides; panels b and c show Moderate and Heavy rainfall under the official threshold settings; panel d shows the Extreme-rainfall score, all on the same relative disruption-score scale. The 2016 points provide footprint-bounded historical alignment evidence for the frozen terrain-context ranking; they do not validate the 2026 rainfall or earthquake adjustment.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " The 2016 points provide footprint-bounded historical alignment evidence for the frozen terrain-context ranking; they do not validate the 2026 rainfall or earthquake adjustment."
+
+### part-08-figure
+
+- Location: Figures > Figure 2 embedded raster
+- Reason: Replace Figure 2 with the approved footprint-bounded historical-evidence display.
+- Kila decisions: KILA-D-20260903-023
+- Mode: `figure-replace`
+- Timestamp: 2026-09-03T13:01:47.259438Z
+- Author: Kila
+- Markup SHA-256 before: `3f7dd9398ad5e174816cc23e297a85cd3d313a993e1e6b65c6ad56fcad5d0305`
+- Markup SHA-256 after: `b4d36bd4f6fd19ec62d6fb98955556b50ea370352ec87703664ef8d1b54e7e70`
+- Revision IDs: not applicable (approved embedded-media replacement)
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T220147259438.reviewer-4-comment-1.part-08-figure.docx`
+- Figure relationship: `rId10` -> `word/media/image2.png`
+- Verified caption: Figure 2. Terrain, landslides, warnings, roads, and emergency services
+- Replacement asset: `data/results/figures/Figure_terrain_landslide_evidence_and_emergency_network_context.png`
+- Original image SHA-256: `ec1248fdca9f3d2f4b6883f69bfc91197ea3ad1c4c4e93e3e0b84a48d3e2e16f`
+- Replacement image SHA-256: `0c741c9769a5c04b043c05913332b58b3028c5cba1b9ba95ed7dbc36dace9b75`
+- Image format and dimensions preserved: `true` (PNG, 4087 x 3335, RGBA)
+- Non-target package members preserved byte-for-byte: `true`
+- XML and DOCX ZIP verification: `passed`
+- Track-revisions setting preserved: `true`
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+

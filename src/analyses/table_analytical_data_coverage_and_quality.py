@@ -57,7 +57,7 @@ LAYER_SPECS = [
     LayerSpec("Emergency water points", "emergency_water_points_preprocessed.parquet", "Point when resolved", "Current supply point", ("Valid From Date", "Valid To Date", "Source Status Time"), "Water Point Name", ("Water Point Name", "Source Status Time"), ("Latitude", "Longitude"), "Emergency-water reachability target", "Only the resolved current subset enters routing; missing destinations make the direction of bias indeterminate."),
     LayerSpec("Independent rainfall-event maxima", "jma_rainfall_event_maxima_preprocessed.parquet", "Station-event table", "Independent wet event at one station", ("Event Start", "Event End"), "Rainfall Event ID", ("Rainfall Event ID", "Support Specification", "Event Maximum 1 h Rainfall", "Event Maximum 3 h Rainfall", "Event Maximum 24 h Rainfall", "Event Maximum 72 h Rainfall"), ("Station Latitude", "Station Longitude"), "Event-based scenario quantiles and station-level spatial loading", "Central estimates use seven stations over 2016–2020; five continuously observed stations over 2016–2025 define support sensitivity."),
     LayerSpec("Fire stations", "fire_stations_preprocessed.parquet", "Point", "Fire facility", tuple(), "Fire Facility Name", ("Fire Facility Name", "Fire Facility Type"), ("Geometry",), "Fire-service reachability target", "Facility presence does not imply vehicle, staff, or dispatch availability."),
-    LayerSpec("2016 landslide inventory", "gsi_2016_landslide_inventory_preprocessed.parquet", "Point", "Interpreted landslide placemark", ("Observation Date",), "Landslide Inventory ID", ("Landslide Inventory ID", "Observation Date"), ("Geometry",), "Presence-background calibration evidence", "Incomplete presence evidence; absence of a point is not a confirmed non-event."),
+    LayerSpec("2016 landslide inventory", "gsi_2016_landslide_inventory_preprocessed.parquet", "Point", "Interpreted centre point within 57.8% air-photo footprint", ("Source Photo Start Date", "Source Photo End Date", "Inventory Update Date"), "Landslide Inventory ID", ("Landslide Inventory ID", "Source Photo Start Date", "Source Photo End Date", "Inventory Update Date"), ("Geometry",), "Historical terrain-ranking alignment evidence", "Incomplete centre-point evidence within the official interpretation footprint; source/deposit polygons, field verification, point-specific failure time, and disturbance depth are unavailable, and absence of a point is not a confirmed non-event."),
     LayerSpec("GSI DEM 10B elevation", "gsi_dem10b_elevation_preprocessed.tif", "Raster", "Approximately 10 m terrain cell", tuple(), "Raster cell", tuple(), tuple(), "Elevation, slope, and curvature derivation", "DEM support does not imply rainfall or hazard information at 10 m resolution."),
     LayerSpec("JMA hourly rainfall", "jma_hourly_rainfall_preprocessed.parquet", "Station time series", "Station-hour", ("Observation Time",), "Station ID + Observation Time", ("Station ID", "Observation Time", "Hourly Rainfall", "Quality Flag"), ("Station Latitude", "Station Longitude"), "Rainfall history and independent-event construction", "Station observations support event-based interpolation but do not constitute fine-resolution radar rainfall."),
     LayerSpec("Landslide warning zones", "landslide_warning_zones_preprocessed.parquet", "Polygon", "Official warning-zone polygon", ("Designation Date",), "Zone ID", ("Zone ID", "Hazard Type", "Warning Zone Class"), ("Geometry",), "Warning-zone exposure baseline", "Official zoning is a screening layer and does not represent event occurrence."),
@@ -179,13 +179,16 @@ def build_table() -> pd.DataFrame:
             continue
         columns = tuple(dict.fromkeys((*spec.required_fields, *spec.location_fields, *spec.time_columns)))
         frame = pd.read_parquet(PROCESSED / spec.file_name, columns=list(columns))
+        coverage = temporal_coverage(frame, spec.time_columns)
+        if spec.label == "2016 landslide inventory":
+            coverage = "Photos 2016-04-16 to 2016-07-24; inventory updated 2016-07-28"
         rows.append(
             {
                 "Analytical Data Layer": spec.label,
                 "Record Count": int(len(frame)),
                 "Spatial Type": spec.spatial_type,
                 "Spatial Resolution / Support": spec.spatial_support,
-                "Temporal Coverage": temporal_coverage(frame, spec.time_columns),
+                "Temporal Coverage": coverage,
                 "Key Identifier": spec.key_identifier,
                 "Required-Field Missingness": missing_fraction(frame, spec.required_fields),
                 "Location Completeness": location_completeness(frame, spec),
@@ -260,7 +263,9 @@ def style_workbook(path: Path) -> None:
         row[1].alignment = Alignment(horizontal="right", vertical="top")
         row[6].alignment = Alignment(horizontal="right", vertical="top")
         row[7].alignment = Alignment(horizontal="right", vertical="top")
-        worksheet.row_dimensions[row[0].row].height = 45
+        worksheet.row_dimensions[row[0].row].height = (
+            62 if row[0].value == "2016 landslide inventory" else 45
+        )
 
     widths = {
         "A": 31,

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+import re
 from xml.etree import ElementTree as ET
 from zipfile import ZipFile
 
@@ -17,6 +18,24 @@ SOURCE = ROOT / "data/raw/official_reference/2016_inventory/gsi_airphoto_interpr
 OUTPUT = ROOT / "data/processed/gsi_2016_landslide_inventory_preprocessed.parquet"
 KML_NAME = "20160728_houkaichi.kml"
 NS = {"kml": "http://www.opengis.net/kml/2.2"}
+INVENTORY_UPDATE_DATE = datetime(2016, 7, 28)
+
+
+def source_photo_dates(description: str) -> tuple[str, datetime, datetime]:
+    """Parse the official air-photo acquisition label and date interval."""
+    match = re.search(
+        r"(\d{4})/(\d{1,2})/(\d{1,2})(?:[～～-](?:(\d{1,2})/)?(\d{1,2}))?",
+        description,
+    )
+    if match is None:
+        raise ValueError(f"Unresolved GSI source-photo date: {description!r}")
+    year, month, day = (int(match.group(index)) for index in (1, 2, 3))
+    end_month = int(match.group(4)) if match.group(4) else month
+    end_day = int(match.group(5)) if match.group(5) else day
+    start = datetime(year, month, day)
+    end = datetime(year, end_month, end_day)
+    label = f"{start:%Y-%m-%d}" if start == end else f"{start:%Y-%m-%d} to {end:%Y-%m-%d}"
+    return label, start, end
 
 
 def main() -> None:
@@ -30,12 +49,19 @@ def main() -> None:
             continue
         longitude, latitude, *_ = [float(value) for value in coordinates.split(",")]
         size_class = placemark.findtext("kml:name", default="", namespaces=NS).strip()
+        description = placemark.findtext(
+            "kml:description", default="", namespaces=NS
+        ).strip()
+        photo_label, photo_start, photo_end = source_photo_dates(description)
         point = Point(longitude, latitude)
         rows.append(
             {
                 "Landslide Inventory ID": f"GSI2016-{len(rows) + 1:05d}",
                 "Landslide Size Class": size_class,
-                "Observation Date": datetime(2016, 7, 28),
+                "Source Photo Date Label": photo_label,
+                "Source Photo Start Date": photo_start,
+                "Source Photo End Date": photo_end,
+                "Inventory Update Date": INVENTORY_UPDATE_DATE,
                 "Longitude": longitude,
                 "Latitude": latitude,
                 "Geometry": point.wkb,

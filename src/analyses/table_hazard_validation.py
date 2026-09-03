@@ -100,23 +100,57 @@ def validate_specification(
     return metrics, full_score
 
 
+def validate_frozen_score(
+    model: object,
+    matrix: np.ndarray,
+    outcome: np.ndarray,
+    groups: np.ndarray,
+) -> tuple[dict[str, object], np.ndarray]:
+    """Evaluate the already propagated fixed score without refitting it."""
+    full_score = np.asarray(model.decision_function(matrix), dtype=float)
+    auc_values: list[float] = []
+    capture_values: list[float] = []
+    splitter = GroupKFold(n_splits=5)
+    for _, test in splitter.split(matrix, outcome, groups):
+        if len(np.unique(outcome[test])) < 2:
+            continue
+        test_score = full_score[test]
+        auc_values.append(float(roc_auc_score(outcome[test], test_score)))
+        threshold = float(np.quantile(test_score, 0.75))
+        capture_values.append(
+            float(np.mean(test_score[outcome[test] == 1] >= threshold))
+        )
+    if len(auc_values) < 4:
+        raise RuntimeError("Frozen-score validation produced fewer than four folds.")
+    return (
+        {
+            "Spatial Folds": len(auc_values),
+            "Mean Spatial AUC": float(np.mean(auc_values)),
+            "Spatial AUC Range": f"{np.min(auc_values):.3f}–{np.max(auc_values):.3f}",
+            "Held-Out Top-Quartile Capture": float(np.mean(capture_values)),
+        },
+        full_score,
+    )
+
+
 def build_table() -> pd.DataFrame:
     """Build the planned five-row hazard validation table."""
-    context = shared.prepare_context()
+    context, frozen_model = shared.prepare_historical_alignment_context()
     matrix = np.asarray(context["matrix"], dtype=float)
     outcome = np.asarray(context["outcome"], dtype=int)
     groups = np.asarray(context["groups"])
     validation_warning_counts = context["validation_warning_counts"]
     sample_label = (
         f"{context['presence_count']:,} / {context['background_count']:,}; "
-        f"{validation_warning_counts['selected']:,} pre-event zones"
+        f"{validation_warning_counts['selected']:,} pre-sequence zones; "
+        f"{context['interpretation_footprint_pct']:.1f}% GSI footprint"
     )
     specifications = [
         (
             "Full terrain + warning-zone logistic",
             [0, 1, 2, 3],
             "logistic",
-            "Fitted comparator using warning zones designated by 2016-07-28; selected only if the stability rule passes.",
+            "Fitted comparator using warning zones designated before the 2016 earthquake sequence; diagnostic only.",
         ),
         (
             "Terrain-only logistic",
@@ -128,7 +162,7 @@ def build_table() -> pd.DataFrame:
             "Elevation + warning-zone logistic",
             [0, 3],
             "logistic",
-            "Reduced comparator using warning zones designated by 2016-07-28.",
+            "Reduced comparator using warning zones designated before the 2016 earthquake sequence.",
         ),
         (
             "Warning-zone-only indicator",
@@ -140,20 +174,25 @@ def build_table() -> pd.DataFrame:
             "Fixed standardized terrain score",
             [0, 1, 2, 3],
             "fixed",
-            "Transparent ranking calibrated with pre-event warning-zone support; not an occurrence probability.",
+            "Frozen propagated terrain-context ranking evaluated without reviewer-driven refitting; not an occurrence probability.",
         ),
     ]
 
     rows: list[dict[str, object]] = []
     full_reference: np.ndarray | None = None
     for specification, indices, model_kind, interpretation in specifications:
-        metrics, full_score = validate_specification(
-            matrix,
-            outcome,
-            groups,
-            indices,
-            model_kind,
-        )
+        if model_kind == "fixed":
+            metrics, full_score = validate_frozen_score(
+                frozen_model, matrix, outcome, groups
+            )
+        else:
+            metrics, full_score = validate_specification(
+                matrix,
+                outcome,
+                groups,
+                indices,
+                model_kind,
+            )
         if full_reference is None:
             full_reference = full_score
         correlation = float(

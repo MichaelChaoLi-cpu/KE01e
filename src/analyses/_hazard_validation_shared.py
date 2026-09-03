@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from xml.etree import ElementTree as ET
+from zipfile import ZipFile
 
 os.environ.pop("PROJ_LIB", None)
 os.environ.pop("PROJ_DATA", None)
@@ -24,6 +26,7 @@ from rasterio.transform import from_bounds
 from scipy.special import expit
 from scipy.stats import spearmanr
 import shapely
+from shapely.geometry import Polygon
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import GroupKFold
@@ -51,6 +54,13 @@ HAZARD_SHEET = "Hazard Validation"
 ROAD_SHEET = "Road Validation"
 DISPLAY_WIDTH = road_validation.DISPLAY_WIDTH
 RANDOM_SEED = 20260809
+GSI_INVENTORY_ZIP = (
+    ROOT / "data/raw/official_reference/2016_inventory/gsi_airphoto_interpreted_landslides.zip"
+)
+GSI_FOOTPRINT_KMLS = ("201604_handokuhani.kml", "201607_handokuhani.kml")
+KML_NS = {"kml": "http://www.opengis.net/kml/2.2"}
+EARTHQUAKE_SEQUENCE_START = pd.Timestamp("2016-04-14")
+LEGACY_INVENTORY_UPDATE_DATE = pd.Timestamp("2016-07-28")
 
 
 def decode_geometry(series: pd.Series) -> np.ndarray:
@@ -73,6 +83,26 @@ def logistic_model() -> object:
             random_state=RANDOM_SEED,
         ),
     )
+
+
+def gsi_interpretation_footprint() -> object:
+    """Return the union of the official April and July air-photo footprints."""
+    polygons: list[Polygon] = []
+    with ZipFile(GSI_INVENTORY_ZIP) as archive:
+        for member in GSI_FOOTPRINT_KMLS:
+            root = ET.fromstring(archive.read(member))
+            for node in root.findall(
+                ".//kml:Polygon/kml:outerBoundaryIs/kml:LinearRing/kml:coordinates",
+                KML_NS,
+            ):
+                coordinates = []
+                for token in (node.text or "").split():
+                    longitude, latitude, *_ = token.split(",")
+                    coordinates.append((float(longitude), float(latitude)))
+                polygons.append(Polygon(coordinates))
+    if not polygons:
+        raise RuntimeError("No GSI interpretation-footprint polygons were parsed.")
+    return shapely.union_all(np.asarray(polygons, dtype=object))
 
 
 def prepare_context() -> dict[str, object]:
@@ -184,6 +214,86 @@ def prepare_context() -> dict[str, object]:
         "presence_count": len(presence_flat),
         "background_count": len(background_flat),
     }
+
+
+def prepare_historical_alignment_context() -> tuple[dict[str, object], object]:
+    """Build corrected mapped support and recover the frozen propagated score.
+
+    The fixed score is standardized on the original pre-revision support so the
+    reviewer-driven support audit cannot refit or retune any propagated score.
+    Only the diagnostic logistic comparators are fitted on the corrected sample.
+    """
+    original_cutoff = terrain_score.LANDSLIDE_VALIDATION_DATE
+    try:
+        terrain_score.LANDSLIDE_VALIDATION_DATE = LEGACY_INVENTORY_UPDATE_DATE
+        frozen_context = prepare_context()
+        frozen_model = terrain_score.TransparentStandardizedScore(
+            terrain_score.FALLBACK_WEIGHTS
+        ).fit(np.asarray(frozen_context["matrix"], dtype=float))
+
+        terrain_score.LANDSLIDE_VALIDATION_DATE = EARTHQUAKE_SEQUENCE_START
+        context = prepare_context()
+    finally:
+        terrain_score.LANDSLIDE_VALIDATION_DATE = original_cutoff
+
+    footprint = gsi_interpretation_footprint()
+    footprint_mask = rasterize(
+        [(footprint, 1)],
+        out_shape=context["shape"],
+        transform=context["transform"],
+        fill=0,
+        all_touched=True,
+        dtype="uint8",
+    ).astype(bool)
+    eligible = context["valid"] & footprint_mask
+    coordinates = shapely.get_coordinates(context["landslide_geometry"])
+    row, column, inside = terrain_score.grid_indices(
+        coordinates, context["extent"], context["shape"]
+    )
+    cell_pairs = np.unique(np.column_stack([row[inside], column[inside]]), axis=0)
+    cell_pairs = cell_pairs[eligible[cell_pairs[:, 0], cell_pairs[:, 1]]]
+    presence_flat = np.ravel_multi_index(
+        (cell_pairs[:, 0], cell_pairs[:, 1]), context["shape"]
+    )
+    available_flat = np.flatnonzero(eligible.ravel())
+    background_pool = np.setdiff1d(
+        available_flat, presence_flat, assume_unique=False
+    )
+    background_count = len(presence_flat) * 10
+    if len(background_pool) < background_count:
+        raise RuntimeError("The GSI footprint has insufficient pseudo-background support.")
+    random = np.random.default_rng(RANDOM_SEED)
+    background_flat = random.choice(
+        background_pool, size=background_count, replace=False
+    )
+    sampled_flat = np.concatenate([presence_flat, background_flat])
+    sampled_row, sampled_column = np.unravel_index(sampled_flat, context["shape"])
+    context["sampled_row"] = sampled_row
+    context["sampled_column"] = sampled_column
+    context["matrix"] = np.column_stack(
+        [
+            context["features"][name][sampled_row, sampled_column]
+            for name in terrain_score.FEATURE_NAMES
+        ]
+    )
+    context["outcome"] = np.concatenate(
+        [
+            np.ones(len(presence_flat), dtype=int),
+            np.zeros(len(background_flat), dtype=int),
+        ]
+    )
+    context["groups"] = terrain_score.spatial_groups(
+        sampled_row, sampled_column, context["extent"], context["shape"]
+    )
+    context["presence_count"] = len(presence_flat)
+    context["background_count"] = len(background_flat)
+    context["interpretation_footprint"] = footprint
+    context["interpretation_footprint_pct"] = float(
+        100
+        * shapely.area(shapely.intersection(footprint, context["admin_union"]))
+        / shapely.area(context["admin_union"])
+    )
+    return context, frozen_model
 
 
 def validate_hazard_specification(
