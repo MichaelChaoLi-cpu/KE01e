@@ -208,10 +208,22 @@ Reviewer 3: Major revision is recommended. The manuscript presents a relevant an
 First, "earthquake-adjusted" is potentially misleading because the model does not include ground motion, earthquake damage, or measured changes in slope strength, but only operational reductions in rainfall-warning thresholds.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for highlighting this terminology issue. We agree that “earthquake-adjusted” could imply a physical earthquake-effect model. We therefore replace that term in the title, keywords, Results heading, conclusion, and Figure 1 with language that identifies the analysis as an operational post-earthquake rainfall-warning threshold scenario. The Abstract now explicitly states that the model does not include ground motion, earthquake damage, or measured changes in slope strength. The revised text reads:
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"Post-earthquake rainfall-warning threshold scenarios for landslide-related road disruption, community isolation, and emergency intervention planning in Kumamoto Prefecture, Japan"
+(Page 1, Lines 2–5)
+
+"Here, post-earthquake adjustment denotes area-level operational retention of rainfall-warning criteria, not a model of ground motion, earthquake damage, or measured changes in slope strength."
+(Page 1, Lines 9–11)
+
+"Compound hazards; Post-earthquake rainfall-warning criteria; Landslide disruption; Road networks; Community isolation; Service accessibility"
+(Page 2, Lines 28–29)
+
+"Operational Threshold Retention and Slope Disruption"
+(Page 23, Line 482)
+
+"Under the post-earthquake rainfall-warning threshold scenarios, the framework identifies where relative slope disruption may affect roads, where those road disruptions may isolate communities or remove basic-service access, and which road or community actions have the greatest conditional planning benefit."
+(Page 34, Lines 732–735)
 
 ## Comment 2
 

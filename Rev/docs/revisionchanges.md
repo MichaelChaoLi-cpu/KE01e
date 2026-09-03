@@ -230,3 +230,249 @@ The rainfall dimension therefore supports magnitude scaling and broader conseque
      - Before: ""
      - After: " The paired all-area f = 1.00 comparison and the 15-combination rainfall-parameter sensitivity are reported in Appendix Table B5. Official retention changes downstream consequence magnitude more strongly than road ordering, while alternative window weights and γ values leave road rankings stable but produce wider variation in expected isolation."
 
+## reviewer-3/comment-1
+
+### part-01
+
+- Location: Manuscript title
+- Reason: Replace the potentially physical-sounding earthquake-adjusted title with an explicit post-earthquake rainfall-warning threshold scenario title.
+- Kila decisions: KILA-D-20260903-008
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T04:38:19Z
+- Author: Kila
+- Markup SHA-256 before: `abe3a86a53b116db4dcbd9ed94ed586256ac3b4f549bd1ef2b07fac5191eb22f`
+- Markup SHA-256 after: `3c58d205c576ab11abaa2e894368c9bef1fa12f977894048fbdc84fbbe6d8055`
+- Revision IDs: `7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T133819803024.reviewer-3-comment-1.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `2e04fe98f25922c0d6367a917809937c6a7c2a5b42022f8c41bb9161722a8c77`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Earthquake-adjusted rainfall-triggered landslide disruption informs community isolation and emergency intervention priorities in Kumamoto Prefecture, Japan
+~~~~
+
+- After:
+
+~~~~text
+Post-earthquake rainfall-warning threshold scenarios for landslide-related road disruption, community isolation, and emergency intervention planning in Kumamoto Prefecture, Japan
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "Earthquake-adjusted"
+     - After: "Post-earthquake"
+  2. `replace`
+     - Before: "rainfall-triggered"
+     - After: "rainfall-warning"
+  3. `replace`
+     - Before: "landslide"
+     - After: "threshold scenarios for landslide-related road"
+  4. `replace`
+     - Before: " informs"
+     - After: ","
+  5. `insert`
+     - Before: ""
+     - After: ","
+  6. `replace`
+     - Before: "priorities"
+     - After: "planning"
+
+### part-02
+
+- Location: Abstract, opening sentence
+- Reason: State directly that post-earthquake adjustment is an operational warning-threshold scenario and not a physical earthquake-effect model.
+- Kila decisions: KILA-D-20260903-008
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T04:38:33Z
+- Author: Kila
+- Markup SHA-256 before: `3c58d205c576ab11abaa2e894368c9bef1fa12f977894048fbdc84fbbe6d8055`
+- Markup SHA-256 after: `9c20d0763000633d481f7d8b58a8e46071aea123e6ecedb628578d9f91acfa48`
+- Revision IDs: `18`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T133833161509.reviewer-3-comment-1.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Post-earthquake rainfall can propagate slope instability through road networks into community isolation and service loss.
+~~~~
+
+- After:
+
+~~~~text
+Post-earthquake rainfall can propagate slope instability through road networks into community isolation and service loss. Here, post-earthquake adjustment denotes area-level operational retention of rainfall-warning criteria, not a model of ground motion, earthquake damage, or measured changes in slope strength.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " Here, post-earthquake adjustment denotes area-level operational retention of rainfall-warning criteria, not a model of ground motion, earthquake damage, or measured changes in slope strength."
+
+### part-03
+
+- Location: Keywords
+- Reason: Replace the misleading earthquake-adjusted keyword with the operational rainfall-warning criterion terminology.
+- Kila decisions: KILA-D-20260903-008
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T04:38:48Z
+- Author: Kila
+- Markup SHA-256 before: `9c20d0763000633d481f7d8b58a8e46071aea123e6ecedb628578d9f91acfa48`
+- Markup SHA-256 after: `6c2a41b755ce12f66f94511dde14fefef713f65dc5a70ad8d229cd8008c5bab1`
+- Revision IDs: `19, 20, 21, 22, 23, 24`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T133848670117.reviewer-3-comment-1.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Compound hazards; Earthquake-adjusted rainfall thresholds; Landslide disruption; Road networks; Community isolation; Service accessibility
+~~~~
+
+- After:
+
+~~~~text
+Compound hazards; Post-earthquake rainfall-warning criteria; Landslide disruption; Road networks; Community isolation; Service accessibility
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "Earthquake-adjusted"
+     - After: "Post-earthquake"
+  2. `replace`
+     - Before: "rainfall"
+     - After: "rainfall-warning"
+  3. `replace`
+     - Before: "thresholds"
+     - After: "criteria"
+
+### part-05
+
+- Location: Results section heading
+- Reason: Name the Results section for the operational threshold-retention contrast actually modeled.
+- Kila decisions: KILA-D-20260903-008
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T04:39:32Z
+- Author: Kila
+- Markup SHA-256 before: `6c2a41b755ce12f66f94511dde14fefef713f65dc5a70ad8d229cd8008c5bab1`
+- Markup SHA-256 after: `1f4ca90f560f1848c81691d129b2fee06f7962fe248ad40ff5624a5c48cbb5b0`
+- Revision IDs: `25, 26, 27, 28`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T133932275703.reviewer-3-comment-1.part-05.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Earthquake-Adjusted Rainfall and Slope Disruption
+~~~~
+
+- After:
+
+~~~~text
+Operational Threshold Retention and Slope Disruption
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "Earthquake-Adjusted"
+     - After: "Operational"
+  2. `replace`
+     - Before: "Rainfall"
+     - After: "Threshold Retention"
+
+### part-06
+
+- Location: Conclusions, opening sentence
+- Reason: Condition the conclusion on post-earthquake rainfall-warning threshold scenarios instead of implying a physical earthquake-adjusted model.
+- Kila decisions: KILA-D-20260903-008
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T04:39:49Z
+- Author: Kila
+- Markup SHA-256 before: `1f4ca90f560f1848c81691d129b2fee06f7962fe248ad40ff5624a5c48cbb5b0`
+- Markup SHA-256 after: `824cac92cf2cdf15897aff4299b9486a9fddd3747403327cb24c8c8a14b5ceb8`
+- Revision IDs: `29, 30, 31, 32, 33, 34, 35`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T133949876320.reviewer-3-comment-1.part-06.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Earthquake-adjusted rainfall scenarios identify where relative slope disruption may affect roads, where those road disruptions may isolate communities or remove basic-service access, and which road or community actions have the greatest conditional planning benefit.
+~~~~
+
+- After:
+
+~~~~text
+Under the post-earthquake rainfall-warning threshold scenarios, the framework identifies where relative slope disruption may affect roads, where those road disruptions may isolate communities or remove basic-service access, and which road or community actions have the greatest conditional planning benefit.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "Earthquake-adjusted"
+     - After: "Under"
+  2. `replace`
+     - Before: "rainfall"
+     - After: "the post-earthquake rainfall-warning threshold"
+  3. `insert`
+     - Before: ""
+     - After: ","
+  4. `replace`
+     - Before: "identify"
+     - After: "the framework identifies"
+
+### part-04
+
+- Location: Figures > Figure 1 embedded drawing
+- Reason: Replace the misleading earthquake-adjusted figure label with the approved post-earthquake threshold-retention wording.
+- Kila decisions: KILA-D-20260903-008, KILA-D-20260903-009
+- Mode: `figure-replace`
+- Timestamp: 2026-09-03T04:47:55.195279Z
+- Author: Kila
+- Markup SHA-256 before: `824cac92cf2cdf15897aff4299b9486a9fddd3747403327cb24c8c8a14b5ceb8`
+- Markup SHA-256 after: `9a2bf7de8a58e87b5521828168e819e7fb8ee6581561d6108ba5c4f2b0d002e7`
+- Revision IDs: not applicable (approved embedded-media replacement)
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T134755195279.reviewer-3-comment-1.part-04.docx`
+- Figure relationship: `rId9` -> `word/media/image1.png`
+- Verified caption: Figure 1. Compound-hazard pathway from rainfall to intervention priorities
+- Replacement asset: `data/results/figures/Figure_compound_hazard_decision_pathway.png`
+- Original image SHA-256: `b3e8479eab67aec26f0cc4e6c5418bc5479fc6b49c2d09b42e7179aba6029cab`
+- Replacement image SHA-256: `f48bc8c9ce314a357ab5b855d8aed5c7247df7066b3ca1f1c413d4a9ca9738af`
+- Image format and dimensions preserved: `true` (PNG, 2400 x 1080, RGB)
+- Non-target package members preserved byte-for-byte: `true`
+- XML and DOCX ZIP verification: `passed`
+- Track-revisions setting preserved: `true`
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+

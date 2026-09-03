@@ -193,7 +193,7 @@ def build_svg() -> str:
                 50,
                 235,
                 115,
-                ["Earthquake-adjusted", "threshold"],
+                ["Post-earthquake", "threshold retention"],
                 [
                     "Baseline 1.00  |  official 0.70/0.80",
                     "Yatsushiro midpoint 0.75",

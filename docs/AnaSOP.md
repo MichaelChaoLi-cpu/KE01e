@@ -5,8 +5,8 @@ Analysis Standard Operating Procedure
 
 ### Working Title
 
-Earthquake-adjusted rainfall-triggered landslide risk, community isolation, and
-emergency intervention priorities in Kumamoto
+Post-earthquake rainfall-warning threshold scenarios for landslide-related road
+disruption, community isolation, and emergency intervention planning in Kumamoto
 
 ### Central Research Question
 
@@ -22,19 +22,20 @@ emergency intervention priorities in Kumamoto
   disclosure groups, administrative areas, landslide warning zones, designated and
   current shelters, emergency water points, public facilities, fire stations, 2026
   road-restriction snapshots, and limited geolocated earthquake-damage evidence.
-- Key readable variables or data scope: rainfall scenario; earthquake disturbance;
+- Key readable variables or data scope: rainfall scenario; official area-level
+  rainfall-warning threshold retention;
   terrain and land-cover conditions; slope-to-road exposure; road failure or disruption
   score; network redundancy; community connectivity; total and older population;
   service reachability; intervention cost; and avoided isolation.
 - What would verify it: A reproducible scenario chain must yield stable road and
   community rankings across rainfall severity, Monte Carlo seeds, network assumptions,
-  and plausible earthquake-adjustment parameters; intervention benefits must be
+  and plausible threshold-retention parameters; intervention benefits must be
   positive, budget-feasible, and reconciled to affected communities and population.
 - What would falsify or weaken it: The central claim is weakened if the hazard layer
   cannot be linked to roads, the baseline network cannot represent community access,
   community definitions are spatially unstable, or intervention rankings are driven
   mainly by arbitrary cost and threshold choices.
-- Required next feasibility check: Confirm terrain, rainfall, earthquake-disturbance,
+- Required next feasibility check: Confirm terrain, rainfall, official threshold-retention,
   and landslide-inventory availability; define the community unit and external-network
   connection target; audit road topology and service-node coverage.
 
@@ -43,38 +44,35 @@ emergency intervention priorities in Kumamoto
 The central question is supported by four linked questions that follow the compound-
 hazard and consequence pathway.
 
-#### Supporting Point 1: Earthquake-adjusted rainfall threshold
+#### Supporting Point 1: Post-earthquake rainfall-warning threshold retention
 
 - Role relative to central point: mechanism.
-- Research question: Does stronger earthquake disturbance make the same rainfall
-  exposure correspond to greater slope-instability risk, or, if event labels are
-  insufficient, how much do low, central, and high threshold-reduction scenarios
-  change the landslide disruption score?
+- Research question: How much do the declared baseline and official post-earthquake
+  threshold-retention settings change the relative landslide disruption score under
+  otherwise identical rainfall scenarios?
 - Why it matters: This is the main compound-hazard contribution and separates the
   project from a static landslide susceptibility assessment.
 - Data support currently visible: Official warning-zone geography and limited event
   damage evidence are available, while the required elevation surface, rainfall fields,
-  ground-motion surface, and event-labelled landslide inventory remain acquisition or
-  feasibility tasks.
+  and event-labelled landslide inventory remain acquisition or feasibility tasks.
 - Key readable variables or data scope: 1 h, 3 h, 24 h, and 72 h rainfall; antecedent
   precipitation index; slope, curvature, wetness and flow-accumulation proxies;
-  geology, soil, and land cover; shaking intensity or ground motion; and the rainfall-
-  disturbance interaction.
-- What would verify it: With a suitable inventory, a positive and spatially stable
-  rainfall-by-earthquake interaction under event-wise or spatially blocked validation;
-  without one, coherent and ordered sensitivity across declared threshold-reduction
-  scenarios calibrated where possible against the 2016 event.
-- What would falsify or weaken it: No inventory support, unstable interaction estimates,
-  severe spatial sampling bias, or scenario rankings that reverse under minor parameter
-  changes would prevent a probability or threshold-shift claim.
+  geology, soil, and land cover; area-level threshold-retention factor; and the
+  dimensionless rainfall-loading index.
+- What would verify it: Compatibility with the reconstructed JMA-type operational
+  indicator, coherent ordering across declared threshold-retention scenarios, and stable
+  road prioritization across rainfall-window and loading-coefficient sensitivities.
+- What would falsify or weaken it: Indicator incompatibility, severe spatial sampling
+  bias, or scenario rankings that reverse under minor parameter changes would prevent
+  an operational threshold-retention interpretation.
 - Required next feasibility check: Determine the completeness and mapping method of
-  the 2016 and 2026 landslide inventories and select one primary earthquake-disturbance
-  measure without treating intensity, PGA, and PGV as interchangeable.
+  the 2016 and 2026 evidence inventories and resolve the spatial support of each official
+  threshold-retention setting.
 
 #### Supporting Point 2: Slope hazard to road disruption
 
 - Role relative to central point: mechanism and exposure translation.
-- Research question: Under each earthquake-rainfall scenario, which road sections are
+- Research question: Under each rainfall and threshold-retention scenario, which road sections are
   most exposed to landslide, rockfall, or debris-flow impact from upslope terrain?
 - Why it matters: Community consequences depend on whether hazardous slopes can reach
   and block specific road sections, not only on where high-hazard terrain exists.
@@ -195,14 +193,14 @@ Section focus: Empirical context, practical problem, and cautious interpretation
 - Existing local network analyses demonstrate emergency-access and intervention methods,
   but their hospital, fire, or water-service outcomes and generic failure probabilities
   cannot answer this project's landslide-specific isolation question.
-- The applied gap is therefore an evidence-bounded chain from earthquake-adjusted
-  rainfall triggering to road disruption, community consequences, and pre-rainfall
-  action priorities.
+- The applied gap is therefore an evidence-bounded chain from operational
+  post-earthquake rainfall-warning threshold scenarios to road disruption, community
+  consequences, and pre-rainfall action priorities.
 
 ### Conceptual Framework
 
 - Hazard pathway: rainfall, antecedent wetness, terrain, geology, soil, land cover, and
-  earthquake disturbance determine slope-instability risk or a scenario disruption score.
+  official area-level threshold retention determine a relative scenario disruption score.
 - Exposure pathway: upslope hazard, potential travel or runout, and road attributes
   determine road-section disruption.
 - Consequence pathway: disrupted roads alter network connectivity and travel costs,
@@ -210,9 +208,9 @@ Section focus: Empirical context, practical problem, and cautious interpretation
 - Decision pathway: the avoidable portion of these consequences, together with cost and
   feasibility constraints, determines inspection, reinforcement, clearance, evacuation,
   and pre-positioning priorities.
-- Expected relationship 1: Stronger earthquake disturbance increases rainfall-related
-  instability when the inventory supports estimating an interaction; otherwise this
-  relationship is represented only through declared threshold-reduction scenarios.
+- Expected relationship 1: Smaller declared threshold-retention fractions increase
+  relative scenario loading for otherwise identical rainfall, without identifying a
+  causal effect of shaking or measuring a change in slope strength.
 - Expected relationship 2: Road sections below hazardous upslope terrain and with low
   network redundancy generate larger isolation consequences.
 - Expected relationship 3: Consequence-aware intervention selection protects more people
@@ -222,27 +220,10 @@ Section focus: Empirical context, practical problem, and cautious interpretation
 
 ### Problem Formulation
 
-- If an event-labelled inventory is adequate, the candidate interpretable hazard model is
-
-  \[
-  \operatorname{logit} P(L_i=1)
-  = \alpha + f(R_i) + \beta_S S_i + \beta_G G_i + \beta_E E_i
-  + \beta_{RE}(R_i E_i).
-  \]
-
-  Here, \(R_i\) contains rainfall and antecedent-wetness measures, \(S_i\) terrain
-  measures, \(G_i\) geology, soil, and land-cover measures, and \(E_i\) the selected
-  earthquake-disturbance measure. The interaction is not interpreted causally without
-  an identification design.
-- If the inventory is inadequate, the analysis instead declares low, central, and high
-  earthquake-sensitivity scenarios:
-
-  \[
-  R_c^{post}(x) = R_c^{baseline}(x)[1-\delta E(x)].
-  \]
-
-  The resulting output is an earthquake-adjusted landslide disruption score, not a
-  calibrated probability.
+- The implemented analysis uses declared operational threshold-retention factors rather
+  than a ground-motion, earthquake-damage, or slope-strength model. The resulting output
+  is a threshold-retention landslide disruption score, not a calibrated probability or
+  an estimated causal earthquake effect.
 - Conditional on a defensible slope-to-road transfer weight, road-section failure can
   be represented as
 
