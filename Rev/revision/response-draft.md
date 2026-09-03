@@ -136,10 +136,22 @@ Thank you for this comment. We agree that the equal rainfall-window weights and 
 5. The directional slope-to-road translation requires further methodological justification. Please clarify the criteria and parameter settings used to define the influence set and transfer weight in Equation 7, and justify their applicability to the study area.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for highlighting the need to make the directional slope-to-road translation reproducible and locally interpretable. The revised Methods now reports the road-sampling fractions, grid scale, influence-set neighborhood, relief and alignment criteria, angular and distance equivalents, and the complete distance–alignment–relief weighting rule. We also added a prespecified 15-specification sensitivity analysis, matched road-restriction correspondence, and strict-to-permissive downstream bounds in Appendix Tables B6a, B6b, and B7. The revised text now distinguishes evidence of directional applicability in Kumamoto from calibration of a physical runout model: the matched restriction comparison supports a persistent ranking signal, while the sensitivity results show that neighborhood reach and relief criteria materially affect exact priorities and consequence magnitude.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"For sample point j, influence set Uej contains every noncentral offset with dx and dy in [−3, 3] for which the candidate cell is at least 10 m above the road point and the cosine alignment between the local upslope gradient and the road-to-cell vector is at least 0.20. These settings correspond to an angular tolerance of 78.5° in raster-coordinate space, axis-aligned reaches of approximately 432–509 m, and a maximum diagonal reach of approximately 668 m. Transfer weight qij multiplies an exponential distance term with a 2.5-cell e-folding length, alignment clipped to [0, 1], and a relief term clipped to [0.20, 1.00] after division by 100 m."
+(Page 16, Lines 329–336)
+
+"Across the 15 prespecified transfer specifications, the minimum Spearman correlation on the union of supported roads was 0.676, the minimum top-1% overlap was 0.428, and the minimum overlap of Heavy candidate sets was 0.764. Neighborhood reach and minimum relief changed road support and exact top-ranked membership most strongly, whereas alignment, distance decay, relief scaling, and road-sampling alternatives were more stable individually. Matched road-evidence concordance ranged from 0.614 to 0.687 and remained above 0.50 under every specification. The restriction evidence therefore supports a persistent directional ranking signal, but not parameter-invariant identification of the exact highest-ranked roads."
+(Page 25, Lines 527–535)
+
+"Reconstructing the candidate-road set and closure mapping for the strict and permissive transfer boundaries changes Heavy expected isolation to 523.5 and 2,256.3 residents, respectively, compared with 1,121.7 centrally."
+(Page 26, Lines 555–557)
+
+"Across the strict and permissive transfer boundaries, the corresponding ranges are 264.6–1,303.9, 799.8–3,433.9, and 480.6–1,698.5 residents. These primary comparisons show that destination geography, network alternatives, and slope-to-road transfer assumptions shape service consequences beyond external-road isolation."
+(Page 27, Lines 571–575)
+
+"Slope-to-road transfer approximates runout through relief, alignment, and distance on an approximately 150 m screening grid rather than through a calibrated physical runout model. Its neighborhood and relief settings materially affect road support, exact top-ranked membership, and downstream consequence magnitude; the central specification is therefore a transparent reference rather than an optimized local model."
+(Page 34, Lines 737–741)
 
 ## Comment 6
 

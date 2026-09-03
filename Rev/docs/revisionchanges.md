@@ -589,3 +589,339 @@ Within the event and area for which they are issued, official threshold adjustme
      - Before: "Official"
      - After: "Within the event and area for which they are issued, official"
 
+## reviewer-2/comment-5
+
+### part-01
+
+- Location: Methods > slope-to-road transfer paragraph
+- Reason: Define the influence set, transfer-weight parameters, physical scale, and Kumamoto applicability checks requested by Reviewer 2.
+- Kila decisions: KILA-D-20260903-015, KILA-D-20260903-016
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T06:21:07Z
+- Author: Kila
+- Markup SHA-256 before: `c5fdf67abe4fcd000a56364aebb1ae5a46c9a6f461826e16b48f08afe8725b46`
+- Markup SHA-256 after: `a44e75f67e1c75d36a24066f343bb0498e77407f2555bcd66c53aa8ca237d296`
+- Revision IDs: `40, 41, 42, 43, 44`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T152108927655.reviewer-2-comment-5.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+For road section e, influence set Ue contains terrain cells with positive relief above the road and downhill alignment toward it. GIS-based landslide-risk mapping provides a basis for road-slope prioritization and obstruction analysis (Cheng et al., 2026). Transfer weight qie decreases with distance and represents the relative capacity of cell i to affect section e. Nearby cells below the road, or cells whose downslope direction is inconsistent with the road location, do not contribute in the same way as aligned upslope cells. Equation 7 uses a normalized weighted mean, rather than a noisy-OR expression, so a longer section does not receive a larger score solely because it contains more sampled cells.
+~~~~
+
+- After:
+
+~~~~text
+For road section e, each line component is sampled at normalized fractions 0.20, 0.50, and 0.80 on the 752 × 950 WGS84 road-transfer grid. At the study-area midpoint, a grid cell is approximately 144 m east–west by 170 m north–south after 16 × 16 aggregation of the native 9.55 m DEM pixels. For sample point j, influence set Uej contains every noncentral offset with dx and dy in [−3, 3] for which the candidate cell is at least 10 m above the road point and the cosine alignment between the local upslope gradient and the road-to-cell vector is at least 0.20. These settings correspond to an angular tolerance of 78.5° in raster-coordinate space, axis-aligned reaches of approximately 432–509 m, and a maximum diagonal reach of approximately 668 m. Transfer weight qij multiplies an exponential distance term with a 2.5-cell e-folding length, alignment clipped to [0, 1], and a relief term clipped to [0.20, 1.00] after division by 100 m. Contributions from the three sample points and all line components are pooled to the parent road section. GIS-based landslide-risk mapping provides a basis for road-slope prioritization and obstruction analysis (Cheng et al., 2026). Equation 7 uses a normalized weighted mean, rather than a noisy-OR expression, so a longer section does not receive a larger score solely because it contains more sampled cells. These parameters define a regional directional-screening envelope rather than a calibrated runout model; applicability is evaluated through matched restriction correspondence and the prespecified parameter sensitivity reported in Appendix Tables B6 and B7.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "For road section e, influence set Ue contains terrain cells with positive relief above the road and downhill alignment toward it."
+     - After: "For road section e, each line component is sampled at normalized fractions 0.20, 0.50, and 0.80 on the 752 × 950 WGS84 road-transfer grid. At the study-area midpoint, a grid cell is approximately 144 m east–west by 170 m north–south after 16 × 16 aggregation of the native 9.55 m DEM pixels. For sample point j, influence set Uej contains every noncentral offset with dx and dy in [−3, 3] for which the candidate cell is at least 10 m above the road point and the cosine alignment between the local upslope gradient and the road-to-cell vector is at least 0.20. These settings correspond to an angular tolerance of 78.5° in raster-coordinate space, axis-aligned reaches of approximately 432–509 m, and a maximum diagonal reach of approximately 668 m. Transfer weight qij multiplies an exponential distance term with a 2.5-cell e-folding length, alignment clipped to [0, 1], and a relief term clipped to [0.20, 1.00] after division by 100 m. Contributions from the three sample points and all line components are pooled to the parent road section."
+  2. `structured-replace`
+     - Before: ". Transfer weight qie decreases with distance and represents the relative capacity of cell i to affect section e. Nearby cells below the road, or cells whose downslope direction is inconsistent with the road location, do not contribute in the same way as aligned upslope cells"
+     - After: ""
+  3. `structured-replace`
+     - Before: "."
+     - After: ". These parameters define a regional directional-screening envelope rather than a calibrated runout model; applicability is evaluated through matched restriction correspondence and the prespecified parameter sensitivity reported in Appendix Tables B6 and B7."
+
+### part-02
+
+- Location: Results > Road Disruption and Observed Restriction Correspondence, final sentence of the first paragraph
+- Reason: Report the validated transfer sensitivity and its ranking boundary.
+- Kila decisions: KILA-D-20260903-015
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T06:21:16Z
+- Author: Kila
+- Markup SHA-256 before: `a44e75f67e1c75d36a24066f343bb0498e77407f2555bcd66c53aa8ca237d296`
+- Markup SHA-256 after: `6505def40e66418a6a7099146c80e0f0b1a3185197b0a7b361438d58fea25b84`
+- Revision IDs: `45`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T152116687351.reviewer-2-comment-5.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The Heavy-score background in panel d locates the 93 matched road sections used for ranking validation.
+~~~~
+
+- After:
+
+~~~~text
+The Heavy-score background in panel d locates the 93 matched road sections used for ranking validation. Across the 15 prespecified transfer specifications, the minimum Spearman correlation on the union of supported roads was 0.676, the minimum top-1% overlap was 0.428, and the minimum overlap of Heavy candidate sets was 0.764. Neighborhood reach and minimum relief changed road support and exact top-ranked membership most strongly, whereas alignment, distance decay, relief scaling, and road-sampling alternatives were more stable individually. Matched road-evidence concordance ranged from 0.614 to 0.687 and remained above 0.50 under every specification. The restriction evidence therefore supports a persistent directional ranking signal, but not parameter-invariant identification of the exact highest-ranked roads.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " Across the 15 prespecified transfer specifications, the minimum Spearman correlation on the union of supported roads was 0.676, the minimum top-1% overlap was 0.428, and the minimum overlap of Heavy candidate sets was 0.764. Neighborhood reach and minimum relief changed road support and exact top-ranked membership most strongly, whereas alignment, distance decay, relief scaling, and road-sampling alternatives were more stable individually. Matched road-evidence concordance ranged from 0.614 to 0.687 and remained above 0.50 under every specification. The restriction evidence therefore supports a persistent directional ranking signal, but not parameter-invariant identification of the exact highest-ranked roads."
+
+### part-03
+
+- Location: Results > community isolation paragraph
+- Reason: Update five-seed central estimates and report downstream transfer-specification bounds.
+- Kila decisions: KILA-D-20260903-015, KILA-D-20260903-016
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T06:21:25Z
+- Author: Kila
+- Markup SHA-256 before: `6505def40e66418a6a7099146c80e0f0b1a3185197b0a7b361438d58fea25b84`
+- Markup SHA-256 after: `7012a736023674728b539112fc50ff86d1e8cfa46869149a2a4632e07eafa0ad`
+- Revision IDs: `46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T152126435990.reviewer-2-comment-5.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Expected isolated population rises monotonically with rainfall severity. Across five simulation seeds, Figure 6 reports means of 186.4 residents under Moderate rainfall, 1,106.9 under Heavy rainfall, and 5,031.0 under Extreme rainfall. The Heavy result ranges from 1,093.9 to 1,118.2 across seeds, with a standard deviation of 8.8, indicating small Monte Carlo variation relative to the scenario contrast. The maps show that the increase is concentrated in selected road-dependent communities rather than distributed uniformly across populated cells. Alternative external targets yield 1,044–1,108 isolated residents under Heavy rainfall, whereas alternative closure mappings produce the wider 343–2,309 range.
+~~~~
+
+- After:
+
+~~~~text
+Expected isolated population rises monotonically with rainfall severity. Across five simulation seeds, Figure 6 reports means of 189.1 residents under Moderate rainfall, 1,121.7 under Heavy rainfall, and 5,032.2 under Extreme rainfall. The Heavy result ranges from 1,103.7 to 1,139.7 across seeds, with a standard deviation of 13.9, indicating small Monte Carlo variation relative to the scenario contrast. The maps show that the increase is concentrated in selected road-dependent communities rather than distributed uniformly across populated cells. Alternative external targets yield 1,044–1,108 isolated residents under Heavy rainfall, whereas alternative closure mappings produce the wider 343–2,309 range. Reconstructing the candidate-road set and closure mapping for the strict and permissive transfer boundaries changes Heavy expected isolation to 523.5 and 2,256.3 residents, respectively, compared with 1,121.7 centrally.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "186.4"
+     - After: "189.1"
+  2. `structured-replace`
+     - Before: "1,106.9"
+     - After: "1,121.7"
+  3. `structured-replace`
+     - Before: "5,031.0"
+     - After: "5,032.2"
+  4. `structured-replace`
+     - Before: "1,093.9"
+     - After: "1,103.7"
+  5. `structured-replace`
+     - Before: "1,118.2"
+     - After: "1,139.7"
+  6. `structured-replace`
+     - Before: "8.8"
+     - After: "13.9"
+  7. `structured-replace`
+     - Before: "."
+     - After: ". Reconstructing the candidate-road set and closure mapping for the strict and permissive transfer boundaries changes Heavy expected isolation to 523.5 and 2,256.3 residents, respectively, compared with 1,121.7 centrally."
+
+### part-04
+
+- Location: Results > older-population paragraph
+- Reason: Update five-seed central estimates and report downstream transfer-specification bounds for older residents.
+- Kila decisions: KILA-D-20260903-015, KILA-D-20260903-016
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T06:21:35Z
+- Author: Kila
+- Markup SHA-256 before: `7012a736023674728b539112fc50ff86d1e8cfa46869149a2a4632e07eafa0ad`
+- Markup SHA-256 after: `3246e55b569ae836fdcc696e68ac9b8f1e446f806e8846909dc0a68071522451`
+- Revision IDs: `60, 61`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T152135951152.reviewer-2-comment-5.part-04.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Residents aged 65 years or older account for a substantial part of the simulated burden. Their five-seed mean expected isolated population is 96.7 under Moderate rainfall, 603.1 under Heavy rainfall, and 2,789.2 under Extreme rainfall. The age-specific totals follow the same scenario order, but their geography depends on the population composition of affected communities. The Extreme older-population map uses the same isolation-frequency scale as the total-population panels, so demographic burden reflects both network dependence and the number of older residents exposed.
+~~~~
+
+- After:
+
+~~~~text
+Residents aged 65 years or older account for a substantial part of the simulated burden. Their five-seed mean expected isolated population is 98.0 under Moderate rainfall, 610.2 under Heavy rainfall, and 2,789.3 under Extreme rainfall. Under the strict and permissive transfer boundaries, the Heavy estimate is 280.0 and 1,249.9 older residents, respectively. The age-specific totals follow the same scenario order, but their geography depends on the population composition of affected communities. The Extreme older-population map uses the same isolation-frequency scale as the total-population panels, so demographic burden reflects both network dependence and the number of older residents exposed.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "Their five-seed mean expected isolated population is 96.7 under Moderate rainfall, 603.1 under Heavy rainfall, and 2,789.2 under Extreme rainfall."
+     - After: "Their five-seed mean expected isolated population is 98.0 under Moderate rainfall, 610.2 under Heavy rainfall, and 2,789.3 under Extreme rainfall. Under the strict and permissive transfer boundaries, the Heavy estimate is 280.0 and 1,249.9 older residents, respectively."
+
+### part-05
+
+- Location: Results > service-loss paragraph
+- Reason: Update five-seed service estimates and report downstream transfer-specification bounds.
+- Kila decisions: KILA-D-20260903-015, KILA-D-20260903-016
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T06:21:46Z
+- Author: Kila
+- Markup SHA-256 before: `3246e55b569ae836fdcc696e68ac9b8f1e446f806e8846909dc0a68071522451`
+- Markup SHA-256 after: `23c7fc1582af3b2a1ea19150f1c9ebea92e4782611e1b894a0d7fb4cf4a6443b`
+- Revision IDs: `62, 63, 64, 65, 66, 67`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T152147192829.reviewer-2-comment-5.part-05.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Heavy-rainfall road disruption produces different burdens across service classes. Figure 7 gives five-seed mean populations losing reachability of 600.3 for shelters, 1,251.5 for fire services, and 923.0 for municipal facilities. These primary comparisons show that destination geography and network alternatives shape service consequences beyond external-road isolation. Emergency-water routing yields 7,969.1 affected residents, but only 10 geolocated destinations among 36 announcements enter the network. That result is retained as conditional sensitivity evidence rather than a fourth co-equal service estimate, and incomplete destination geography does not establish the direction of bias in the loss magnitude.
+~~~~
+
+- After:
+
+~~~~text
+Heavy-rainfall road disruption produces different burdens across service classes. Figure 7 gives five-seed mean populations losing reachability of 609.9 for shelters, 1,286.7 for fire services, and 937.3 for municipal facilities. Across the strict and permissive transfer boundaries, the corresponding ranges are 264.6–1,303.9, 799.8–3,433.9, and 480.6–1,698.5 residents. These primary comparisons show that destination geography, network alternatives, and slope-to-road transfer assumptions shape service consequences beyond external-road isolation. Emergency-water routing yields 7,789.8 affected residents centrally and 3,872.8–21,189.4 across the transfer boundaries, but only 10 geolocated destinations among 36 announcements enter the network. That result is retained as conditional sensitivity evidence rather than a fourth co-equal service estimate, and incomplete destination geography does not establish the direction of bias in the loss magnitude.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "Figure 7 gives five-seed mean populations losing reachability of 600.3 for shelters, 1,251.5 for fire services, and 923.0 for municipal facilities."
+     - After: "Figure 7 gives five-seed mean populations losing reachability of 609.9 for shelters, 1,286.7 for fire services, and 937.3 for municipal facilities. Across the strict and permissive transfer boundaries, the corresponding ranges are 264.6–1,303.9, 799.8–3,433.9, and 480.6–1,698.5 residents."
+  2. `structured-replace`
+     - Before: "destination geography and network alternatives"
+     - After: "destination geography, network alternatives, and slope-to-road transfer assumptions"
+  3. `structured-replace`
+     - Before: "Emergency-water routing yields 7,969.1 affected residents"
+     - After: "Emergency-water routing yields 7,789.8 affected residents centrally and 3,872.8–21,189.4 across the transfer boundaries"
+
+### part-06
+
+- Location: Discussion > Compound-Hazard Interpretation, sentence beginning 'Across the tested parameterizations'
+- Reason: Distinguish stable rainfall-parameter rankings from materially sensitive slope-to-road boundaries.
+- Kila decisions: KILA-D-20260903-015
+- Mode: `reedit`
+- Revises prior parts: reviewer-2/comment-2#part-02
+- Timestamp: 2026-09-03T06:21:54Z
+- Author: Kila
+- Markup SHA-256 before: `23c7fc1582af3b2a1ea19150f1c9ebea92e4782611e1b894a0d7fb4cf4a6443b`
+- Markup SHA-256 after: `e1c0085e4883c99cb752e0cb119566e42ba712c7a41d9748a9ec64509a7b7e4e`
+- Revision IDs: `6`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T152154938953.reviewer-2-comment-5.part-06.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Across the tested parameterizations, road-priority order is more stable than absolute isolation estimates; consequence magnitudes are therefore treated as scenario-sensitive.
+~~~~
+
+- After:
+
+~~~~text
+Rainfall-window and γ alternatives leave road order comparatively stable, whereas slope-to-road neighborhood and relief boundaries materially change supported and top-ranked roads. Exact road priorities and consequence magnitudes are therefore treated as parameter-conditional.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "Across"
+     - After: "Rainfall-window"
+  2. `replace`
+     - Before: "the"
+     - After: "and"
+  3. `replace`
+     - Before: "tested"
+     - After: "γ"
+  4. `replace`
+     - Before: "parameterizations,"
+     - After: "alternatives"
+  5. `replace`
+     - Before: "road-priority"
+     - After: "leave road"
+  6. `replace`
+     - Before: "is more"
+     - After: "comparatively"
+  7. `insert`
+     - Before: ""
+     - After: ","
+  8. `replace`
+     - Before: "than"
+     - After: "whereas"
+  9. `replace`
+     - Before: "absolute"
+     - After: "slope-to-road"
+  10. `replace`
+     - Before: "isolation"
+     - After: "neighborhood"
+  11. `replace`
+     - Before: "estimates;"
+     - After: "and relief boundaries materially change supported and top-ranked roads. Exact road priorities and"
+  12. `replace`
+     - Before: "scenario-sensitive"
+     - After: "parameter-conditional"
+
+### part-07
+
+- Location: Discussion > Strengths, Limitations, and Future Work, first paragraph
+- Reason: State the transfer-scale, physical-runout, optimization, and local-applicability boundaries.
+- Kila decisions: KILA-D-20260903-015
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T06:22:05Z
+- Author: Kila
+- Markup SHA-256 before: `e1c0085e4883c99cb752e0cb119566e42ba712c7a41d9748a9ec64509a7b7e4e`
+- Markup SHA-256 after: `35e43708f8a9b5a6da64b953f36aa78236ab31aa5ccf9af73834f91cc0e0ff22`
+- Revision IDs: `68, 69, 70, 71, 72, 73, 74`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T152205871354.reviewer-2-comment-5.part-07.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Landslide points do not define absence, restriction records do not cover every road failure, and slope-to-road transfer approximates runout through relief, alignment, and distance.
+~~~~
+
+- After:
+
+~~~~text
+Landslide points do not define absence, and restriction records do not cover every road failure. Slope-to-road transfer approximates runout through relief, alignment, and distance on an approximately 150 m screening grid rather than through a calibrated physical runout model. Its neighborhood and relief settings materially affect road support, exact top-ranked membership, and downstream consequence magnitude; the central specification is therefore a transparent reference rather than an optimized local model.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " and"
+  2. `replace`
+     - Before: ","
+     - After: "."
+  3. `replace`
+     - Before: "and slope-to-road"
+     - After: "Slope-to-road"
+  4. `insert`
+     - Before: ""
+     - After: " on an approximately 150 m screening grid rather than through a calibrated physical runout model"
+  5. `insert`
+     - Before: ""
+     - After: " Its neighborhood and relief settings materially affect road support, exact top-ranked membership, and downstream consequence magnitude; the central specification is therefore a transparent reference rather than an optimized local model."
+
