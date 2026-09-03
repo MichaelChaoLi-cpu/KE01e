@@ -334,10 +334,31 @@ Reviewer 4: This paper proposes a composite disaster framework that couples post
 2. In Equation 7, the transfer weight qie is described as "decreasing with distance," but no specific functional form (e.g., exponential decay, power-law, or threshold distance) is provided. Additionally, the criteria for determining "downslope alignment" (e.g., tolerance angle between flow direction and road orientation) remain unspecified. Please provide the explicit mathematical expression for qie, the algorithm for extracting the upslope influence set Ue, including angular tolerance, and whether this transfer method has been independently validated (e.g., by comparing predicted landslide deposit extents with observed data).
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for identifying this gap. We revised the Directional Slope-to-Road Translation subsection to define the component-level sample index, the upslope influence set, the relief and cosine-alignment filters, the 78.5° angular tolerance, the exponential distance decay, and the section-level aggregation explicitly. Equation 7 now presents the complete implemented formulation, including the union of sample-point influence sets and the normalized weighted road score. We also corrected the Appendix cross-references to Tables B6a, B6b, and B7. Regarding validation, we now distinguish road-level ranking correspondence on a separate restriction dataset from physical runout validation. The available GSI inventory contains interpreted points rather than deposit polygons, so it cannot independently validate deposit extent or runout geometry. We state this limitation directly and identify the event-specific source, deposit, material, and independent footprint data needed for a future physically based model.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"With j indexing the component-level sample points described above, the aggregated transfer weight qie sums, over every eligible j, the product of an exponential distance term with a 2.5-cell e-folding length, alignment clipped to [0, 1], and a relief term clipped to [0.20, 1.00] after division by 100 m."
+(Page 16, Lines 334–337)
+
+Equation 7 (mathematical transcription):
+$$
+\begin{gathered}
+\Delta z_{ije}=z_i-z_{je},\qquad d_{ije}=\lVert\mathbf{o}_{ije}\rVert_2,\qquad a_{ije}=\frac{\nabla z_i^{\mathsf T}\mathbf{o}_{ije}}{\max\!\left(\lVert\nabla z_i\rVert_2d_{ije},10^{-6}\right)},\\
+U_{ej}=\left\{i:\mathbf{o}_{ije}=(d_x,d_y),\ d_x,d_y\in\{-3,\ldots,3\},\ (d_x,d_y)\ne(0,0),\ \Delta z_{ije}\ge10,\ a_{ije}\ge0.20\right\},\\
+U_e=\bigcup_{j\in J_e}U_{ej},\\
+q_{ie}=\sum_{j:i\in U_{ej}}\exp\!\left(-\frac{d_{ije}}{2.5}\right)\operatorname{clip}(a_{ije},0,1)\operatorname{clip}\!\left(\frac{\Delta z_{ije}}{100},0.20,1.00\right),\\
+D_e^{(r,f)}=\begin{cases}\displaystyle\frac{\sum_{i\in U_e}q_{ie}H_i^{(r,f)}}{\sum_{i\in U_e}q_{ie}}, & \sum_{i\in U_e}q_{ie}>0,\\0, & \text{otherwise}.\end{cases}
+\end{gathered}
+$$
+(Page 17, Line 346)
+
+"The matched restriction comparison evaluates road-level ranking correspondence; it does not independently validate landslide-deposit extent or physical runout geometry, because the available GSI inventory comprises 1,044 interpreted point locations rather than mapped deposit polygons."
+(Page 26, Lines 545–548)
+
+"The framework uses readable score construction, spatially separated slope validation, road-restriction correspondence on a separate infrastructure dataset, ordered common-random-number simulations, age-specific population consequences, and comparator portfolios."
+(Page 34, Lines 729–732)
+
+"A physically based runout model could replace the directional transfer approximation once event-specific source and deposit polygons, material or rheological parameters, and independent footprint or road-impact observations are available for calibration and validation; blockage-duration and repair-time models could then distinguish short interruption from prolonged isolation."
+(Pages 35–36, Lines 766–770)
 
 ## Comment 3
 

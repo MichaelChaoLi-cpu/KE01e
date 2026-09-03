@@ -925,3 +925,248 @@ Landslide points do not define absence, and restriction records do not cover eve
      - Before: ""
      - After: " Its neighborhood and relief settings materially affect road support, exact top-ranked membership, and downstream consequence magnitude; the central specification is therefore a transparent reference rather than an optimized local model."
 
+## reviewer-4/comment-2
+
+### part-01
+
+- Location: Methods > Directional Slope-to-Road Translation, transfer-weight sentence
+- Reason: Make the transfer-weight index and sample-point aggregation consistent with the implemented Equation 7 definition.
+- Kila decisions: KILA-D-20260903-018, KILA-D-20260903-019
+- Mode: `structured-reedit`
+- Revises prior parts: reviewer-2/comment-5#part-01
+- Timestamp: 2026-09-03T07:30:50Z
+- Author: Kila
+- Markup SHA-256 before: `35e43708f8a9b5a6da64b953f36aa78236ab31aa5ccf9af73834f91cc0e0ff22`
+- Markup SHA-256 after: `0f2a0b1082e5e53c80c0901c6c0ec0e9067a7fe1af6cbcc913240ee35c5ef17d`
+- Revision IDs: `44`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T163050868009.reviewer-4-comment-2.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Transfer weight qij multiplies an exponential distance term with a 2.5-cell e-folding length, alignment clipped to [0, 1], and a relief term clipped to [0.20, 1.00] after division by 100 m.
+~~~~
+
+- After:
+
+~~~~text
+With j indexing the component-level sample points described above, the aggregated transfer weight qie sums, over every eligible j, the product of an exponential distance term with a 2.5-cell e-folding length, alignment clipped to [0, 1], and a relief term clipped to [0.20, 1.00] after division by 100 m.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-reedit`
+     - Before: "Transfer weight qij multiplies"
+     - After: "With j indexing the component-level sample points described above, the aggregated transfer weight qie sums, over every eligible j, the product of"
+
+### part-02
+
+- Location: Methods > Directional Slope-to-Road Translation, final sentence before Equation 7
+- Reason: Correct the Appendix table references after the readability-driven split of Table B6.
+- Kila decisions: KILA-D-20260903-018
+- Mode: `reedit`
+- Revises prior parts: reviewer-2/comment-5#part-01
+- Timestamp: 2026-09-03T07:30:51Z
+- Author: Kila
+- Markup SHA-256 before: `0f2a0b1082e5e53c80c0901c6c0ec0e9067a7fe1af6cbcc913240ee35c5ef17d`
+- Markup SHA-256 after: `0bdba40991c38f45c0d21831f94c34712734be186153194c0357d008f2bbdb9e`
+- Revision IDs: `41`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T163051284917.reviewer-4-comment-2.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+These parameters define a regional directional-screening envelope rather than a calibrated runout model; applicability is evaluated through matched restriction correspondence and the prespecified parameter sensitivity reported in Appendix Tables B6 and B7.
+~~~~
+
+- After:
+
+~~~~text
+These parameters define a regional directional-screening envelope rather than a calibrated runout model; applicability is evaluated through matched restriction correspondence and the prespecified parameter sensitivity reported in Appendix Tables B6a, B6b, and B7.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "B6"
+     - After: "B6a, B6b,"
+
+### part-03
+
+- Location: Methods > Directional Slope-to-Road Translation, displayed Equation 7
+- Reason: Provide the explicit implemented influence-set, transfer-weight, and normalized road-score formulation requested by Reviewer 4.
+- Kila decisions: KILA-D-20260903-018, KILA-D-20260903-019
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T07:30:51Z
+- Author: Kila
+- Markup SHA-256 before: `0bdba40991c38f45c0d21831f94c34712734be186153194c0357d008f2bbdb9e`
+- Markup SHA-256 after: `13e2423c9b75978c7558f7a6f6be2964a925f9eb974ca8feece942cf7b34af82`
+- Revision IDs: `75, 76`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T163051770588.reviewer-4-comment-2.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+De(r,f)=i∈Ue​qieHi(r,f)i∈Ue​qie.
+~~~~
+
+- After:
+
+~~~~text
+Δzije=zi−zje,  dije=oije2,  aije=∇ziToijemax​∇zi2dije,10−6,Uej=i:oije=(dx,dy), dx,dy∈{−3,…,3}, (dx,dy)≠(0,0), Δzije≥10, aije≥0.20,Ue=⋃j∈JeUej,qie=j:i∈Uej​exp​−dije2.5clip(aije,0,1)clip​Δzije100,0.20,1.00,De(r,f)=i∈Ue​qieHi(r,f)i∈Ue​qie,i∈Ue​qie>0,0,otherwise.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "De(r,f)=i∈Ue​qieHi(r,f)i∈Ue​qie."
+     - After: "Δzije=zi−zje,  dije=oije2,  aije=∇ziToijemax​∇zi2dije,10−6,Uej=i:oije=(dx,dy), dx,dy∈{−3,…,3}, (dx,dy)≠(0,0), Δzije≥10, aije≥0.20,Ue=⋃j∈JeUej,qie=j:i∈Uej​exp​−dije2.5clip(aije,0,1)clip​Δzije100,0.20,1.00,De(r,f)=i∈Ue​qieHi(r,f)i∈Ue​qie,i∈Ue​qie>0,0,otherwise."
+
+### part-04
+
+- Location: Results > Road Disruption and Observed Restriction Correspondence, final sentence of the second paragraph
+- Reason: Distinguish road-level ranking correspondence from independent validation of physical runout or deposit extent.
+- Kila decisions: KILA-D-20260903-018
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T07:30:52Z
+- Author: Kila
+- Markup SHA-256 before: `13e2423c9b75978c7558f7a6f6be2964a925f9eb974ca8feece942cf7b34af82`
+- Markup SHA-256 after: `65ff60ad786c35761df73031ffdb4e32e3a29d6927ef03a970969f0857ff597f`
+- Revision IDs: `77`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T163052166318.reviewer-4-comment-2.part-04.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+It does not establish scenario-sensitive spatial ranking, because Moderate, Heavy, and Extreme scores preserve almost the same order, and it does not identify a closure rate among unreported roads.
+~~~~
+
+- After:
+
+~~~~text
+It does not establish scenario-sensitive spatial ranking, because Moderate, Heavy, and Extreme scores preserve almost the same order, and it does not identify a closure rate among unreported roads. The matched restriction comparison evaluates road-level ranking correspondence; it does not independently validate landslide-deposit extent or physical runout geometry, because the available GSI inventory comprises 1,044 interpreted point locations rather than mapped deposit polygons.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " The matched restriction comparison evaluates road-level ranking correspondence; it does not independently validate landslide-deposit extent or physical runout geometry, because the available GSI inventory comprises 1,044 interpreted point locations rather than mapped deposit polygons."
+
+### part-05
+
+- Location: Discussion > Strengths, Limitations, and Future Research, first paragraph
+- Reason: Avoid implying independent physical runout validation when the evidence is a separate road-restriction dataset.
+- Kila decisions: KILA-D-20260903-018
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T07:30:52Z
+- Author: Kila
+- Markup SHA-256 before: `65ff60ad786c35761df73031ffdb4e32e3a29d6927ef03a970969f0857ff597f`
+- Markup SHA-256 after: `9dd73495f367881511e728abdfb2b7d26a015030855cd521a5007b0555d0aa76`
+- Revision IDs: `78, 79, 80`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T163052554976.reviewer-4-comment-2.part-05.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The framework uses readable score construction, spatially separated validation, independent road-restriction correspondence, ordered common-random-number simulations, age-specific population consequences, and comparator portfolios.
+~~~~
+
+- After:
+
+~~~~text
+The framework uses readable score construction, spatially separated slope validation, road-restriction correspondence on a separate infrastructure dataset, ordered common-random-number simulations, age-specific population consequences, and comparator portfolios.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: "slope "
+  2. `delete`
+     - Before: " independent"
+     - After: ""
+  3. `insert`
+     - Before: ""
+     - After: " on a separate infrastructure dataset"
+
+### part-06
+
+- Location: Discussion > Strengths, Limitations, and Future Research, second paragraph
+- Reason: State the event-specific evidence required to calibrate and independently validate a future physical runout model.
+- Kila decisions: KILA-D-20260903-018
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T07:30:52Z
+- Author: Kila
+- Markup SHA-256 before: `9dd73495f367881511e728abdfb2b7d26a015030855cd521a5007b0555d0aa76`
+- Markup SHA-256 after: `7860226fbdb1d7818ececb3e5329bf746fa778990f204e0cd8bfa505978319fe`
+- Revision IDs: `81, 82, 83, 84, 85, 86, 87, 88, 89`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T163052946089.reviewer-4-comment-2.part-06.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Physically informed runout could replace the directional transfer approximation, while blockage-duration and repair-time models could distinguish short interruption from prolonged isolation.
+~~~~
+
+- After:
+
+~~~~text
+A physically based runout model could replace the directional transfer approximation once event-specific source and deposit polygons, material or rheological parameters, and independent footprint or road-impact observations are available for calibration and validation; blockage-duration and repair-time models could then distinguish short interruption from prolonged isolation.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "Physically"
+     - After: "A"
+  2. `replace`
+     - Before: "informed"
+     - After: "physically based"
+  3. `insert`
+     - Before: ""
+     - After: " model"
+  4. `insert`
+     - Before: ""
+     - After: " once event-specific source and deposit polygons"
+  5. `replace`
+     - Before: "while"
+     - After: "material or rheological parameters, and independent footprint or road-impact observations are available for calibration and validation;"
+  6. `insert`
+     - Before: ""
+     - After: " then"
+
