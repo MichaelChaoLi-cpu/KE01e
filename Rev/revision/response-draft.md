@@ -168,10 +168,44 @@ Thank you for highlighting the need to make the directional slope-to-road transl
 7. The road-disruption validation requires clearer identification of the triggering mechanism of the restriction records. The retained records include rockfall, slope collapse, landslide, and sediment inflow shortly after the earthquake, although it is unclear whether these disruptions were rainfall-triggered or directly earthquake-induced. Please clarify the triggering conditions and demonstrate that the selected records are appropriate for validating rainfall-triggered road disruption.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for identifying this important attribution problem. We audited the restriction records at the physical-episode level, reviewed the recorded process reasons and event timing, and compared each episode with official hourly observations from the project JMA station network. The audit shows that the retained records occurred in a dry, earthquake-proximate window: they are consistent with direct earthquake effects, but the source records do not explicitly establish the trigger. We therefore do not present these records as validation of rainfall-triggered road disruption. Instead, the revised manuscript uses them only as supplementary evidence that the terrain-to-road ranking corresponds with earthquake-proximate mass-movement restrictions. We also replaced the snapshot-weighted comparison with equal episode weighting, episode-cluster bootstrap intervals, and paired comparator contrasts; revised Equation 9, Figure 5, and Appendix Tables B2a–B2c; and narrowed the Abstract, Methods, Results, and Discussion claims accordingly.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"An event-deduplicated audit identified 10 earthquake-proximate mass-movement restriction episodes; their Heavy-score concordance was 0.723 (episode-cluster bootstrap 95% CI 0.598–0.840), but zero preceding 72-h rainfall across the audited JMA station network means that this evidence provides only supplementary road-ranking correspondence, not validation of rainfall-triggered disruption."
+(Page 1, Lines 16–21)
+
+"The interpreted 2016 landslide inventory is used only for historical slope-ranking validation. Late-July to early-August 2026 restriction records are retained only as supplementary correspondence evidence for earthquake-proximate mass-movement effects on roads; the absence of preceding rainfall prevents their use as validation of rainfall-triggered disruption."
+(Page 6, Lines 117–121)
+
+"Repeated restriction snapshots are consolidated into physical episodes and linked to plausible network edges. Source reasons, timing, and official event-window rainfall observations are audited before the records are used as supplementary correspondence evidence for earthquake-proximate rockfall, slope-collapse, and sediment-inflow restrictions. Because the sources do not explicitly code the trigger and the audited event window was dry, these records do not validate rainfall-triggered closure, identify unaffected roads, or calibrate a failure probability."
+(Page 9, Lines 172–178)
+
+"The 10 episodes began 0.55–24.38 h after the earthquake, their reasons contained no explicit rainfall-trigger term, and official hourly observations gave 0 mm over the preceding 1, 3, 24, and 72 h both at the nearest project station and across the ten-station audit. We therefore classify them as direct-earthquake consistent but source-unconfirmed and use them only for supplementary correspondence with the terrain-to-road ranking, not for validation of rainfall triggering."
+(Page 18, Lines 374–379)
+
+Equation 9 (mathematical transcription):
+$$
+C_{\mathrm{episode}}^{(r,f)}=
+\frac{1}{K}\sum_{k=1}^{K}\frac{1}{|A_k|}\sum_{a\in A_k}
+\frac{1}{|B_a|}\sum_{b\in B_a}
+\left[\mathbf{1}\!\left(D_a^{(r,f)}>D_b^{(r,f)}\right)
++\frac{1}{2}\mathbf{1}\!\left(D_a^{(r,f)}=D_b^{(r,f)}\right)\right].
+$$
+(Page 19, Line 389)
+
+"The trigger audit retains 10 physical restriction episodes linked to 94 sections, of which 93 have eligible controls. Under equal episode weighting, Heavy-score concordance is 0.723 (episode-cluster bootstrap 95% CI 0.598–0.840), compared with 0.698 (0.554–0.845) for road length and 0.545 (0.409–0.683) for warning-zone exposure. The Heavy-minus-length contrast is 0.025 (−0.073 to 0.116), and the Heavy-minus-warning contrast is 0.178 (−0.011 to 0.353). Because all retained episodes occurred in a dry earthquake-proximate window and both paired contrast intervals include zero, these results provide only supplementary ranking correspondence; they do not validate rainfall triggering or establish predictive superiority."
+(Pages 24–25, Lines 510–518)
+
+"Episode-weighted correspondence ranged from 0.711 to 0.741 across the 15 specifications. This range indicates consistent correspondence with the terrain-to-road ranking under alternative transfer settings, but the 10 clustered dry-event episodes neither validate rainfall triggering nor identify the exact highest-ranked roads independently of parameter choice."
+(Page 26, Lines 554–558)
+
+"Across the 10 earthquake-proximate restriction episodes, episode-weighted concordance is 0.723 for the Heavy road score, 0.545 for warning-zone exposure, and 0.698 for section length. Within the same matched controls, the Heavy-minus-warning contrast is 0.178 (episode-cluster bootstrap 95% CI −0.011 to 0.353), whereas the Heavy-minus-length contrast is 0.025 (−0.073 to 0.116). The score therefore shows positive correspondence with the retained road restrictions but does not establish improvement over the length comparator. More importantly, the dry event window means that this comparison evaluates only whether the terrain-to-road ranking corresponds with earthquake-proximate mass-movement restrictions; it does not validate rainfall-triggered disruption, scenario-sensitive spatial ranking, closure probability, landslide-deposit extent, or physical runout geometry."
+(Pages 26–27, Lines 559–569)
+
+"The 2026 restriction evidence comprises only 10 physical episodes in a dry earthquake-proximate window; repeated snapshots and multiple linked sections are not independent events, and the source reasons do not explicitly code the trigger. Consequently, these records cannot validate rainfall-triggered road disruption, and a future target-mechanism validation requires event-deduplicated road impacts with confirmed rainfall timing, event rainfall fields, and credible unaffected-road comparators."
+(Pages 35–36, Lines 762–767)
+
+"Note: Panels a, b, and c map relative road disruption scores under Moderate, Heavy, and Extreme rainfall, with the Extreme panel also identifying emergency transport roads. Panel d locates the 10 event-deduplicated rockfall, slope-collapse, or sediment-inflow restriction episodes and their linked sections on the Heavy-score background. These episodes occurred in a dry earthquake-proximate window and provide supplementary terrain-to-road ranking correspondence, not validation of rainfall-triggered disruption."
+(Page 44, Lines 29–33)
 
 ## Comment 8
 

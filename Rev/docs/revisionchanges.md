@@ -1170,3 +1170,752 @@ A physically based runout model could replace the directional transfer approxima
      - Before: ""
      - After: " then"
 
+## reviewer-2/comment-7
+
+### part-01
+
+- Location: Abstract, sentence beginning 'The Heavy Road score attained'
+- Reason: Replace snapshot-level road validation language with the approved event-deduplicated trigger-audit interpretation.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:17:26Z
+- Author: Mike Li
+- Markup SHA-256 before: `7860226fbdb1d7818ececb3e5329bf746fa778990f204e0cd8bfa505978319fe`
+- Markup SHA-256 after: `24c7af6bb61d6784897c498c48085b10347e22cbf0ea6079b7aa8f9d15ecfd5e`
+- Revision IDs: `90, 91`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T201726993491.reviewer-2-comment-7.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The Heavy Road score attained matched concordance of 0.646, compared with 0.556 for road length and 0.494 for warning-zone exposure under the same matched-control design.
+~~~~
+
+- After:
+
+~~~~text
+An event-deduplicated audit identified 10 earthquake-proximate mass-movement restriction episodes; their Heavy-score concordance was 0.723 (episode-cluster bootstrap 95% CI 0.598–0.840), but zero preceding 72-h rainfall across the audited JMA station network means that this evidence provides only supplementary road-ranking correspondence, not validation of rainfall-triggered disruption.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "The Heavy Road score attained matched concordance of 0.646, compared with 0.556 for road length and 0.494 for warning-zone exposure under the same matched-control design."
+     - After: "An event-deduplicated audit identified 10 earthquake-proximate mass-movement restriction episodes; their Heavy-score concordance was 0.723 (episode-cluster bootstrap 95% CI 0.598–0.840), but zero preceding 72-h rainfall across the audited JMA station network means that this evidence provides only supplementary road-ranking correspondence, not validation of rainfall-triggered disruption."
+
+### part-02
+
+- Location: Study Area, sentence beginning 'The interpreted 2016 landslide inventory'
+- Reason: Clarify the distinct validation roles of the 2016 landslide inventory and the dry 2026 restriction evidence.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:17:27Z
+- Author: Mike Li
+- Markup SHA-256 before: `24c7af6bb61d6784897c498c48085b10347e22cbf0ea6079b7aa8f9d15ecfd5e`
+- Markup SHA-256 after: `c23c7e9ef11c7f8e18d11866e3722ae42019e3e23f8bf82f53510b647f89e1f3`
+- Revision IDs: `92, 93`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T201727859544.reviewer-2-comment-7.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The interpreted 2016 landslide inventory is used only for historical slope-ranking validation; late-July to early-August 2026 restriction records provide separate road-ranking evidence for the application stage.
+~~~~
+
+- After:
+
+~~~~text
+The interpreted 2016 landslide inventory is used only for historical slope-ranking validation. Late-July to early-August 2026 restriction records are retained only as supplementary correspondence evidence for earthquake-proximate mass-movement effects on roads; the absence of preceding rainfall prevents their use as validation of rainfall-triggered disruption.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "The interpreted 2016 landslide inventory is used only for historical slope-ranking validation; late-July to early-August 2026 restriction records provide separate road-ranking evidence for the application stage."
+     - After: "The interpreted 2016 landslide inventory is used only for historical slope-ranking validation. Late-July to early-August 2026 restriction records are retained only as supplementary correspondence evidence for earthquake-proximate mass-movement effects on roads; the absence of preceding rainfall prevents their use as validation of rainfall-triggered disruption."
+
+### part-03
+
+- Location: Methods > Road Network, Communities, Population, and Basic Services
+- Reason: State the event-deduplication and trigger-audit boundary before using restriction records as supplementary correspondence evidence.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:17:28Z
+- Author: Mike Li
+- Markup SHA-256 before: `c23c7e9ef11c7f8e18d11866e3722ae42019e3e23f8bf82f53510b647f89e1f3`
+- Markup SHA-256 after: `e28c18ce75d0fe48b65f198a1c806dc32806fbc70c46d7dde42ed5b0381bf585`
+- Revision IDs: `94, 95`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T201728612117.reviewer-2-comment-7.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Restriction snapshots are deduplicated and linked to plausible network edges for an independent test of whether the road score ranks observed landslide-related disruption above comparator rankings. Because reporting intensity and restriction causes vary, these records validate correspondence with observed disruption but do not define the rate at which unreported road sections remained open.
+~~~~
+
+- After:
+
+~~~~text
+Repeated restriction snapshots are consolidated into physical episodes and linked to plausible network edges. Source reasons, timing, and official event-window rainfall observations are audited before the records are used as supplementary correspondence evidence for earthquake-proximate rockfall, slope-collapse, and sediment-inflow restrictions. Because the sources do not explicitly code the trigger and the audited event window was dry, these records do not validate rainfall-triggered closure, identify unaffected roads, or calibrate a failure probability.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "Restriction snapshots are deduplicated and linked to plausible network edges for an independent test of whether the road score ranks observed landslide-related disruption above comparator rankings. Because reporting intensity and restriction causes vary, these records validate correspondence with observed disruption but do not define the rate at which unreported road sections remained open."
+     - After: "Repeated restriction snapshots are consolidated into physical episodes and linked to plausible network edges. Source reasons, timing, and official event-window rainfall observations are audited before the records are used as supplementary correspondence evidence for earthquake-proximate rockfall, slope-collapse, and sediment-inflow restrictions. Because the sources do not explicitly code the trigger and the audited event window was dry, these records do not validate rainfall-triggered closure, identify unaffected roads, or calibrate a failure probability."
+
+### part-06
+
+- Location: Results > Analytical Coverage and Validation Performance
+- Reason: Report event-weighted concordance, episode-cluster uncertainty, and paired comparator contrasts with the correct trigger boundary.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:17:29Z
+- Author: Mike Li
+- Markup SHA-256 before: `e28c18ce75d0fe48b65f198a1c806dc32806fbc70c46d7dde42ed5b0381bf585`
+- Markup SHA-256 after: `4d89b322be97ea86df028166a4eb673ce832636e698a29a4eac18e28b08d97ff`
+- Revision IDs: `96, 97`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T201730201872.reviewer-2-comment-7.part-06.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Road validation retains 93 matched sections representing 94 evidence cases. Under the Heavy score, matched concordance is 0.646 with a section-bootstrap 95% interval of 0.586–0.705, compared with 0.556 for road length and 0.494 for warning-zone exposure. These contrasts support relative ranking correspondence under the matched-control design, although the intervals and presence-only evidence preclude claims of calibrated closure probability or decisive predictive superiority.
+~~~~
+
+- After:
+
+~~~~text
+The trigger audit retains 10 physical restriction episodes linked to 94 sections, of which 93 have eligible controls. Under equal episode weighting, Heavy-score concordance is 0.723 (episode-cluster bootstrap 95% CI 0.598–0.840), compared with 0.698 (0.554–0.845) for road length and 0.545 (0.409–0.683) for warning-zone exposure. The Heavy-minus-length contrast is 0.025 (−0.073 to 0.116), and the Heavy-minus-warning contrast is 0.178 (−0.011 to 0.353). Because all retained episodes occurred in a dry earthquake-proximate window and both paired contrast intervals include zero, these results provide only supplementary ranking correspondence; they do not validate rainfall triggering or establish predictive superiority.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "Road validation retains 93 matched sections representing 94 evidence cases. Under the Heavy score, matched concordance is 0.646 with a section-bootstrap 95% interval of 0.586–0.705, compared with 0.556 for road length and 0.494 for warning-zone exposure. These contrasts support relative ranking correspondence under the matched-control design, although the intervals and presence-only evidence preclude claims of calibrated closure probability or decisive predictive superiority."
+     - After: "The trigger audit retains 10 physical restriction episodes linked to 94 sections, of which 93 have eligible controls. Under equal episode weighting, Heavy-score concordance is 0.723 (episode-cluster bootstrap 95% CI 0.598–0.840), compared with 0.698 (0.554–0.845) for road length and 0.545 (0.409–0.683) for warning-zone exposure. The Heavy-minus-length contrast is 0.025 (−0.073 to 0.116), and the Heavy-minus-warning contrast is 0.178 (−0.011 to 0.353). Because all retained episodes occurred in a dry earthquake-proximate window and both paired contrast intervals include zero, these results provide only supplementary ranking correspondence; they do not validate rainfall triggering or establish predictive superiority."
+
+### part-04
+
+- Location: Methods > Road disruption validation, paragraph beginning 'Report-derived hazard catalogs'
+- Reason: Replace snapshot-level validation with the approved physical-episode funnel, trigger audit, equal-episode concordance, and inference boundary while preserving protected citations.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:21:02Z
+- Author: Mike Li
+- Markup SHA-256 before: `4d89b322be97ea86df028166a4eb673ce832636e698a29a4eac18e28b08d97ff`
+- Markup SHA-256 after: `5797e35833305b07a4dcf046e2d84255e90d5aedaf26e7c3ee9881865d288931`
+- Revision IDs: `98, 99, 100, 101`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202103743247.reviewer-2-comment-7.part-04.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Report-derived hazard catalogs require event deduplication and validation of triggering attributes (Zhao et al., 2026). Road validation therefore removes repeated snapshots and retains restriction reasons associated with rockfall, slope collapse, landslide, or sediment inflow. The funnel begins with 680 restriction snapshots, resolves 116 deduplicated landslide-related observations, and retains 93 matched road sections representing 94 evidence cases after spatial and route-agreement checks. Each evidence section a is compared with pseudo-background sections Ba matched on municipality or ward, road category, emergency-route membership, and section-length decile. Equation 9 is the mean share of matched comparisons in which the evidence section has the higher score. Report-based infrastructure records can miss less severe but disruptive hazard exposures (Ghoreishi et al., 2025). Because roads without reports are therefore not confirmed non-events, the metric supports ranking correspondence rather than closure probability.
+~~~~
+
+- After:
+
+~~~~text
+Report-derived hazard catalogs require event deduplication and validation of triggering attributes (Zhao et al., 2026). We first retained snapshot reasons describing rockfall, slope collapse, or sediment inflow, without treating those process labels as trigger labels. The 680 snapshot rows contained 175 such rows. Deduplication by start address, end address, process reason, and restriction start time yielded 14 physical episodes before network matching; the existing matched_primary and no-more-than-50-m rule retained 116 snapshot rows belonging to 10 physical episodes. These episodes mapped to 152 unique network edges, 94 unique sections, and 96 event–section pairs, of which 93 sections had eligible matched controls. Route-name agreement was audited but was not an eligibility criterion because agreement was available among candidate matches for only one retained episode. The 10 episodes began 0.55–24.38 h after the earthquake, their reasons contained no explicit rainfall-trigger term, and official hourly observations gave 0 mm over the preceding 1, 3, 24, and 72 h both at the nearest project station and across the ten-station audit. We therefore classify them as direct-earthquake consistent but source-unconfirmed and use them only for supplementary correspondence with the terrain-to-road ranking, not for validation of rainfall triggering. Each evidence section a within episode k is compared with pseudo-background sections Ba matched on municipality or ward, road category, emergency-route membership, and section-length decile. Because multiple sections can arise from the same episode, Equation 9 first averages within an episode and then gives each episode equal weight; ties contribute 0.5. Episode-cluster bootstrap intervals preserve the physical episode as the resampling unit. Report-based infrastructure records can miss less severe but disruptive hazard exposures (Ghoreishi et al., 2025). Roads without reports are therefore not confirmed non-events, and the metric supports only supplementary ranking correspondence rather than closure probability or trigger attribution.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "Road validation therefore removes repeated snapshots and retains restriction reasons associated with rockfall, slope collapse, landslide, or sediment inflow. The funnel begins with 680 restriction snapshots, resolves 116 deduplicated landslide-related observations, and retains 93 matched road sections representing 94 evidence cases after spatial and route-agreement checks. Each evidence section a is compared with pseudo-background sections Ba matched on municipality or ward, road category, emergency-route membership, and section-length decile. Equation 9 is the mean share of matched comparisons in which the evidence section has the higher score."
+     - After: "We first retained snapshot reasons describing rockfall, slope collapse, or sediment inflow, without treating those process labels as trigger labels. The 680 snapshot rows contained 175 such rows. Deduplication by start address, end address, process reason, and restriction start time yielded 14 physical episodes before network matching; the existing matched_primary and no-more-than-50-m rule retained 116 snapshot rows belonging to 10 physical episodes. These episodes mapped to 152 unique network edges, 94 unique sections, and 96 event–section pairs, of which 93 sections had eligible matched controls. Route-name agreement was audited but was not an eligibility criterion because agreement was available among candidate matches for only one retained episode. The 10 episodes began 0.55–24.38 h after the earthquake, their reasons contained no explicit rainfall-trigger term, and official hourly observations gave 0 mm over the preceding 1, 3, 24, and 72 h both at the nearest project station and across the ten-station audit. We therefore classify them as direct-earthquake consistent but source-unconfirmed and use them only for supplementary correspondence with the terrain-to-road ranking, not for validation of rainfall triggering. Each evidence section a within episode k is compared with pseudo-background sections Ba matched on municipality or ward, road category, emergency-route membership, and section-length decile. Because multiple sections can arise from the same episode, Equation 9 first averages within an episode and then gives each episode equal weight; ties contribute 0.5. Episode-cluster bootstrap intervals preserve the physical episode as the resampling unit."
+  2. `structured-replace`
+     - Before: "Because roads without reports are therefore not confirmed non-events, the metric supports ranking correspondence rather than closure probability."
+     - After: "Roads without reports are therefore not confirmed non-events, and the metric supports only supplementary ranking correspondence rather than closure probability or trigger attribution."
+
+### part-05
+
+- Location: Methods > Road disruption validation, Equation 9
+- Reason: Give each physical restriction episode equal weight, include ties, and define event-level concordance used in the revised analysis.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:21:04Z
+- Author: Mike Li
+- Markup SHA-256 before: `5797e35833305b07a4dcf046e2d84255e90d5aedaf26e7c3ee9881865d288931`
+- Markup SHA-256 after: `beca98701d2ff3beafc317bc7a7acfe16d01241f4c0dc4cadb95a757fd4c086c`
+- Revision IDs: `102, 103`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202104613198.reviewer-2-comment-7.part-05.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+C(r,f)=1Aa=1A1|Ba|b∈Ba​1Da(r,f)>Db(r,f).
+~~~~
+
+- After:
+
+~~~~text
+Cepisode(r,f)=1Kk=1K1|Ak|a∈Ak​1|Ba|b∈Ba​1​Da(r,f)>Db(r,f)+121​Da(r,f)=Db(r,f).
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "C(r,f)=1Aa=1A1|Ba|b∈Ba​1Da(r,f)>Db(r,f)."
+     - After: "Cepisode(r,f)=1Kk=1K1|Ak|a∈Ak​1|Ba|b∈Ba​1​Da(r,f)>Db(r,f)+121​Da(r,f)=Db(r,f)."
+
+### part-07a
+
+- Location: Results > Road Disruption and Observed Restriction Correspondence, first paragraph
+- Reason: Identify the physical episodes shown in revised Figure 5 rather than snapshot-derived matched sections.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:25:09Z
+- Author: Mike Li
+- Markup SHA-256 before: `beca98701d2ff3beafc317bc7a7acfe16d01241f4c0dc4cadb95a757fd4c086c`
+- Markup SHA-256 after: `826b6d7edc68a62b33e8f0b117518aad0303e3bf750909ea41660e0b4e1cd38a`
+- Revision IDs: `104, 105`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202509512422.reviewer-2-comment-7.part-07a.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The Heavy-score background in panel d locates the 93 matched road sections used for ranking validation.
+~~~~
+
+- After:
+
+~~~~text
+The Heavy-score background in panel d locates the 10 earthquake-proximate physical restriction episodes and their linked road sections.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "The Heavy-score background in panel d locates the 93 matched road sections used for ranking validation."
+     - After: "The Heavy-score background in panel d locates the 10 earthquake-proximate physical restriction episodes and their linked road sections."
+
+### part-07b-reedit
+
+- Location: Results > Road Disruption and Observed Restriction Correspondence, first paragraph sensitivity insertion
+- Reason: Re-express the previously added transfer-sensitivity result using episode-weighted correspondence and the approved dry-event inference boundary.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `reedit`
+- Revises prior parts: reviewer-2/comment-5#part-02
+- Timestamp: 2026-09-03T11:25:09Z
+- Author: Mike Li
+- Markup SHA-256 before: `826b6d7edc68a62b33e8f0b117518aad0303e3bf750909ea41660e0b4e1cd38a`
+- Markup SHA-256 after: `f22a7e429974d9fc5fb6d43946f05ee2d057ac8f2dff65481bae6a422afada2e`
+- Revision IDs: `45`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202509828416.reviewer-2-comment-7.part-07b-reedit.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+ Across the 15 prespecified transfer specifications, the minimum Spearman correlation on the union of supported roads was 0.676, the minimum top-1% overlap was 0.428, and the minimum overlap of Heavy candidate sets was 0.764. Neighborhood reach and minimum relief changed road support and exact top-ranked membership most strongly, whereas alignment, distance decay, relief scaling, and road-sampling alternatives were more stable individually. Matched road-evidence concordance ranged from 0.614 to 0.687 and remained above 0.50 under every specification. The restriction evidence therefore supports a persistent directional ranking signal, but not parameter-invariant identification of the exact highest-ranked roads.
+~~~~
+
+- After:
+
+~~~~text
+ Across the 15 prespecified transfer specifications, the minimum Spearman correlation on the union of supported roads was 0.676, the minimum top-1% overlap was 0.428, and the minimum overlap of Heavy candidate sets was 0.764. Neighborhood reach and minimum relief changed road support and exact top-ranked membership most strongly, whereas alignment, distance decay, relief scaling, and road-sampling alternatives were more stable individually. Episode-weighted correspondence ranged from 0.711 to 0.741 across the 15 specifications. This range indicates consistent correspondence with the terrain-to-road ranking under alternative transfer settings, but the 10 clustered dry-event episodes neither validate rainfall triggering nor identify the exact highest-ranked roads independently of parameter choice.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "Matched"
+     - After: "Episode-weighted"
+  2. `replace`
+     - Before: "road-evidence concordance"
+     - After: "correspondence"
+  3. `replace`
+     - Before: "614"
+     - After: "711"
+  4. `replace`
+     - Before: "687"
+     - After: "741"
+  5. `replace`
+     - Before: "and"
+     - After: "across"
+  6. `replace`
+     - Before: "remained"
+     - After: "the"
+  7. `replace`
+     - Before: "above"
+     - After: "15"
+  8. `replace`
+     - Before: "0"
+     - After: "specifications"
+  9. `replace`
+     - Before: "50"
+     - After: " This range indicates consistent correspondence with the terrain-to-road ranking"
+  10. `replace`
+     - Before: "every"
+     - After: "alternative"
+  11. `replace`
+     - Before: "specification."
+     - After: "transfer"
+  12. `replace`
+     - Before: "The restriction evidence therefore supports a persistent directional ranking signal"
+     - After: "settings"
+  13. `replace`
+     - Before: "not"
+     - After: "the"
+  14. `replace`
+     - Before: "parameter-invariant"
+     - After: "10"
+  15. `replace`
+     - Before: "identification"
+     - After: "clustered"
+  16. `replace`
+     - Before: "of"
+     - After: "dry-event episodes neither validate rainfall triggering nor identify"
+  17. `insert`
+     - Before: ""
+     - After: " independently of parameter choice"
+
+### part-08a
+
+- Location: Results > Road Disruption and Observed Restriction Correspondence, second paragraph
+- Reason: Replace snapshot-weighted claims with event-weighted concordance, paired uncertainty, and the approved supplementary-only interpretation.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:25:09Z
+- Author: Mike Li
+- Markup SHA-256 before: `f22a7e429974d9fc5fb6d43946f05ee2d057ac8f2dff65481bae6a422afada2e`
+- Markup SHA-256 after: `79e39e5b19335f2e6676250e16f4eefbe2e923fd24cfd9f6fe74aa022edd8e7b`
+- Revision IDs: `106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202510141050.reviewer-2-comment-7.part-08a.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Observed restriction evidence ranks higher under the Heavy road score than under the official warning-zone and road-length comparators.
+~~~~
+
+- After:
+
+~~~~text
+Across the 10 earthquake-proximate restriction episodes, episode-weighted concordance is 0.723 for the Heavy road score, 0.545 for warning-zone exposure, and 0.698 for section length. Within the same matched controls, the Heavy-minus-warning contrast is 0.178 (episode-cluster bootstrap 95% CI −0.011 to 0.353), whereas the Heavy-minus-length contrast is 0.025 (−0.073 to 0.116). The score therefore shows positive correspondence with the retained road restrictions but does not establish improvement over the length comparator. More importantly, the dry event window means that this comparison evaluates only whether the terrain-to-road ranking corresponds with earthquake-proximate mass-movement restrictions; it does not validate rainfall-triggered disruption, scenario-sensitive spatial ranking, closure probability, landslide-deposit extent, or physical runout geometry.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "Observed"
+     - After: "Across the 10 earthquake-proximate"
+  2. `replace`
+     - Before: "evidence"
+     - After: "episodes,"
+  3. `replace`
+     - Before: "ranks"
+     - After: "episode-weighted"
+  4. `replace`
+     - Before: "higher"
+     - After: "concordance"
+  5. `replace`
+     - Before: "under"
+     - After: "is 0.723 for"
+  6. `insert`
+     - Before: ""
+     - After: ","
+  7. `replace`
+     - Before: "than"
+     - After: "0.545"
+  8. `replace`
+     - Before: "under"
+     - After: "for warning-zone exposure, and 0.698 for section length. Within"
+  9. `replace`
+     - Before: "official"
+     - After: "same"
+  10. `replace`
+     - Before: "warning-zone"
+     - After: "matched"
+  11. `replace`
+     - Before: "and"
+     - After: "controls,"
+  12. `replace`
+     - Before: "road-length"
+     - After: "the"
+  13. `replace`
+     - Before: "comparators"
+     - After: "Heavy-minus-warning contrast is 0"
+  14. `insert`
+     - Before: ""
+     - After: "178 (episode-cluster bootstrap 95% CI −0.011 to 0.353), whereas the Heavy-minus-length contrast is 0.025 (−0.073 to 0.116). The score therefore shows positive correspondence with the retained road restrictions but does not establish improvement over the length comparator. More importantly, the dry event window means that this comparison evaluates only whether the terrain-to-road ranking corresponds with earthquake-proximate mass-movement restrictions; it does not validate rainfall-triggered disruption, scenario-sensitive spatial ranking, closure probability, landslide-deposit extent, or physical runout geometry."
+
+### part-08a2
+
+- Location: Results > Road Disruption and Observed Restriction Correspondence, superseded comparator passage
+- Reason: Delete the superseded snapshot-weighted comparator passage after inserting the approved event-weighted result.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:25:24Z
+- Author: Mike Li
+- Markup SHA-256 before: `79e39e5b19335f2e6676250e16f4eefbe2e923fd24cfd9f6fe74aa022edd8e7b`
+- Markup SHA-256 after: `dcd84d5857ca49d0dfefc4220bda919c5c7279dabc4c4e2d0d065eed7d19045a`
+- Revision IDs: `132`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202524690671.reviewer-2-comment-7.part-08a2.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Matched concordance is 0.646 for the Heavy score, compared with 0.494 for warning-zone exposure and 0.556 for section length. The comparison is made within matched municipality, road category, emergency-route status, and length-decile strata, limiting the ability of section length or reporting geography to explain the difference. The result supports the directional score as a relative screening device. It does not establish scenario-sensitive spatial ranking, because 
+~~~~
+
+- After:
+
+~~~~text
+
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "Matched concordance is 0.646 for the Heavy score, compared with 0.494 for warning-zone exposure and 0.556 for section length. The comparison is made within matched municipality, road category, emergency-route status, and length-decile strata, limiting the ability of section length or reporting geography to explain the difference. The result supports the directional score as a relative screening device. It does not establish scenario-sensitive spatial ranking, because "
+     - After: ""
+
+### part-08a3
+
+- Location: Results > Road Disruption and Observed Restriction Correspondence, second paragraph rendered-page continuation
+- Reason: Delete the superseded continuation after inserting the approved event-weighted result while preserving the page marker.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:25:32Z
+- Author: Mike Li
+- Markup SHA-256 before: `dcd84d5857ca49d0dfefc4220bda919c5c7279dabc4c4e2d0d065eed7d19045a`
+- Markup SHA-256 after: `30ecd854a30d33ab17a5d1aeb6e3e2d640f1beca09342b13d0e107cddcdf7714`
+- Revision IDs: `133`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202532835986.reviewer-2-comment-7.part-08a3.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Moderate, Heavy, and Extreme scores preserve almost the same order, and it does not identify a closure rate among unreported roads.
+~~~~
+
+- After:
+
+~~~~text
+
+~~~~
+
+- Minimal tracked fragments:
+  1. `delete`
+     - Before: "Moderate, Heavy, and Extreme scores preserve almost the same order, and it does not identify a closure rate among unreported roads."
+     - After: ""
+
+### part-08b-reedit
+
+- Location: Results > Road Disruption and Observed Restriction Correspondence, prior runout-limitation insertion
+- Reason: Remove the superseded prior insertion after integrating its boundary into the approved event-audit paragraph.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `reedit`
+- Revises prior parts: reviewer-4/comment-2#part-04
+- Timestamp: 2026-09-03T11:25:50Z
+- Author: Mike Li
+- Markup SHA-256 before: `30ecd854a30d33ab17a5d1aeb6e3e2d640f1beca09342b13d0e107cddcdf7714`
+- Markup SHA-256 after: `fff0b368ac215ce72973b2094611a4fdd50e92d7236017aa42ecd8f971034c51`
+- Revision IDs: `77`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202550497531.reviewer-2-comment-7.part-08b-reedit.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+ The matched restriction comparison evaluates road-level ranking correspondence; it does not independently validate landslide-deposit extent or physical runout geometry, because the available GSI inventory comprises 1,044 interpreted point locations rather than mapped deposit polygons.
+~~~~
+
+- After:
+
+~~~~text
+
+~~~~
+
+- Minimal tracked fragments:
+  1. `delete`
+     - Before: " The matched restriction comparison evaluates road-level ranking correspondence; it does not independently validate landslide-deposit extent or physical runout geometry, because the available GSI inventory comprises 1,044 interpreted point locations rather than mapped deposit polygons."
+     - After: ""
+
+### part-09-reedit
+
+- Location: Discussion > Strengths, Limitations, and Future Research, first paragraph
+- Reason: Qualify the separate road-restriction evidence as event-deduplicated and trigger-audited.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:25:59Z
+- Author: Mike Li
+- Markup SHA-256 before: `fff0b368ac215ce72973b2094611a4fdd50e92d7236017aa42ecd8f971034c51`
+- Markup SHA-256 after: `4c144f92db0facf9d02ef6f9ecb15d2180fcc436775db82602358d56d1315ed9`
+- Revision IDs: `134`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202559897996.reviewer-2-comment-7.part-09-reedit.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+road-restriction correspondence
+~~~~
+
+- After:
+
+~~~~text
+event-deduplicated and trigger-audited road-restriction correspondence
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: "event-deduplicated and trigger-audited "
+
+### part-10a
+
+- Location: Figure 5 caption title
+- Reason: Rename Figure 5 to reflect earthquake-proximate supplementary restriction correspondence.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:26:29Z
+- Author: Mike Li
+- Markup SHA-256 before: `4c144f92db0facf9d02ef6f9ecb15d2180fcc436775db82602358d56d1315ed9`
+- Markup SHA-256 after: `2f67c6babd96efbed0bdb636b811ece748695d4ebf42354581480015c94b4c89`
+- Revision IDs: `135, 136, 137, 138`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202629472154.reviewer-2-comment-7.part-10a.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `3ed02e454dab3dedfb8d6f75472db6dd289f38cf7eb0541008bf00b626a56413`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Figure 5. Road disruption scores and observed restriction evidence
+~~~~
+
+- After:
+
+~~~~text
+Figure 5. Road disruption scores and earthquake-proximate restriction correspondence
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "observed"
+     - After: "earthquake-proximate"
+  2. `replace`
+     - Before: "evidence"
+     - After: "correspondence"
+
+### part-10b
+
+- Location: Figure 5 caption note
+- Reason: Define the event-deduplicated dry restriction evidence and its supplementary-only interpretation.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:26:29Z
+- Author: Mike Li
+- Markup SHA-256 before: `2f67c6babd96efbed0bdb636b811ece748695d4ebf42354581480015c94b4c89`
+- Markup SHA-256 after: `564325e6bc4acc1e4d7961e55989bd7d4b4ae93ee776b3c8103bbea648baf918`
+- Revision IDs: `139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202629780148.reviewer-2-comment-7.part-10b.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `8cc96e2185dbabd7f935b2bba2d43f75fae7c302a7fde587a64321d22c581c27`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Note: Panels a, b, and c map relative road disruption scores under Moderate, Heavy, and Extreme rainfall, with the Extreme panel also identifying emergency transport roads; panel d overlays deduplicated landslide-related restriction evidence on the Heavy- rainfall score and summarizes matching and ranking correspondence.
+~~~~
+
+- After:
+
+~~~~text
+Note: Panels a, b, and c map relative road disruption scores under Moderate, Heavy, and Extreme rainfall, with the Extreme panel also identifying emergency transport roads. Panel d locates the 10 event-deduplicated rockfall, slope-collapse, or sediment-inflow restriction episodes and their linked sections on the Heavy-score background. These episodes occurred in a dry earthquake-proximate window and provide supplementary terrain-to-road ranking correspondence, not validation of rainfall-triggered disruption.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: ";"
+     - After: "."
+  2. `replace`
+     - Before: "panel"
+     - After: "Panel"
+  3. `replace`
+     - Before: "overlays"
+     - After: "locates"
+  4. `replace`
+     - Before: "deduplicated"
+     - After: "the"
+  5. `replace`
+     - Before: "landslide-related"
+     - After: "10 event-deduplicated rockfall, slope-collapse, or sediment-inflow"
+  6. `replace`
+     - Before: "evidence"
+     - After: "episodes and their linked sections"
+  7. `replace`
+     - Before: "Heavy-"
+     - After: "Heavy-score"
+  8. `replace`
+     - Before: "rainfall"
+     - After: "background."
+  9. `replace`
+     - Before: "score"
+     - After: "These episodes occurred in a dry earthquake-proximate window"
+  10. `replace`
+     - Before: "summarizes"
+     - After: "provide"
+  11. `replace`
+     - Before: "matching"
+     - After: "supplementary"
+  12. `replace`
+     - Before: "and"
+     - After: "terrain-to-road"
+  13. `insert`
+     - Before: ""
+     - After: ", not validation of rainfall-triggered disruption"
+
+### part-10c-figure
+
+- Location: Figure 5 embedded raster
+- Reason: Replace the snapshot-level validation panel with the approved event-deduplicated, trigger-audited supplementary correspondence figure.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `figure-replace`
+- Timestamp: 2026-09-03T11:27:06.431174Z
+- Author: Kila
+- Markup SHA-256 before: `564325e6bc4acc1e4d7961e55989bd7d4b4ae93ee776b3c8103bbea648baf918`
+- Markup SHA-256 after: `4a7742f669cf8a3459d0c82a492f7d247119fd36314f1a1613d25c60531d23e7`
+- Revision IDs: not applicable (approved embedded-media replacement)
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202706431174.reviewer-2-comment-7.part-10c-figure.docx`
+- Figure relationship: `rId13` -> `word/media/image5.png`
+- Verified caption: Figure 5. Road disruption scores and earthquake-proximate restriction correspondence
+- Replacement asset: `data/results/figures/Figure_road_disruption_exposure_and_observed_restriction_evidence.png`
+- Original image SHA-256: `485531ff97806572e5941ff6f6bbb8fc03aa3dd80542e5abd2f964211f02e8c0`
+- Replacement image SHA-256: `0e125b1e6007464e3c1721812609d07dae0a255b62e2684fe77826579105f9a4`
+- Image format and dimensions preserved: `true` (PNG, 4327 x 3335, RGBA)
+- Non-target package members preserved byte-for-byte: `true`
+- XML and DOCX ZIP verification: `passed`
+- Track-revisions setting preserved: `true`
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+
+### part-11
+
+- Location: Discussion > Strengths, Limitations, and Future Research, second paragraph
+- Reason: State the small, clustered, dry restriction-evidence boundary and the evidence required for future target-mechanism validation.
+- Kila decisions: KILA-D-20260903-021
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T11:28:46Z
+- Author: Mike Li
+- Markup SHA-256 before: `4a7742f669cf8a3459d0c82a492f7d247119fd36314f1a1613d25c60531d23e7`
+- Markup SHA-256 after: `81296ac670959dc569a41720ca56160aa12041c9d40271303041f3066eb1ad65`
+- Revision IDs: `164`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T202846882355.reviewer-2-comment-7.part-11.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Slope-to-road transfer
+~~~~
+
+- After:
+
+~~~~text
+The 2026 restriction evidence comprises only 10 physical episodes in a dry earthquake-proximate window; repeated snapshots and multiple linked sections are not independent events, and the source reasons do not explicitly code the trigger. Consequently, these records cannot validate rainfall-triggered road disruption, and a future target-mechanism validation requires event-deduplicated road impacts with confirmed rainfall timing, event rainfall fields, and credible unaffected-road comparators. Slope-to-road transfer
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: "The 2026 restriction evidence comprises only 10 physical episodes in a dry earthquake-proximate window; repeated snapshots and multiple linked sections are not independent events, and the source reasons do not explicitly code the trigger. Consequently, these records cannot validate rainfall-triggered road disruption, and a future target-mechanism validation requires event-deduplicated road impacts with confirmed rainfall timing, event rainfall fields, and credible unaffected-road comparators. "
+

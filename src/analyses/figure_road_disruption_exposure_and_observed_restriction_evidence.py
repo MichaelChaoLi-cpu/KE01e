@@ -9,6 +9,7 @@ translation. Scores are screening indices, not road-closure probabilities.
 """
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 
@@ -32,6 +33,11 @@ import shapely
 
 import figure_official_threshold_adjusted_landslide_disruption_score as terrain_score
 from cache_fingerprint import cache_matches, content_signature
+from road_restriction_event_validation import (
+    build_matched_design,
+    event_weighted_concordance,
+    load_restriction_evidence,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -44,9 +50,13 @@ THRESHOLD_PATH = PROCESSED / "official_threshold_factors_preprocessed.parquet"
 ROAD_PATH = PROCESSED / "road_sections_preprocessed.parquet"
 EDGE_PATH = PROCESSED / "road_edges_preprocessed.parquet"
 MATCH_PATH = PROCESSED / "road_restriction_edge_matches_preprocessed.parquet"
+RESTRICTION_PATH = PROCESSED / "road_restrictions_preprocessed.parquet"
 OUT = ROOT / "data/results/figures/Figure_road_disruption_exposure_and_observed_restriction_evidence.png"
 SVG_OUT = OUT.with_suffix(".svg")
 INTERMEDIATE = ROOT / "data/results/intermediate"
+TRIGGER_DECISION_PATH = (
+    ROOT / "data/exp/revision/reviewer-2-comment-7/decision.json"
+)
 
 DISPLAY_WIDTH = 950
 SAMPLE_FRACTIONS = (0.20, 0.50, 0.80)
@@ -457,96 +467,28 @@ def matched_road_concordance(
     roads: pd.DataFrame,
     road_geometry: np.ndarray,
     heavy_score: np.ndarray,
-    evidence_section_ids: pd.Series,
+    event_section_pairs: pd.DataFrame,
     admin_geometry: np.ndarray,
     display_shape: tuple[int, int],
     display_transform: Affine,
     extent: tuple[float, float, float, float],
-) -> dict[str, float]:
-    """Compare observed restriction sections with matched pseudo-background roads."""
-    municipality_grid = rasterize(
-        ((geometry, index + 1) for index, geometry in enumerate(admin_geometry)),
-        out_shape=display_shape,
-        transform=display_transform,
-        fill=0,
-        all_touched=True,
-        dtype="int16",
-    )
-    midpoints = shapely.line_interpolate_point(road_geometry, 0.5, normalized=True)
-    municipality_index = sample_grid(
-        municipality_grid.astype("float32"),
-        shapely.get_coordinates(midpoints)[:, :2],
+) -> dict[str, object]:
+    """Compare restriction episodes with matched pseudo-background roads."""
+    design = build_matched_design(
+        roads,
+        road_geometry,
+        event_section_pairs,
+        admin_geometry,
+        display_shape,
+        display_transform,
         extent,
-    ).astype(int)
-    length_decile = pd.qcut(
-        roads["Road Section Length (m)"].rank(method="first"),
-        q=10,
-        labels=False,
-        duplicates="drop",
-    ).to_numpy(dtype=int)
-    road_category = roads["Road Category"].fillna("Unknown").astype(str).to_numpy()
-    emergency_class = (
-        roads["Emergency Route Membership"].fillna("None").astype(str).to_numpy()
+        sample_grid,
     )
-    section_lookup = pd.Series(
-        np.arange(len(roads), dtype=int),
-        index=roads["Road Section ID"].astype(str),
+    return event_weighted_concordance(
+        np.asarray(heavy_score, dtype=float),
+        design,
+        event_section_pairs,
     )
-    evidence_positions = (
-        evidence_section_ids.astype(str).drop_duplicates().map(section_lookup).dropna().astype(int)
-    )
-    evidence_position_set = set(evidence_positions.tolist())
-    random = np.random.default_rng(20260812)
-    score_concordance: list[float] = []
-    length_concordance: list[float] = []
-    control_counts: list[int] = []
-    road_length = roads["Road Section Length (m)"].to_numpy(dtype=float)
-    for case in evidence_positions:
-        eligible = (
-            (municipality_index == municipality_index[case])
-            & (road_category == road_category[case])
-            & (emergency_class == emergency_class[case])
-            & (length_decile == length_decile[case])
-        )
-        candidates = np.flatnonzero(eligible)
-        candidates = np.array(
-            [position for position in candidates if position not in evidence_position_set],
-            dtype=int,
-        )
-        if candidates.size == 0:
-            continue
-        controls = random.choice(
-            candidates,
-            size=min(10, candidates.size),
-            replace=False,
-        )
-        score_difference = heavy_score[case] - heavy_score[controls]
-        length_difference = road_length[case] - road_length[controls]
-        score_concordance.append(
-            float(np.mean((score_difference > 0) + 0.5 * (score_difference == 0)))
-        )
-        length_concordance.append(
-            float(np.mean((length_difference > 0) + 0.5 * (length_difference == 0)))
-        )
-        control_counts.append(int(len(controls)))
-
-    if not score_concordance:
-        raise RuntimeError("No observed road section had an eligible matched control.")
-    score_array = np.asarray(score_concordance)
-    bootstrap = np.empty(2000, dtype=float)
-    for iteration in range(len(bootstrap)):
-        bootstrap[iteration] = np.mean(
-            random.choice(score_array, size=len(score_array), replace=True)
-        )
-    return {
-        "Evidence Sections": float(len(evidence_positions)),
-        "Matched Evidence Sections": float(len(score_array)),
-        "Matched Controls": float(np.sum(control_counts)),
-        "Road Score Concordance": float(np.mean(score_array)),
-        "Road Score CI Low": float(np.quantile(bootstrap, 0.025)),
-        "Road Score CI High": float(np.quantile(bootstrap, 0.975)),
-        "Length Concordance": float(np.mean(length_concordance)),
-    }
 
 
 def style_map_axis(ax: plt.Axes, extent: tuple[float, float, float, float]) -> None:
@@ -640,45 +582,47 @@ def main() -> None:
         for scenario, values in scores.items()
     }
 
-    matches = pd.read_parquet(
+    restriction_evidence = load_restriction_evidence(
+        RESTRICTION_PATH,
         MATCH_PATH,
-        columns=[
-            "Restriction Observation ID",
-            "Snapshot Time",
-            "Restriction Reason",
-            "Restriction Status",
-            "Matched Road Edge ID",
-            "Road Edge Match Distance (m)",
-            "Road Edge Match Status",
-        ],
-    )
-    reliable = (
-        matches["Restriction Reason"].astype("string").str.contains(LANDSLIDE_REASON_PATTERN, na=False)
-        & matches["Road Edge Match Status"].eq("matched_primary")
-        & matches["Road Edge Match Distance (m)"].le(50)
-    )
-    evidence = matches.loc[reliable].drop_duplicates(
-        ["Restriction Observation ID", "Snapshot Time", "Matched Road Edge ID"]
-    )
-    evidence_observations = evidence.drop_duplicates(
-        ["Restriction Observation ID", "Snapshot Time"]
+        EDGE_PATH,
+        roads["Road Section ID"],
     )
     edges = pd.read_parquet(
         EDGE_PATH,
         columns=["Road Edge ID", "Road Section ID", "Geometry"],
     )
-    evidence_edges = evidence.merge(
-        edges,
-        left_on="Matched Road Edge ID",
-        right_on="Road Edge ID",
+    evidence_edges = restriction_evidence.episode_matches.drop(
+        columns=["Geometry"],
+        errors="ignore",
+    ).merge(
+        edges[["Road Edge ID", "Geometry"]],
+        on="Road Edge ID",
         how="inner",
         validate="many_to_one",
-    ).drop_duplicates(["Road Edge ID", "Restriction Reason"])
+    ).drop_duplicates(["Episode ID", "Road Edge ID"])
     evidence_geometry = decode_geometry(evidence_edges["Geometry"])
+    episode_geometry = np.asarray(
+        [
+            shapely.from_geojson(value)
+            for value in restriction_evidence.retained_episodes["Geometry JSON"]
+        ],
+        dtype=object,
+    )
+    episode_points = shapely.centroid(episode_geometry)
+    episode_coordinates = shapely.get_coordinates(episode_points)[:, :2]
+    trigger_decision = json.loads(TRIGGER_DECISION_PATH.read_text(encoding="utf-8"))
+    if trigger_decision["retained_physical_episodes"] != len(episode_points):
+        raise RuntimeError("Trigger-audit episode count does not match the figure evidence.")
     print("Completed restriction linkage funnel.", flush=True)
 
     heavy_lookup = pd.Series(scores["Heavy"], index=roads["Road Section ID"])
-    evidence_scores = evidence_edges["Road Section ID"].map(heavy_lookup).dropna().to_numpy()
+    evidence_scores = (
+        restriction_evidence.event_section_pairs["Road Section ID"]
+        .map(heavy_lookup)
+        .dropna()
+        .to_numpy()
+    )
     valid_heavy = scores["Heavy"][np.isfinite(scores["Heavy"])]
     median_percentile = float(
         np.median(np.searchsorted(np.sort(valid_heavy), evidence_scores, side="right") / len(valid_heavy))
@@ -690,7 +634,7 @@ def main() -> None:
         roads,
         road_geometry,
         scores["Heavy"],
-        evidence_edges["Road Section ID"],
+        restriction_evidence.event_section_pairs,
         admin_geometry,
         display_shape,
         display_transform,
@@ -721,7 +665,7 @@ def main() -> None:
             roads,
             road_geometry,
             bound_score,
-            evidence_edges["Road Section ID"],
+            restriction_evidence.event_section_pairs,
             admin_geometry,
             display_shape,
             display_transform,
@@ -761,7 +705,7 @@ def main() -> None:
         ("Moderate rainfall", score_rasters["Moderate"]),
         ("Heavy rainfall", score_rasters["Heavy"]),
         ("Extreme rainfall", score_rasters["Extreme"]),
-        ("Observed restriction evidence\nHeavy rainfall score background", score_rasters["Heavy"]),
+        ("Earthquake-proximate restriction correspondence\nHeavy score background", score_rasters["Heavy"]),
     ]
 
     image = None
@@ -829,17 +773,22 @@ def main() -> None:
     )
 
     evidence_handles: list[Line2D] = []
+    reason_markers = {"落石": "o", "法面崩落": "s", "土砂流入": "^"}
+    episode_reasons = restriction_evidence.retained_episodes[
+        "Restriction Reason"
+    ].astype("string")
     for reason in ("落石", "法面崩落", "土砂流入"):
-        selected = evidence_edges["Restriction Reason"].astype("string").eq(reason).to_numpy()
-        if not np.any(selected):
+        selected_edges = evidence_edges["Restriction Reason"].astype("string").eq(reason).to_numpy()
+        selected_episodes = episode_reasons.eq(reason).to_numpy()
+        if not np.any(selected_episodes):
             continue
-        segments = line_segments(evidence_geometry[selected])
+        segments = line_segments(evidence_geometry[selected_edges])
         axes[3].add_collection(
             LineCollection(
                 segments,
                 colors="white",
-                linewidths=3.2,
-                alpha=0.98,
+                linewidths=2.5,
+                alpha=0.90,
                 zorder=13,
             )
         )
@@ -847,17 +796,30 @@ def main() -> None:
             LineCollection(
                 segments,
                 colors=REASON_COLORS[reason],
-                linewidths=2.0,
-                alpha=0.95,
+                linewidths=1.2,
+                alpha=0.72,
                 zorder=14,
             )
+        )
+        axes[3].scatter(
+            episode_coordinates[selected_episodes, 0],
+            episode_coordinates[selected_episodes, 1],
+            s=34,
+            marker=reason_markers[reason],
+            facecolor=REASON_COLORS[reason],
+            edgecolor="white",
+            linewidth=0.9,
+            zorder=16,
         )
         evidence_handles.append(
             Line2D(
                 [0],
                 [0],
-                color=REASON_COLORS[reason],
-                linewidth=2.0,
+                marker=reason_markers[reason],
+                linestyle="none",
+                markerfacecolor=REASON_COLORS[reason],
+                markeredgecolor="white",
+                markersize=6,
                 label=REASON_LABELS[reason],
             )
         )
@@ -872,15 +834,13 @@ def main() -> None:
         0.982,
         0.018,
         (
-            f"{len(evidence_observations):,} deduplicated observations\n"
-            f"{evidence_edges['Road Edge ID'].nunique():,} reliably matched edges\n"
-            f"Matched sections: {int(matched_metrics['Matched Evidence Sections']):,}/"
-            f"{int(matched_metrics['Evidence Sections']):,}\n"
-            f"Matched concordance: {matched_metrics['Road Score Concordance']:.2f} "
+            f"{int(matched_metrics['Physical Episodes']):,} physical episodes\n"
+            "0 confirmed rainfall-triggered\n"
+            "Preceding 72-h rainfall: 0 mm\n"
+            f"Heavy episode concordance: {matched_metrics['Road Score Concordance']:.2f} "
             f"({matched_metrics['Road Score CI Low']:.2f}–"
             f"{matched_metrics['Road Score CI High']:.2f})\n"
-            f"Yatsushiro 0.70–0.80 concordance: "
-            f"{min(bound_concordance):.2f}–{max(bound_concordance):.2f}"
+            "Supplementary correspondence only"
         ),
         transform=axes[3].transAxes,
         ha="right",
@@ -918,13 +878,17 @@ def main() -> None:
     print(f"Road sections scored: {len(roads):,}")
     print(f"Terrain-score construction: {model_mode}")
     print("Road pooling: normalized directional weighted mean")
-    print(f"Reliable deduplicated restriction observations: {len(evidence_observations):,}")
-    print(f"Reliable matched restriction edges: {evidence_edges['Road Edge ID'].nunique():,}")
+    print(
+        "Physical restriction episodes: "
+        f"{len(restriction_evidence.retained_episodes):,}"
+    )
+    print(f"Matched restriction edges: {evidence_edges['Road Edge ID'].nunique():,}")
     print(f"Median matched-edge Heavy score percentile: {median_percentile:.3f}")
     print(f"Matched-edge share in Heavy top quartile: {top_quartile_share:.3f}")
     print("Matched pseudo-background validation:")
     for key, value in matched_metrics.items():
-        print(f"  {key}: {value:.4f}")
+        if isinstance(value, (int, float, np.integer, np.floating)):
+            print(f"  {key}: {float(value):.4f}")
     print(
         "Yatsushiro 0.70-0.80 Heavy sensitivity: "
         f"matched concordance={min(bound_concordance):.4f}-"
