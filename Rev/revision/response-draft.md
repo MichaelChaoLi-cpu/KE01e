@@ -362,10 +362,16 @@ Reviewer 4: This paper proposes a composite disaster framework that couples post
 6. The threshold retention factors of 0.80 and 0.70 are explicitly defined as "operational scenario settings" rather than physical measurements, which is commendable. However, the paper also states that these settings "inform more than a revised hazard map." If these factors are purely administrative operational parameters, how does the paper ensure their transferability across other earthquake events or different counties? Is it recommended that future research replace these administrative coefficients with field shear strength tests or InSAR deformation data?
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for this important comment. We agree that the Kumamoto retention values themselves should not be transferred to another earthquake or jurisdiction. We revised the Study Area and Data, Discussion, and Conclusions to distinguish the transferability of the framework from the portability of its upstream coefficients. Application elsewhere now requires locally supported retention settings, a compatible rainfall indicator, and renewed checks before downstream interpretation. We also clarify that InSAR and geotechnical measurements are complementary evidence: where coverage and calibration are adequate, they can support a physical disturbance model that replaces the administrative proxy rather than serving as direct one-for-one substitutes for an operational coefficient.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"The numerical values are event- and area-specific and are not transferred to another earthquake or jurisdiction. Applying the framework elsewhere requires locally issued or empirically estimated retention settings, a rainfall indicator compatible with how those settings were defined, and renewed compatibility and sensitivity checks before downstream consequences are interpreted."
+(Page 8, Lines 150–154)
+
+"Repeated InSAR deformation observations and targeted geotechnical measurements, including field shear-strength tests, could support a spatially explicit disturbance model where coverage and calibration are adequate. These data are complementary evidence rather than one-for-one substitutes for an operational warning coefficient; once validated, such a physical model could replace the administrative retention proxy at the susceptibility stage while the downstream road-network and consequence modules remain applicable."
+(Pages 33–34, Lines 724–730)
+
+"Within the event and area for which they are issued, official threshold adjustments can therefore inform more than a revised hazard map: they can support a consistent comparison of inspection targets, access-protection candidates, community preparedness needs, and resource-pre-positioning priorities before heavy rainfall."
+(Pages 34–35, Lines 749–753)
 
 ## Comment 7
 

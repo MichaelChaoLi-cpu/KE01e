@@ -476,3 +476,116 @@ Under the post-earthquake rainfall-warning threshold scenarios, the framework id
 - Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 - Endnote relationships SHA-256: `absent`
 
+## reviewer-4/comment-6
+
+### part-01
+
+- Location: Study Area and Data > Landslide Hazard and Rainfall Evidence, paragraph beginning 'We treat the interpreted landslide locations'
+- Reason: Clarify that the numerical threshold-retention factors are not portable and define the conditions for applying the framework to another event or jurisdiction.
+- Kila decisions: KILA-D-20260903-011
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T05:12:24Z
+- Author: Kila
+- Markup SHA-256 before: `9a2bf7de8a58e87b5521828168e819e7fb8ee6581561d6108ba5c4f2b0d002e7`
+- Markup SHA-256 after: `da632f702065fabece747dc3b184474aa0f7f02d936cb51b8bd1b4e80e242f77`
+- Revision IDs: `36`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T141225119861.reviewer-4-comment-6.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+We treat the threshold-retention factors as municipality- or subarea-level operational scenario settings rather than continuous shaking or site-specific soil-strength measurements (Zhang et al., 2025).
+~~~~
+
+- After:
+
+~~~~text
+We treat the threshold-retention factors as municipality- or subarea-level operational scenario settings rather than continuous shaking or site-specific soil-strength measurements (Zhang et al., 2025). The numerical values are event- and area-specific and are not transferred to another earthquake or jurisdiction. Applying the framework elsewhere requires locally issued or empirically estimated retention settings, a rainfall indicator compatible with how those settings were defined, and renewed compatibility and sensitivity checks before downstream consequences are interpreted.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " The numerical values are event- and area-specific and are not transferred to another earthquake or jurisdiction. Applying the framework elsewhere requires locally issued or empirically estimated retention settings, a rainfall indicator compatible with how those settings were defined, and renewed compatibility and sensitivity checks before downstream consequences are interpreted."
+
+### part-02
+
+- Location: Discussion > Limitations and Future Research, paragraph beginning 'Future work should replace'
+- Reason: Explain how InSAR and field shear-strength evidence could support a calibrated physical model without treating either source as a one-for-one substitute for an operational warning coefficient.
+- Kila decisions: KILA-D-20260903-011
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T05:12:38Z
+- Author: Kila
+- Markup SHA-256 before: `da632f702065fabece747dc3b184474aa0f7f02d936cb51b8bd1b4e80e242f77`
+- Markup SHA-256 after: `761a327214dec02ed50d5f8bd2df5b66ebd6cf4ee4518033af9d5c88ac7e0cbd`
+- Revision IDs: `37`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T141238417280.reviewer-4-comment-6.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+A more complete post-event inventory using satellite, uncrewed aerial vehicle, and field observations could improve slope validation (Fu et al., 2025).
+~~~~
+
+- After:
+
+~~~~text
+A more complete post-event inventory using satellite, uncrewed aerial vehicle, and field observations could improve slope validation (Fu et al., 2025). Repeated InSAR deformation observations and targeted geotechnical measurements, including field shear-strength tests, could support a spatially explicit disturbance model where coverage and calibration are adequate. These data are complementary evidence rather than one-for-one substitutes for an operational warning coefficient; once validated, such a physical model could replace the administrative retention proxy at the susceptibility stage while the downstream road-network and consequence modules remain applicable.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " Repeated InSAR deformation observations and targeted geotechnical measurements, including field shear-strength tests, could support a spatially explicit disturbance model where coverage and calibration are adequate. These data are complementary evidence rather than one-for-one substitutes for an operational warning coefficient; once validated, such a physical model could replace the administrative retention proxy at the susceptibility stage while the downstream road-network and consequence modules remain applicable."
+
+### part-03
+
+- Location: Conclusions, sentence beginning 'Official threshold adjustments'
+- Reason: Limit the decision-use claim to the event and area for which the operational factors were issued.
+- Kila decisions: KILA-D-20260903-011
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T05:12:55Z
+- Author: Kila
+- Markup SHA-256 before: `761a327214dec02ed50d5f8bd2df5b66ebd6cf4ee4518033af9d5c88ac7e0cbd`
+- Markup SHA-256 after: `c5fdf67abe4fcd000a56364aebb1ae5a46c9a6f461826e16b48f08afe8725b46`
+- Revision IDs: `38, 39`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260903T141255129132.reviewer-4-comment-6.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Official threshold adjustments can therefore inform more than a revised hazard map: they can support a consistent comparison of inspection targets, access-protection candidates, community preparedness needs, and resource-pre-positioning priorities before heavy rainfall.
+~~~~
+
+- After:
+
+~~~~text
+Within the event and area for which they are issued, official threshold adjustments can therefore inform more than a revised hazard map: they can support a consistent comparison of inspection targets, access-protection candidates, community preparedness needs, and resource-pre-positioning priorities before heavy rainfall.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "Official"
+     - After: "Within the event and area for which they are issued, official"
+
