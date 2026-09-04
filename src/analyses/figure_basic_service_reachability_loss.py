@@ -6,8 +6,10 @@ services and summarize population exposure and reachable-route travel-time penal
 Emergency-water results are a conditional sensitivity for the 10 geolocated records,
 not a co-equal primary service estimate.
 Framework: Section 5 secondary consequence estimands; Section 6 service reachability
-loss and excess travel time; Section 7 nearest-service routing on the accepted
-community and road-disruption screening network.
+loss and excess travel time; Section 7 any-same-class routing on the accepted
+community and road-disruption screening network. Baseline travel time is the minimum
+over the resolved, road-attached facilities in a class, and each disruption draw
+recomputes that minimum so a farther same-class facility may substitute.
 
 The 1,000-draw loss frequency is conditional on the central candidate-road closure
 mapping. Excess time is estimated on the complete weighted road graph using 100
@@ -153,7 +155,7 @@ def full_graph_service_excess_time(
     mesh_node: np.ndarray,
     community_count: int,
 ) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray]]:
-    """Estimate five-seed mean full-network excess time."""
+    """Estimate excess time to the nearest reachable same-class facility."""
     replicate_results = [
         _full_graph_service_excess_time_seed(
             edge_u, edge_v, edge_time, edge_candidate_position, section_propensity,
@@ -354,7 +356,7 @@ def simulate_service_loss(
     community_count: int,
     seed: int,
 ) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray], dict[str, np.ndarray]]:
-    """Estimate Heavy-scenario reachability loss and conditional excess travel time."""
+    """Estimate class loss only when no same-class facility remains reachable."""
     all_open = np.ones(len(section_propensity), dtype=bool)
     baseline_graph = weighted_draw_graph(all_open, pair_reduction, root_count)
     baseline: dict[str, np.ndarray] = {}
@@ -433,7 +435,7 @@ def cached_service_loss(
     community_count: int,
     cache_tag: str = "central",
 ) -> tuple[dict[str, np.ndarray], dict[str, np.ndarray], dict[str, np.ndarray]]:
-    """Return five-seed mean Heavy-scenario service outcomes."""
+    """Return five-seed mean any-same-class Heavy-scenario service outcomes."""
     replicates = [
         _cached_service_loss_seed(
             section_propensity, pair_reduction, root_count, service_roots,

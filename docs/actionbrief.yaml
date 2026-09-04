@@ -2152,7 +2152,8 @@ variableDictionary:
     variableNameInArticle: Basic Service Reachability Loss
     variableAttribute: continuous
     variableUnit: proportion of draws
-    variableDescription: Simulated loss of access to a declared basic-service class among baseline-reachable communities.
+    variableDescription: Simulated frequency that no resolved, road-attached destination in a declared basic-service
+      class remains reachable among baseline-reachable communities; destinations are recomputed after each disruption.
     variableSource: designated_shelters_preprocessed
     observationNumber: 0
   excess_travel_time:
@@ -2301,14 +2302,17 @@ figureDictionary:
     figureAim: Shows class-specific loss of reachability to shelters, fire services, and municipal facilities, together
       with excess travel time where routes remain available; emergency water is a conditional sensitivity for 10
       of 36 geolocated destinations.
-    figureExplanation: Maps primary service-loss frequencies and reports full-network excess travel time; the hatched
-      emergency-water estimate is excluded from the primary cross-service interpretation.
+    figureExplanation: Maps any-same-class service-loss frequencies and reports excess travel time to the nearest
+      remaining same-class facility; the hatched emergency-water estimate is excluded from the primary cross-service
+      interpretation.
     figurePanelCount: 4
     figureNote: >
       Panels a, b, and c map Heavy-rainfall reachability loss for shelters, fire services,
       and municipal facilities; panel d compares expected affected population and median
       excess travel time and marks emergency water as conditional sensitivity evidence for
-      the 10 of 36 geolocated destinations.
+      the 10 of 36 geolocated destinations. A community loses a service class only when no
+      resolved, road-attached facility in that class remains reachable; the baseline-nearest
+      destination is not fixed after disruption.
     figureSuitableSection: 'Results: Service Consequences'
   fig_intervention_priorities_and_budgeted_benefits:
     figureId: fig_intervention_priorities_and_budgeted_benefits
@@ -2378,9 +2382,20 @@ tableDictionary:
     tableCaption: Municipality isolation and service-loss summary
     tableAim: Summarizes community isolation, exposed population, older population, class-specific service loss,
       and shelter-specific excess travel time for each administrative unit and scenario.
-    tableExplanation: Aggregates eligible population, ordered isolation outcomes, primary service-loss populations,
-      conditional emergency-water sensitivity, and shelter excess time to municipalities and wards.
+    tableExplanation: Aggregates eligible population, ordered isolation outcomes, any-same-class service-loss
+      populations, conditional emergency-water sensitivity, and shelter excess time to municipalities and wards;
+      the four service columns explicitly name the any-same-class estimand.
     tableSuitableSection: 'Appendix C: Municipality Isolation and Service-Loss Summary'
+  table_service_destination_estimand_comparison:
+    tableId: table_service_destination_estimand_comparison
+    tablePath: data/results/tables/Table_service_destination_estimand_comparison.xlsx
+    tableCaption: Service-destination estimand and rerouting comparison
+    tableAim: Compares any-same-class reachability with fixed-baseline-destination continuity under identical
+      Heavy-scenario closure draws.
+    tableExplanation: Reports source-location coverage, road attachment, baseline eligibility, paired five-seed loss
+      means and ranges, rerouting benefit, benefit share, and benefiting-community counts from the validated
+      service-destination audit summary.
+    tableSuitableSection: 'Appendix B: Service-Destination Estimand and Rerouting Comparison'
   table_priority_road_sections:
     tableId: table_priority_road_sections
     tablePath: data/results/tables/Table_priority_road_sections.xlsx
@@ -2525,13 +2540,17 @@ analysisStructureBrief:
     - Facility Name
     - Baseline Edge Travel Time (min)
     - Total Population
-    modelOrMethod: Service loss is the simulated frequency that nearest-service travel time becomes infinite. Excess
-      time is Delta T_c,k=T_c,k^disrupted-T_c,k^baseline using 100 full weighted-network rerouting draws.
+    modelOrMethod: Service loss is the simulated frequency that no resolved, road-attached same-class facility remains
+      reachable. Baseline time is the nearest-facility time, and each disruption draw recomputes the shortest path to
+      all destinations in the class. A paired common-random-number audit compares this primary estimand with fixed-
+      baseline-destination continuity; excess time uses 100 full weighted-network rerouting draws.
     outputs:
     - Basic Service Reachability Loss
+    - Service-Destination Estimand and Rerouting Comparison
     - Municipality Isolation and Service-Loss Summary
-    interpretation: Baseline-unreachable cases are non-evaluable; emergency-water results are conditional sensitivity
-      evidence for 10 of 36 geolocated destinations, with indeterminate bias direction.
+    interpretation: Same-class rerouting prevents fixed-destination overstatement but does not represent facility
+      operability or capacity. Baseline-unreachable cases are non-evaluable; emergency-water results are conditional
+      sensitivity evidence for 10 of 36 geolocated destinations, with indeterminate bias direction.
   - levelName: Robust intervention screening
     levelAim: Rank feasible road-access actions by population protection under budget and parameter uncertainty.
     inputs:

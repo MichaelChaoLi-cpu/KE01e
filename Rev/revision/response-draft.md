@@ -212,10 +212,22 @@ $$
 8. The service-accessibility analysis fixes the nearest baseline facility as the destination after disruption. Please discuss how this assumption affects the interpretation of service loss in cases where another facility of the same service class remains reachable.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for raising this important point. We found that the manuscript description, rather than the production implementation, was inaccurate: after each disruption draw, the model recomputes access to every resolved, road-attached destination within a service class, so the baseline-nearest facility is not fixed. We corrected the Methods and Figure 7 note, added a paired comparison with a restrictive fixed-baseline-destination estimator, and report the full comparison in Appendix Table B9. Under Heavy rainfall, fixing the baseline destination would increase affected population from 609.9 to 1,217.4 for shelters, from 1,286.7 to 7,106.4 for fire services, and from 937.3 to 2,811.3 for municipal facilities. Thus, a fixed-destination assumption materially overstates class-level network reachability loss, especially for fire services. Conversely, the any-same-class estimand represents network availability and does not establish that an alternative facility is operating, adequately staffed, or able to absorb additional demand. Emergency-water results remain conditional on the 10 of 36 announced destinations with resolved coordinates.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"Service analysis includes only communities that can reach a destination of the relevant class at baseline. For each eligible community, baseline travel time is the shortest time to any reachable designated shelter, resolved emergency water point, fire-service facility, or municipal facility on the complete weighted road graph. After each disruption draw, shortest paths are recomputed to all resolved, road-attached destinations in that class, so a farther same-class facility may replace the baseline-nearest facility. Service reachability is lost only when no destination in the class remains reachable. This rerouting rule does not imply that residents would necessarily choose the identified facility during an emergency or that every mapped facility would be operating or have sufficient capacity. A facility without a resolved network attachment remains outside the routing denominator, and a community that is already unreachable at baseline is not counted as a disruption-induced loss."
+(Pages 21–22, Lines 453–464)
+
+"Travel-time change is evaluated only when at least one destination in the class remains reachable."
+(Page 22, Line 473)
+
+"A paired destination-estimand audit confirms that the principal results already allow substitution among facilities in the same class. If the baseline-nearest destination were instead held fixed, Heavy-scenario affected population would increase from 609.9 to 1,217.4 for shelters, from 1,286.7 to 7,106.4 for fire services, and from 937.3 to 2,811.3 for municipal facilities. Same-class rerouting therefore prevents 607.4, 5,819.7, and 1,874.1 residents, respectively, from being classified as losing the service, equal to 49.9%, 81.9%, and 66.7% of the corresponding fixed-destination losses (Appendix Table B9). The conditional emergency-water comparison is reported separately in the Appendix because only 10 of 36 announced destinations are geolocated."
+(Page 31, Lines 658–666)
+
+"The service-destination comparison further separates class-level network availability from continuity with one baseline facility. Holding the baseline-nearest destination fixed would overstate the primary loss estimate because it counts communities that can still reach another same-class facility, with the largest difference occurring for fire services. The any-same-class estimand is more appropriate for network availability, but it does not establish realized service continuity: an alternative facility may be closed, understaffed, capacity-constrained, inaccessible for non-network reasons, or unable to accept additional demand. The estimates therefore bound road-network reachability rather than operational service adequacy."
+(Pages 36–37, Lines 789–797)
+
+"Note: Panels a, b, and c map Heavy-rainfall reachability loss for shelters, fire services, and municipal facilities; panel d compares expected affected population and median excess travel time and marks emergency water as conditional sensitivity evidence for the 10 of 36 geolocated destinations. A community loses a service class only when no resolved, road-attached facility in that class remains reachable; the baseline-nearest destination is not fixed after disruption."
+(Page 50, Lines 47–51)
 
 ## Comment 9
 

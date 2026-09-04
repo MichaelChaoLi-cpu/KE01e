@@ -2548,3 +2548,284 @@ The 1 km and 3 km square clusters and ρ=0.25 and 0.50 dependence levels are del
      - Before: ""
      - After: "The 1 km and 3 km square clusters and ρ=0.25 and 0.50 dependence levels are deliberately broad sensitivity settings rather than estimates from observed co-failures. Square-grid boundaries also discretize processes that would vary continuously in space. The correlated results therefore bound dependence uncertainty but cannot identify an event-specific correlation length, attribute a common physical trigger, or replace calibration using geocoded and time-resolved multi-road failure observations."
 
+## reviewer-2/comment-8
+
+### part-02
+
+- Location: Methods > Basic-Service Consequence Estimation, first paragraph
+- Reason: Correct the service-destination estimand and explicitly permit same-class substitution after disruption. Broader rewrite rationale: the three middle sentences jointly define the wrong fixed-destination estimand, so revising them together is necessary for methodological accuracy and coherence.
+- Kila decisions: KILA-D-20260904-003, KILA-D-20260904-004
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T02:56:34Z
+- Author: Kila
+- Markup SHA-256 before: `103d5c60a10a9732566d62efdee6de0f8efb494e99d11b992a5d8a136fa21564`
+- Markup SHA-256 after: `58df1c3c722b47e3476c0711f18a6d1c0fea0a6a3f34943425d4ba564d0480ec`
+- Revision IDs: `235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T115635072153.reviewer-2-comment-8.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Service analysis includes only communities that can reach a destination of the relevant class at baseline. For each eligible community, the destination is the nearest reachable designated shelter, resolved emergency water point, fire-service facility, or municipal facility on the complete weighted road graph. Fixing the baseline destination provides a consistent reference for determining whether the route is lost or lengthened after disruption. It does not imply that residents would necessarily choose that destination during an emergency or that every mapped facility would be operating. A facility without a resolved network attachment remains outside the routing denominator, and a community that is already unreachable at baseline is not counted as a disruption-induced loss.
+~~~~
+
+- After:
+
+~~~~text
+Service analysis includes only communities that can reach a destination of the relevant class at baseline. For each eligible community, baseline travel time is the shortest time to any reachable designated shelter, resolved emergency water point, fire-service facility, or municipal facility on the complete weighted road graph. After each disruption draw, shortest paths are recomputed to all resolved, road-attached destinations in that class, so a farther same-class facility may replace the baseline-nearest facility. Service reachability is lost only when no destination in the class remains reachable. This rerouting rule does not imply that residents would necessarily choose the identified facility during an emergency or that every mapped facility would be operating or have sufficient capacity. A facility without a resolved network attachment remains outside the routing denominator, and a community that is already unreachable at baseline is not counted as a disruption-induced loss.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "the"
+     - After: "baseline"
+  2. `replace`
+     - Before: "destination"
+     - After: "travel time"
+  3. `replace`
+     - Before: "nearest"
+     - After: "shortest time to any"
+  4. `replace`
+     - Before: "Fixing"
+     - After: "After each disruption draw, shortest paths are recomputed to all resolved, road-attached destinations in that class, so a farther same-class facility may replace"
+  5. `replace`
+     - Before: "baseline"
+     - After: "baseline-nearest"
+  6. `replace`
+     - Before: "destination"
+     - After: "facility."
+  7. `replace`
+     - Before: "provides"
+     - After: "Service"
+  8. `replace`
+     - Before: "a consistent reference for determining whether the route"
+     - After: "reachability"
+  9. `replace`
+     - Before: "or"
+     - After: "only"
+  10. `replace`
+     - Before: "lengthened"
+     - After: "when"
+  11. `replace`
+     - Before: "after"
+     - After: "no"
+  12. `replace`
+     - Before: "disruption"
+     - After: "destination in the class remains reachable"
+  13. `replace`
+     - Before: "It"
+     - After: "This rerouting rule"
+  14. `replace`
+     - Before: "that"
+     - After: "the"
+  15. `replace`
+     - Before: "destination"
+     - After: "identified facility"
+  16. `insert`
+     - Before: ""
+     - After: " or have sufficient capacity"
+
+### part-03
+
+- Location: Methods > Basic-Service Consequence Estimation, paragraph beginning 'For service class'
+- Reason: Align the Equation 12 outcome definition with the implemented multi-destination algorithm.
+- Kila decisions: KILA-D-20260904-003, KILA-D-20260904-004
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T02:56:42Z
+- Author: Kila
+- Markup SHA-256 before: `58df1c3c722b47e3476c0711f18a6d1c0fea0a6a3f34943425d4ba564d0480ec`
+- Markup SHA-256 after: `66e9ae75a7eef9b75d8076e5df1415658f758bddf0e3f98e05796c9ef1d7e180`
+- Revision IDs: `266, 267, 268, 269`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T115642288098.reviewer-2-comment-8.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+For service class k and seed replicate v, disrupted travel time Tc,k,v(r,f,b) becomes infinite when no route remains from community c to its destination. Equation 12 defines Lc,k,vservice,(r,f,b) as the replicate-specific conditional unreachability frequency for that class. Reported central estimates are arithmetic means across the same five seeds used for isolation. No cross-service composite or undeclared class weight is used, preserving the distinct destination geography and interpretation boundary of each service.
+~~~~
+
+- After:
+
+~~~~text
+For service class k and seed replicate v, disrupted travel time Tc,k,v(r,f,b) becomes infinite when no route remains from community c to any resolved, road-attached destination in class k. Equation 12 defines Lc,k,vservice,(r,f,b) as the replicate-specific conditional class-level unreachability frequency. Reported central estimates are arithmetic means across the same five seeds used for isolation. No cross-service composite or undeclared class weight is used, preserving the distinct destination geography and interpretation boundary of each service.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: " to its destination."
+     - After: " to any resolved, road-attached destination in class k."
+  2. `structured-replace`
+     - Before: "replicate-specific conditional unreachability frequency for that class"
+     - After: "replicate-specific conditional class-level unreachability frequency"
+
+### part-04
+
+- Location: Methods > Basic-Service Consequence Estimation, paragraph beginning 'Travel-time change'
+- Reason: Distinguish class-level rerouting delay from travel to a permanently assigned destination.
+- Kila decisions: KILA-D-20260904-003, KILA-D-20260904-004
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T02:56:48Z
+- Author: Kila
+- Markup SHA-256 before: `66e9ae75a7eef9b75d8076e5df1415658f758bddf0e3f98e05796c9ef1d7e180`
+- Markup SHA-256 after: `4dd8bbc06791a33a4740ef034001b3c3c56afa7d2a29982c3d1028b497a172ab`
+- Revision IDs: `270, 271, 272, 273, 274, 275, 276, 277`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T115648866261.reviewer-2-comment-8.part-04.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Travel-time change is evaluated only when the destination remains reachable. Equation 13 subtracts baseline travel time Tc,kbaseline from disrupted travel time Tc,k,v(r,f,b) within seed replicate v. We calculate this quantity using 100 full weighted-network rerouting draws per seed, whereas unreachability uses the complete connectivity simulation. The reduced draw set is used only for the conditional travel-time distribution. This distinction avoids assigning an arbitrary large travel time to a disconnected service and keeps delay and complete reachability loss as separate consequences.
+~~~~
+
+- After:
+
+~~~~text
+Travel-time change is evaluated only when at least one destination in the class remains reachable. Equation 13 subtracts baseline nearest-facility travel time Tc,kbaseline from the shortest disrupted travel time to any reachable same-class facility, Tc,k,v(r,f,b), within seed replicate v. We calculate this quantity using 100 full weighted-network rerouting draws per seed, whereas unreachability uses the complete connectivity simulation. The reduced draw set is used only for the conditional travel-time distribution. This distinction avoids assigning an arbitrary large travel time to a disconnected service and keeps delay and complete reachability loss as separate consequences.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "Travel-time change is evaluated only when the destination remains reachable."
+     - After: "Travel-time change is evaluated only when at least one destination in the class remains reachable."
+  2. `structured-replace`
+     - Before: "baseline travel time "
+     - After: "baseline nearest-facility travel time "
+  3. `structured-replace`
+     - Before: " from disrupted travel time "
+     - After: " from the shortest disrupted travel time to any reachable same-class facility, "
+  4. `structured-replace`
+     - Before: " within seed replicate "
+     - After: ", within seed replicate "
+
+### part-05
+
+- Location: Results > Basic-Service Reachability Loss, after the current service-loss paragraph
+- Reason: Answer the reviewer's interpretation question with a paired quantitative comparison.
+- Kila decisions: KILA-D-20260904-003, KILA-D-20260904-004
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T02:56:55Z
+- Author: Kila
+- Markup SHA-256 before: `4dd8bbc06791a33a4740ef034001b3c3c56afa7d2a29982c3d1028b497a172ab`
+- Markup SHA-256 after: `1558a4e468b704c1d8c46883a805c6429d4a07d2093bbf5ff298973938220439`
+- Revision IDs: `278, 279`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T115655487226.reviewer-2-comment-8.part-05.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+A paired destination-estimand audit confirms that the principal results already allow substitution among facilities in the same class. If the baseline-nearest destination were instead held fixed, Heavy-scenario affected population would increase from 609.9 to 1,217.4 for shelters, from 1,286.7 to 7,106.4 for fire services, and from 937.3 to 2,811.3 for municipal facilities. Same-class rerouting therefore prevents 607.4, 5,819.7, and 1,874.1 residents, respectively, from being classified as losing the service, equal to 49.9%, 81.9%, and 66.7% of the corresponding fixed-destination losses (Appendix Table B9). The conditional emergency-water comparison is reported separately in the Appendix because only 10 of 36 announced destinations are geolocated.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "A paired destination-estimand audit confirms that the principal results already allow substitution among facilities in the same class. If the baseline-nearest destination were instead held fixed, Heavy-scenario affected population would increase from 609.9 to 1,217.4 for shelters, from 1,286.7 to 7,106.4 for fire services, and from 937.3 to 2,811.3 for municipal facilities. Same-class rerouting therefore prevents 607.4, 5,819.7, and 1,874.1 residents, respectively, from being classified as losing the service, equal to 49.9%, 81.9%, and 66.7% of the corresponding fixed-destination losses (Appendix Table B9). The conditional emergency-water comparison is reported separately in the Appendix because only 10 of 36 announced destinations are geolocated."
+
+### part-06
+
+- Location: Discussion > Network Dependence and Unequal Community Consequences, after the destination-specific resilience paragraph
+- Reason: State both the bias from fixing a destination and the potential optimism of a network-only rerouting measure.
+- Kila decisions: KILA-D-20260904-003, KILA-D-20260904-004
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T02:57:02Z
+- Author: Kila
+- Markup SHA-256 before: `1558a4e468b704c1d8c46883a805c6429d4a07d2093bbf5ff298973938220439`
+- Markup SHA-256 after: `e4a29d126e607efefa70b835c0ab54f4c73e4d6de931d01705d8242fb825348a`
+- Revision IDs: `280, 281`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T115702178491.reviewer-2-comment-8.part-06.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+The service-destination comparison further separates class-level network availability from continuity with one baseline facility. Holding the baseline-nearest destination fixed would overstate the primary loss estimate because it counts communities that can still reach another same-class facility, with the largest difference occurring for fire services. The any-same-class estimand is more appropriate for network availability, but it does not establish realized service continuity: an alternative facility may be closed, understaffed, capacity-constrained, inaccessible for non-network reasons, or unable to accept additional demand. The estimates therefore bound road-network reachability rather than operational service adequacy.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "The service-destination comparison further separates class-level network availability from continuity with one baseline facility. Holding the baseline-nearest destination fixed would overstate the primary loss estimate because it counts communities that can still reach another same-class facility, with the largest difference occurring for fire services. The any-same-class estimand is more appropriate for network availability, but it does not establish realized service continuity: an alternative facility may be closed, understaffed, capacity-constrained, inaccessible for non-network reasons, or unable to accept additional demand. The estimates therefore bound road-network reachability rather than operational service adequacy."
+
+### part-07
+
+- Location: Figure 7 Note
+- Reason: Make the plotted service-loss estimand unambiguous at the point of interpretation.
+- Kila decisions: KILA-D-20260904-003, KILA-D-20260904-004
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T02:57:09Z
+- Author: Kila
+- Markup SHA-256 before: `e4a29d126e607efefa70b835c0ab54f4c73e4d6de931d01705d8242fb825348a`
+- Markup SHA-256 after: `a2a553ef722142e6a67c191314e6541468bd97fb21adeec3ac46b753ff88e2c0`
+- Revision IDs: `282`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T115709478705.reviewer-2-comment-8.part-07.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `8cc96e2185dbabd7f935b2bba2d43f75fae7c302a7fde587a64321d22c581c27`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Note: Panels a, b, and c map Heavy-rainfall reachability loss for shelters, fire services, and municipal facilities; panel d compares expected affected population and median excess travel time and marks emergency water as conditional sensitivity evidence for the 10 of 36 geolocated destinations.
+~~~~
+
+- After:
+
+~~~~text
+Note: Panels a, b, and c map Heavy-rainfall reachability loss for shelters, fire services, and municipal facilities; panel d compares expected affected population and median excess travel time and marks emergency water as conditional sensitivity evidence for the 10 of 36 geolocated destinations. A community loses a service class only when no resolved, road-attached facility in that class remains reachable; the baseline-nearest destination is not fixed after disruption.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " A community loses a service class only when no resolved, road-attached facility in that class remains reachable; the baseline-nearest destination is not fixed after disruption."
+

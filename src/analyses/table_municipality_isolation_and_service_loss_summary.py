@@ -11,6 +11,7 @@ service-reachability figure.
 """
 from __future__ import annotations
 
+import argparse
 import os
 from pathlib import Path
 
@@ -44,6 +45,27 @@ NODE_PATH = PROCESSED / "road_nodes_preprocessed.parquet"
 OUT = ROOT / "data/results/tables/Table_municipality_isolation_and_service_loss_summary.xlsx"
 SHEET_NAME = "Municipality Summary"
 TABLE_TITLE = "Municipality Isolation and Service-Loss Summary"
+SERVICE_COLUMN_LABELS = {
+    "Shelter": "Heavy Shelter Loss Population (Any Same-Class Facility)",
+    "Emergency water": (
+        "Heavy Emergency-Water Sensitivity Loss Population "
+        "(Any of 10/36 Geolocated Facilities)"
+    ),
+    "Fire service": "Heavy Fire service Loss Population (Any Same-Class Facility)",
+    "Municipal facility": (
+        "Heavy Municipal facility Loss Population (Any Same-Class Facility)"
+    ),
+}
+LEGACY_SERVICE_COLUMN_LABELS = {
+    "Shelter": "Heavy Shelter Loss Population (Baseline-Reachable)",
+    "Emergency water": (
+        "Heavy Emergency-Water Sensitivity Loss Population (10/36 Geolocated)"
+    ),
+    "Fire service": "Heavy Fire service Loss Population (Baseline-Reachable)",
+    "Municipal facility": (
+        "Heavy Municipal facility Loss Population (Baseline-Reachable)"
+    ),
+}
 
 
 def prepare_network_and_outcomes() -> dict[str, object]:
@@ -386,14 +408,7 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
             expected_loss = float(
                 np.sum(population[mask][evaluable] * service_values[evaluable])
             )
-            if service == "Emergency water":
-                label = (
-                    "Heavy Emergency-Water Sensitivity Loss Population "
-                    "(10/36 Geolocated)"
-                )
-            else:
-                label = f"Heavy {service} Loss Population (Baseline-Reachable)"
-            row[label] = expected_loss
+            row[SERVICE_COLUMN_LABELS[service]] = expected_loss
         valid_excess = mask & np.isfinite(shelter_excess)
         row["Heavy Shelter Mean Excess Time (min)"] = (
             float(np.average(shelter_excess[valid_excess], weights=population[valid_excess]))
@@ -415,10 +430,10 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
         "Extreme Isolation Frequency",
         "Extreme Expected Isolated Population",
         "Heavy Expected Isolated Population Age 65+",
-        "Heavy Shelter Loss Population (Baseline-Reachable)",
-        "Heavy Emergency-Water Sensitivity Loss Population (10/36 Geolocated)",
-        "Heavy Fire service Loss Population (Baseline-Reachable)",
-        "Heavy Municipal facility Loss Population (Baseline-Reachable)",
+        SERVICE_COLUMN_LABELS["Shelter"],
+        SERVICE_COLUMN_LABELS["Emergency water"],
+        SERVICE_COLUMN_LABELS["Fire service"],
+        SERVICE_COLUMN_LABELS["Municipal facility"],
         "Heavy Shelter Mean Excess Time (min)",
     ]
     table = table.loc[:, columns]
@@ -572,7 +587,90 @@ def verify_workbook(path: Path) -> None:
                 raise RuntimeError(f"Isolation frequency outside [0, 1] at row {row}.")
 
 
+def relabel_existing_workbook(path: Path = OUT) -> None:
+    """Rename only the four service-estimand headers in an existing workbook.
+
+    This narrow path avoids rerunning the network simulation when the numerical
+    results are already final. It verifies that every non-target cell value and
+    every cell style ID remain unchanged.
+    """
+    workbook = load_workbook(path)
+    worksheet = workbook[SHEET_NAME]
+    targets: dict[str, str] = {}
+    for cell in worksheet[2]:
+        for service, legacy_label in LEGACY_SERVICE_COLUMN_LABELS.items():
+            if cell.value == legacy_label:
+                targets[cell.coordinate] = SERVICE_COLUMN_LABELS[service]
+    if len(targets) != len(SERVICE_COLUMN_LABELS):
+        current_headers = [cell.value for cell in worksheet[2]]
+        if all(label in current_headers for label in SERVICE_COLUMN_LABELS.values()):
+            verify_workbook(path)
+            print("Municipality service headers already use the any-same-class estimand.")
+            return
+        raise RuntimeError(
+            f"Expected four legacy service headers, found {len(targets)}: {targets}"
+        )
+
+    before_values = {
+        cell.coordinate: cell.value
+        for row in worksheet.iter_rows()
+        for cell in row
+        if cell.coordinate not in targets
+    }
+    before_styles = {
+        cell.coordinate: cell.style_id
+        for row in worksheet.iter_rows()
+        for cell in row
+    }
+    before_merged = tuple(str(item) for item in worksheet.merged_cells.ranges)
+    before_table_refs = {
+        name: table if isinstance(table, str) else table.ref
+        for name, table in worksheet.tables.items()
+    }
+
+    for coordinate, label in targets.items():
+        worksheet[coordinate] = label
+    workbook.save(path)
+
+    checked = load_workbook(path)
+    checked_sheet = checked[SHEET_NAME]
+    after_values = {
+        cell.coordinate: cell.value
+        for row in checked_sheet.iter_rows()
+        for cell in row
+        if cell.coordinate not in targets
+    }
+    after_styles = {
+        cell.coordinate: cell.style_id
+        for row in checked_sheet.iter_rows()
+        for cell in row
+    }
+    after_merged = tuple(str(item) for item in checked_sheet.merged_cells.ranges)
+    after_table_refs = {
+        name: table if isinstance(table, str) else table.ref
+        for name, table in checked_sheet.tables.items()
+    }
+    if before_values != after_values:
+        raise RuntimeError("A non-header cell value changed during the label-only update.")
+    if before_styles != after_styles:
+        raise RuntimeError("A cell style changed during the label-only update.")
+    if before_merged != after_merged or before_table_refs != after_table_refs:
+        raise RuntimeError("Workbook structure changed during the label-only update.")
+    verify_workbook(path)
+    print(f"Relabeled four service-estimand headers: {path.relative_to(ROOT)}")
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--relabel-existing",
+        action="store_true",
+        help="Rename only the four service-estimand headers in the existing workbook.",
+    )
+    args = parser.parse_args()
+    if args.relabel_existing:
+        relabel_existing_workbook()
+        return
     table, context = build_table()
     OUT.parent.mkdir(parents=True, exist_ok=True)
     table.to_excel(
