@@ -4129,3 +4129,79 @@ Municipality-wide Yatsushiro assignments of 0.70 and 0.80 bound affected populat
 - Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 - Endnote relationships SHA-256: `absent`
 
+## reviewer-1/comment-1
+
+### part-01
+
+- Location: Study Area and Data > Road Network, Communities, Population, and Basic Services; paragraph beginning 'Fine-resolution open population data'
+- Reason: Report the validated concentration and denominator limitation of the emergency-water source records.
+- Kila decisions: KILA-D-20260904-013
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T07:17:14Z
+- Author: Kila
+- Markup SHA-256 before: `f2fb22fb1ce194dc0cc5e9897738830285379d25a949c92b65af31ca0051ac4c`
+- Markup SHA-256 after: `b5de88fdfb9cb0937ddeb61d4f13b05151e71bc698599d59a166f54f51b816f7`
+- Revision IDs: `426`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T161714604061.reviewer-1-comment-1.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The service analysis thus evaluates disruption relative to a valid baseline for each community-destination class.
+~~~~
+
+- After:
+
+~~~~text
+The service analysis thus evaluates disruption relative to a valid baseline for each community-destination class. The emergency-water source contains 36 announcements from Yatsushiro City (28), Uki City (6), and Hikawa Town (2). Only 10 records (27.8%) have resolved coordinates; all are Yatsushiro school-named locations matched exactly to the retained 2012 facility register, whereas 18 Yatsushiro, six Uki, and two Hikawa announcements remain unmatched. Consequently, the routing denominator represents only one of the three source municipalities and is not a complete prefecture-wide emergency-water inventory.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " The emergency-water source contains 36 announcements from Yatsushiro City (28), Uki City (6), and Hikawa Town (2). Only 10 records (27.8%) have resolved coordinates; all are Yatsushiro school-named locations matched exactly to the retained 2012 facility register, whereas 18 Yatsushiro, six Uki, and two Hikawa announcements remain unmatched. Consequently, the routing denominator represents only one of the three source municipalities and is not a complete prefecture-wide emergency-water inventory."
+
+### part-02
+
+- Location: Discussion > Strengths, Limitations, and Future Research; paragraph beginning 'The main limitations arise'
+- Reason: State how incomplete emergency-water geolocation restricts immediate operational planning.
+- Kila decisions: KILA-D-20260904-013
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T07:17:35Z
+- Author: Kila
+- Markup SHA-256 before: `b5de88fdfb9cb0937ddeb61d4f13b05151e71bc698599d59a166f54f51b816f7`
+- Markup SHA-256 after: `5e7250cf8a5bc3be2e8de82618b81b1fa04fff050fc4b86e2c3b6a36c830d296`
+- Revision IDs: `427`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T161735777348.reviewer-1-comment-1.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+These limitations are most consequential for local magnitudes and operational action choice, whereas the prefecture-wide screening value rests on transparent relative comparisons and explicit sensitivity bounds.
+~~~~
+
+- After:
+
+~~~~text
+These limitations are most consequential for local magnitudes and operational action choice, whereas the prefecture-wide screening value rests on transparent relative comparisons and explicit sensitivity bounds. In particular, the emergency-water coverage gap prevents immediate site-level operational interpretation of that service result. The model cannot represent routes to the announced water points in Uki or Hikawa, compare municipalities on a common destination inventory, or evaluate water availability, operating status, capacity, demand, or access to unresolved sites. The emergency-water result therefore describes conditional connectivity to ten observed destinations and should guide completion and verification of location and operational data rather than prefecture-wide deployment decisions.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " In particular, the emergency-water coverage gap prevents immediate site-level operational interpretation of that service result. The model cannot represent routes to the announced water points in Uki or Hikawa, compare municipalities on a common destination inventory, or evaluate water availability, operating status, capacity, demand, or access to unresolved sites. The emergency-water result therefore describes conditional connectivity to ten observed destinations and should guide completion and verification of location and operational data rather than prefecture-wide deployment decisions."
+

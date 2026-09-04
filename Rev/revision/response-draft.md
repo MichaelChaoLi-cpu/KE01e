@@ -35,10 +35,16 @@ If you decide to revise the work, please submit a list of changes or a rebuttal 
 Reviewer 1: 1. Only 10 of the 36 announced emergency water points were geolocated and included in the routing network. The authors should expand on how this significant data gap restricts immediate operational planning.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for this comment. We audited all 36 announced emergency-water destinations by municipality, name class, coordinate completeness, and location-resolution status. The revised Data section now shows that the ten resolved destinations are concentrated in Yatsushiro and are all school-named exact matches to the retained 2012 facility register, while every announced point in Uki and Hikawa remains outside the routing denominator. We also expanded the limitations section and Appendix to state explicitly that this conditional result cannot support prefecture-wide deployment, cross-municipality comparison, or conclusions about water availability, operating status, capacity, demand, or routes to unresolved sites. We did not impute missing coordinates; instead, the result is now framed as connectivity to the ten observed destinations and as evidence that location and operational data must be completed before site-level planning.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"The emergency-water source contains 36 announcements from Yatsushiro City (28), Uki City (6), and Hikawa Town (2). Only 10 records (27.8%) have resolved coordinates; all are Yatsushiro school-named locations matched exactly to the retained 2012 facility register, whereas 18 Yatsushiro, six Uki, and two Hikawa announcements remain unmatched. Consequently, the routing denominator represents only one of the three source municipalities and is not a complete prefecture-wide emergency-water inventory."
+(Page 10, Lines 208–214)
+
+"In particular, the emergency-water coverage gap prevents immediate site-level operational interpretation of that service result. The model cannot represent routes to the announced water points in Uki or Hikawa, compare municipalities on a common destination inventory, or evaluate water availability, operating status, capacity, demand, or access to unresolved sites. The emergency-water result therefore describes conditional connectivity to ten observed destinations and should guide completion and verification of location and operational data rather than prefecture-wide deployment decisions."
+(Pages 41–42, Lines 900–907)
+
+"The emergency-water subset is geographically and institutionally concentrated. The 10 resolved records are Yatsushiro school-named locations matched exactly to the retained 2012 facility register; the unresolved records comprise 18 of 28 Yatsushiro announcements, all six Uki announcements, and both Hikawa announcements. By name class, resolution is 10/13 for schools and 0/14, 0/8, and 0/1 for community centres, government/disaster centres, and other locations, respectively. These counts establish non-uniform data support but cannot identify urban–rural missingness without coordinates."
+(Appendix, Pages 1–2, Lines 22–28)
 
 ## Comment 2
 
