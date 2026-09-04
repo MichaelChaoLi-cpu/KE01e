@@ -45,10 +45,16 @@ Reviewer 1: 1. Only 10 of the 36 announced emergency water points were geolocate
 2. Due to unresolved subarea geometries, an analyst-defined midpoint of 0.75 was assigned. A brief sensitivity statement is needed to clarify if downstream connectivity consequences are highly sensitive to this assumption.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for this comment. We evaluated municipality-wide Yatsushiro assignments of 0.70 and 0.80 around the analyst-defined 0.75 midpoint while retaining the current Primary Emergency Road backbone, Heavy rainfall scenario, five simulation seeds, and current service-routing specification. The bounds change the Heavy disconnected-population estimate by −4.4% to +5.2%, while community-frequency rank correlations remain 0.989–1.000 and Top-30 burden overlap remains 93.3%. Across shelters, fire services, and municipal facilities, affected-population changes remain within −6.5% to +8.0%, with frequency rank correlations of 0.990–1.000 and Top-30 overlap of 86.7%–93.3%. We therefore added the requested sensitivity statement, synchronized the service results and Figure 7, and retained the explicit limitation that 0.75 is an analyst-defined midpoint rather than an official municipality-wide value.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"Municipality-wide Yatsushiro assignments of 0.70 and 0.80 bound the Heavy result at 1,016.6–1,118.7 residents (−4.4% to +5.2% relative to the 0.75 midpoint), with community-frequency rank correlations of 0.989–1.000 and 93.3% Top-30 population-burden overlap. The midpoint assumption therefore changes consequence magnitude modestly without materially changing the community-priority pattern within the tested bounds."
+(Page 29, Lines 631–636)
+
+"Municipality-wide Yatsushiro assignments of 0.70 and 0.80 bound affected populations at 570.5–657.0 for shelters, 1,215.1–1,389.7 for fire services, 898.6–984.2 for municipal facilities, and 7,582.5–8,238.8 for emergency water. Relative to the 0.75 midpoint, changes remain within −6.5% to +8.0% across the three primary service classes; frequency rank correlations are 0.990–1.000 and Top-30 burden overlap is 86.7%–93.3%."
+(Page 32, Lines 690–694)
+
+"Figure 7. Basic-service reachability loss under road disruption"
+(Page 51, Line 48)
 
 ## Comment 3
 

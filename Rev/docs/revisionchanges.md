@@ -3957,3 +3957,175 @@ Note: Panels a, b, and c map community isolation frequency weighted by total pop
 - Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 - Endnote relationships SHA-256: `absent`
 
+## reviewer-1/comment-2
+
+### part-01
+
+- Location: Results > Community Isolation and Population Exposure, paragraph beginning 'Expected emergency-backbone disconnection'
+- Reason: Report the validated magnitude and community-ranking sensitivity of the analyst-defined Yatsushiro midpoint.
+- Kila decisions: KILA-D-20260904-010
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T06:40:59Z
+- Author: Kila
+- Markup SHA-256 before: `5533f5984f9d942be23306198cbc33441c513812fdd39edf0f0fe367b8134488`
+- Markup SHA-256 after: `61263b975c554575dd4a0907cffc87b3660a7fe663c37eb8c6f4d73ec1bb1829`
+- Revision IDs: `399`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T154059304788.reviewer-1-comment-2.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The maps show that the increase is concentrated in selected road-dependent communities rather than distributed uniformly across populated cells.
+~~~~
+
+- After:
+
+~~~~text
+The maps show that the increase is concentrated in selected road-dependent communities rather than distributed uniformly across populated cells. Municipality-wide Yatsushiro assignments of 0.70 and 0.80 bound the Heavy result at 1,016.6–1,118.7 residents (−4.4% to +5.2% relative to the 0.75 midpoint), with community-frequency rank correlations of 0.989–1.000 and 93.3% Top-30 population-burden overlap. The midpoint assumption therefore changes consequence magnitude modestly without materially changing the community-priority pattern within the tested bounds.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " Municipality-wide Yatsushiro assignments of 0.70 and 0.80 bound the Heavy result at 1,016.6–1,118.7 residents (−4.4% to +5.2% relative to the 0.75 midpoint), with community-frequency rank correlations of 0.989–1.000 and 93.3% Top-30 population-burden overlap. The midpoint assumption therefore changes consequence magnitude modestly without materially changing the community-priority pattern within the tested bounds."
+
+### part-02
+
+- Location: Results > Basic-Service Reachability, paragraph beginning 'Among service routes'
+- Reason: Synchronize positive-delay summaries with the current production service analysis and replacement Figure 7.
+- Kila decisions: KILA-D-20260904-010, KILA-D-20260904-011
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T06:45:39Z
+- Author: Kila
+- Markup SHA-256 before: `61263b975c554575dd4a0907cffc87b3660a7fe663c37eb8c6f4d73ec1bb1829`
+- Markup SHA-256 after: `f223ff7506ae0e050223401dd7b4a6df88236b54ff19bd3049aa836124abed08`
+- Revision IDs: `400, 401, 402, 403, 404, 405, 406, 407`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T154539572892.reviewer-1-comment-2.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Among service routes with a positive but finite delay, median excess travel time is 0.35 min for shelters, 1.09 min for fire services, and 0.39 min for municipal facilities. The corresponding emergency-water sensitivity estimate is 5.22 min.
+~~~~
+
+- After:
+
+~~~~text
+Among service routes with a positive but finite delay, median excess travel time is 0.37 min for shelters, 1.05 min for fire services, and 0.38 min for municipal facilities. The corresponding emergency-water sensitivity estimate is 5.04 min.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "0.35"
+     - After: "0.37"
+  2. `structured-replace`
+     - Before: "1.09"
+     - After: "1.05"
+  3. `structured-replace`
+     - Before: "0.39"
+     - After: "0.38"
+  4. `structured-replace`
+     - Before: "5.22"
+     - After: "5.04"
+
+### part-03
+
+- Location: Results > Basic-Service Reachability, paragraph beginning 'Among service routes'
+- Reason: Report current Yatsushiro service-loss bounds and the validated ranking stability.
+- Kila decisions: KILA-D-20260904-010, KILA-D-20260904-011
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T06:45:58Z
+- Author: Kila
+- Markup SHA-256 before: `f223ff7506ae0e050223401dd7b4a6df88236b54ff19bd3049aa836124abed08`
+- Markup SHA-256 after: `a6bfc5e0aecac264e6b13d81093da3a14efa4eed0992edb4de3aa83ca063ae24`
+- Revision IDs: `408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T154558875481.reviewer-1-comment-2.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Municipality-wide Yatsushiro assignments of 0.70 and 0.80 bound affected populations at 563.1–647.2 for shelters, 1,178.2–1,353.8 for fire services, 885.6–969.4 for municipal facilities, and 7,636.2–8,466.1 for emergency water.
+~~~~
+
+- After:
+
+~~~~text
+Municipality-wide Yatsushiro assignments of 0.70 and 0.80 bound affected populations at 570.5–657.0 for shelters, 1,215.1–1,389.7 for fire services, 898.6–984.2 for municipal facilities, and 7,582.5–8,238.8 for emergency water. Relative to the 0.75 midpoint, changes remain within −6.5% to +8.0% across the three primary service classes; frequency rank correlations are 0.990–1.000 and Top-30 burden overlap is 86.7%–93.3%.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "563.1"
+     - After: "570.5"
+  2. `structured-replace`
+     - Before: "647.2"
+     - After: "657.0"
+  3. `structured-replace`
+     - Before: "1,178.2"
+     - After: "1,215.1"
+  4. `structured-replace`
+     - Before: "1,353.8"
+     - After: "1,389.7"
+  5. `structured-replace`
+     - Before: "885.6"
+     - After: "898.6"
+  6. `structured-replace`
+     - Before: "969.4"
+     - After: "984.2"
+  7. `structured-replace`
+     - Before: "7,636.2"
+     - After: "7,582.5"
+  8. `structured-replace`
+     - Before: "8,466.1"
+     - After: "8,238.8"
+  9. `structured-replace`
+     - Before: " for emergency water."
+     - After: " for emergency water. Relative to the 0.75 midpoint, changes remain within −6.5% to +8.0% across the three primary service classes; frequency rank correlations are 0.990–1.000 and Top-30 burden overlap is 86.7%–93.3%."
+
+### part-04-figure7
+
+- Location: Results > Basic-Service Reachability, Figure 7
+- Reason: Replace the stale embedded Figure 7 with the verified current production raster containing the current service totals and Yatsushiro bounds.
+- Kila decisions: KILA-D-20260904-010
+- Mode: `figure-replace`
+- Timestamp: 2026-09-04T06:47:06.271470Z
+- Author: Kila
+- Markup SHA-256 before: `a6bfc5e0aecac264e6b13d81093da3a14efa4eed0992edb4de3aa83ca063ae24`
+- Markup SHA-256 after: `f2fb22fb1ce194dc0cc5e9897738830285379d25a949c92b65af31ca0051ac4c`
+- Revision IDs: not applicable (approved embedded-media replacement)
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T154706271470.reviewer-1-comment-2.part-04-figure7.docx`
+- Figure relationship: `rId15` -> `word/media/image7.png`
+- Verified caption: Figure 7. Basic-service reachability loss under road disruption
+- Replacement asset: `data/results/figures/Figure_basic_service_reachability_loss.png`
+- Original image SHA-256: `68503eee64915cc6cbd0bc10dba280c8323d7a09dbb0c28906299ccdd670ec0b`
+- Replacement image SHA-256: `7390626bb54c83691fc6ce938c5f1d999d6b91a955b60fa350547d9dd9d61ee8`
+- Image format and dimensions preserved: `true` (PNG, 4397 x 3335, RGBA)
+- Non-target package members preserved byte-for-byte: `true`
+- XML and DOCX ZIP verification: `passed`
+- Track-revisions setting preserved: `true`
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+
