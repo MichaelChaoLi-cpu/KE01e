@@ -258,10 +258,22 @@ Thank you for raising this important point. We found that the manuscript descrip
 9. The relationship between Equation 15 and the ranking procedure in Equations 16-17 is unclear. Please explain how the intervention portfolio is selected under the budget constraint and clarify whether Equation 15 is explicitly optimized or whether portfolios are constructed from the screening ranking. The methodological description and terminology should be consistent with the implemented procedure.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for identifying this ambiguity. We clarified throughout the manuscript that Equations 16–17 construct a screening order, whereas Equation 15 evaluates the network benefit of a portfolio only after that portfolio has been assembled. Specifically, the implementation computes the Equation 17 consequence proxy, assigns one feasible road-access action, computes the Equation 16 priority score, ranks all roads, retains the first 150 candidates, and scans that ordered list once for each of seven budgets. An action is selected when its setting-specific cost fits the remaining budget; otherwise it is skipped and the scan continues. The procedure does not backtrack, swap items, search all feasible combinations, or explicitly maximize Equation 15. We therefore now describe the output consistently as a greedy rank-and-pack screening portfolio rather than an optimizer solution. We also revised the research question, conceptual description, conclusion, Appendix, and analytical protocol to use the same terminology.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"Fourth, how does the transparent screening procedure prioritize budget-feasible road actions and residual community preparedness needs, and what population-weighted reduction do the resulting road portfolios achieve?"
+(Page 6, Lines 105–108)
+
+"The costs are relative planning units and the effects are declared assumptions. Equation 15 is evaluated only after a budget-feasible screening portfolio has been constructed; it is not explicitly maximized over all feasible action combinations and does not represent an observed engineering return."
+(Page 25, Lines 527–531)
+
+"Seven budgets span zero to the Central cost of the first 100 ranked candidates. For each budget and sensitivity setting, the same ordered list is scanned once: the assigned action is selected when its setting-specific cost fits the remaining budget, otherwise it is skipped and the scan continues. There is no backtracking, item swapping, or combinatorial search."
+(Page 26, Lines 560–564)
+
+"Under the post-earthquake rainfall-warning threshold scenarios, the framework identifies where relative slope disruption may affect roads, where those road disruptions may isolate communities or remove basic-service access, and how road-access actions and community preparedness needs rank under the declared screening rules."
+(Page 47, Lines 1035–1038)
+
+"Portfolio construction follows a fixed greedy rank-and-pack rule. Equation 17 is evaluated first to obtain the consequence proxy, Equation 16 converts that proxy to the assigned-action priority score, and the first 150 ranked roads form the planning candidate set. For each budget and sensitivity setting, the ordered candidates are scanned once and an action is added only when its cost fits the remaining budget. Equation 15 is evaluated by network simulation after that set has been constructed; it is not maximized over all feasible portfolios."
+(Appendix, Page 11, Lines 199–205)
 
 ## Comment 10
 

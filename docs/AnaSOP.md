@@ -12,8 +12,8 @@ disruption, community isolation, and emergency intervention planning in Kumamoto
 
 - Research question: Under moderate, heavy, and extreme rainfall after the 2026
   Kumamoto earthquake, which road disruptions are most likely to isolate communities
-  or remove access to basic emergency services, and which feasible pre-rainfall
-  interventions yield the largest population-weighted reduction in these consequences?
+  or remove access to basic emergency services, and how do feasible pre-rainfall
+  interventions rank under declared consequence, effect, cost, and budget rules?
 - Why it matters: A susceptibility map alone does not identify where slope failure
   becomes a network emergency or where limited inspection, reinforcement, clearance,
   evacuation, and pre-positioning resources have the greatest protective value.
@@ -121,10 +121,11 @@ hazard and consequence pathway.
 
 #### Supporting Point 4: Intervention priority under limited resources
 
-- Role relative to central point: decision optimization and robustness.
+- Role relative to central point: decision screening and robustness.
 - Research question: Under limited inspection, reinforcement, clearance, evacuation,
-  and resource-pre-positioning budgets, which road or community interventions maximize
-  the reduction in population-weighted isolation and basic-service loss?
+  and resource-pre-positioning budgets, how do road and community interventions rank,
+  and what population-weighted isolation and basic-service losses do the resulting
+  budget-feasible screening portfolios avert?
 - Why it matters: The intended output is an actionable pre-rainfall priority list, not
   only a descriptive risk surface.
 - Data support currently visible: Road sections, network attributes, population and
@@ -775,10 +776,19 @@ Q_e=\operatorname{median}_{b}\left[
 Here, \(\rho_{a(e),b}\) is the assumed proportional effect of the assigned action under
 sensitivity setting \(b\), \(Cost_{e,a(e),b}\) is its relative planning cost, and \(Q_e\)
 is an assigned-action consequence-based screening score. It is not the simulated marginal
-Protected Population of every possible action. Budget portfolios are assembled in \(Q_e\)
-order with feasibility constraints and compared with hazard-only, Emergency Route
-Membership-only, Road Category-only, and equal-cost consequence baselines under the same
-sensitivity setting \(b\). Because the median low-central-high effect-cost ratio equals the
+Protected Population of every possible action. The implemented construction sequence first
+computes \(G_e\), assigns \(a(e)\), substitutes those values into the equation for \(Q_e\),
+sorts all candidate roads in descending \(Q_e\), and retains the first 150 as the planning
+candidate set. Seven budgets span zero to the Central cost of the first 100 ranked candidates.
+For each budget and sensitivity setting, the ordered list is scanned once: an assigned action
+is selected when its setting-specific cost fits the remaining budget; otherwise it is skipped
+and the scan continues. There is no backtracking, item swapping, or combinatorial search.
+Only after the portfolio has been formed are the assumed action effects applied to closure
+propensities and the network simulations used to evaluate the population-weighted benefit
+in the intervention objective equation. The result is therefore a greedy rank-and-pack
+screening portfolio, not an explicitly optimized solution. Portfolios are compared with
+hazard-only, Emergency Route Membership-only, Road Category-only, and equal-cost consequence
+baselines under the same sensitivity setting \(b\). Because the median low-central-high effect-cost ratio equals the
 central ratio in the declared assumptions, the Central \(Q_e\) order is expected to equal
 the Central equal-cost consequence order; this is reported as a consistency result rather
 than incremental superiority. At the central setting, the modeled cost of a one-kilometre

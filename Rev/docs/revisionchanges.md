@@ -4881,3 +4881,274 @@ Public Works Research Institute. (2015). Research on asset-management methods fo
      - Before: ""
      - After: "Public Works Research Institute. (2015). Research on asset-management methods for road-slope countermeasures (1) [in Japanese]. https://www.pwri.go.jp/jpn/results/report/report-project/2015/pdf/pro-2-6-1.pdf"
 
+## reviewer-2/comment-9
+
+### part-01
+
+- Location: Introduction, paragraph beginning 'Figure 1 summarizes the framework.'
+- Reason: Replace unsupported greatest-benefit wording with the implemented ranking, evaluation, and community-priority sequence.
+- Kila decisions: KILA-D-20260904-021
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:47:55Z
+- Author: Kila
+- Markup SHA-256 before: `98afcd764d19f0c7fbe9844c202a6b5ea0dcd6363c630d94425b3fa0acd1b7f2`
+- Markup SHA-256 after: `d967813be6b71693762a441a3e742310118cd4302e1a1b7dc50f7d3a4feccc3b`
+- Revision IDs: `455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T224755741831.reviewer-2-comment-9.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Intervention screening then evaluates where an assumed reduction in closure propensity or an advance community action yields the greatest conditional benefit.
+~~~~
+
+- After:
+
+~~~~text
+Intervention screening then ranks candidate road actions with the declared consequence-per-cost proxy, evaluates the resulting budget-feasible road portfolios by simulated conditional benefit, and separately identifies community preparedness priorities from residual burden.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "evaluates"
+     - After: "ranks"
+  2. `replace`
+     - Before: "where"
+     - After: "candidate"
+  3. `replace`
+     - Before: "an"
+     - After: "road"
+  4. `replace`
+     - Before: "assumed"
+     - After: "actions"
+  5. `replace`
+     - Before: "reduction in closure propensity or an advance community action yields"
+     - After: "with"
+  6. `replace`
+     - Before: "greatest"
+     - After: "declared consequence-per-cost proxy, evaluates the resulting budget-feasible road portfolios by simulated"
+  7. `insert`
+     - Before: ""
+     - After: ", and separately identifies community preparedness priorities from residual burden"
+
+### part-02
+
+- Location: Introduction, paragraph beginning 'The study asks four linked questions.'
+- Reason: State Research Question 4 without claiming that the implemented screen finds a global optimum.
+- Kila decisions: KILA-D-20260904-021
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:48:15Z
+- Author: Kila
+- Markup SHA-256 before: `d967813be6b71693762a441a3e742310118cd4302e1a1b7dc50f7d3a4feccc3b`
+- Markup SHA-256 after: `baa209cc6cfdef06cc41ca39ea84d5a6b23291b68292ff6c4ab21a9134bb49d0`
+- Revision IDs: `468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T224815752005.reviewer-2-comment-9.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Fourth, which budget-feasible road or community actions produce the largest population-weighted reduction in those consequences?
+~~~~
+
+- After:
+
+~~~~text
+Fourth, how does the transparent screening procedure prioritize budget-feasible road actions and residual community preparedness needs, and what population-weighted reduction do the resulting road portfolios achieve?
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "which"
+     - After: "how does the transparent screening procedure prioritize"
+  2. `replace`
+     - Before: "or"
+     - After: "actions and residual"
+  3. `replace`
+     - Before: "actions"
+     - After: "preparedness"
+  4. `replace`
+     - Before: "produce"
+     - After: "needs,"
+  5. `replace`
+     - Before: "the"
+     - After: "and"
+  6. `replace`
+     - Before: "largest"
+     - After: "what"
+  7. `replace`
+     - Before: "in"
+     - After: "do"
+  8. `replace`
+     - Before: "those"
+     - After: "the"
+  9. `replace`
+     - Before: "consequences"
+     - After: "resulting road portfolios achieve"
+
+### part-03
+
+- Location: Methods > Intervention Prioritization and Robustness, final ordinary-text clause immediately before Equation 15
+- Reason: Clarify that Equation 15 is a post-selection evaluation rather than an explicitly optimized objective while preserving paragraph bookmarks, proofing markers, and native equations.
+- Kila decisions: KILA-D-20260904-021, KILA-D-20260904-022
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:55:37Z
+- Author: Codex
+- Markup SHA-256 before: `baa209cc6cfdef06cc41ca39ea84d5a6b23291b68292ff6c4ab21a9134bb49d0`
+- Markup SHA-256 after: `afeee8b9306abfd4a34fff1c29d680b4e0530a546da0ce44c92bc8d641a73fc9`
+- Revision IDs: `486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T225537325956.reviewer-2-comment-9.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+ and the effects are declared assumptions, so the optimized quantity is a scenario screening benefit rather than an observed engineering return.
+~~~~
+
+- After:
+
+~~~~text
+ and the effects are declared assumptions. Equation 15 is evaluated only after a budget-feasible screening portfolio has been constructed; it is not explicitly maximized over all feasible action combinations and does not represent an observed engineering return.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: ","
+     - After: "."
+  2. `replace`
+     - Before: "so"
+     - After: "Equation"
+  3. `replace`
+     - Before: "the optimized quantity"
+     - After: "15"
+  4. `insert`
+     - Before: ""
+     - After: "evaluated only after "
+  5. `replace`
+     - Before: "scenario"
+     - After: "budget-feasible"
+  6. `replace`
+     - Before: "benefit"
+     - After: "portfolio"
+  7. `replace`
+     - Before: "rather"
+     - After: "has"
+  8. `replace`
+     - Before: "than"
+     - After: "been constructed; it is not explicitly maximized over all feasible action combinations and does not represent"
+
+### part-04
+
+- Location: Methods > Intervention Prioritization and Robustness, immediately after Equation 17
+- Reason: Make the implemented Equation 17 to Equation 16 to Equation 15 sequence and one-pass budget-selection rule reproducible.
+- Kila decisions: KILA-D-20260904-021
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:58:19Z
+- Author: Codex
+- Markup SHA-256 before: `afeee8b9306abfd4a34fff1c29d680b4e0530a546da0ce44c92bc8d641a73fc9`
+- Markup SHA-256 after: `19b00045e28bb9ecb9dbb7704062d80716166d4a28c02e1ae57ab64e8f763094`
+- Revision IDs: `501, 502`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T225819695845.reviewer-2-comment-9.part-04.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+The implemented sequence first computes Ge from Equation 17, assigns a(e), substitutes these values into Equation 16 to obtain Qe, sorts all candidate roads in descending Qe, and retains the first 150 as the planning candidate set. Seven budgets span zero to the Central cost of the first 100 ranked candidates. For each budget and sensitivity setting, the same ordered list is scanned once: the assigned action is selected when its setting-specific cost fits the remaining budget, otherwise it is skipped and the scan continues. There is no backtracking, item swapping, or combinatorial search. After the set is formed, the assumed action effects modify closure propensities and the network simulations evaluate Ab(x) in Equation 15. The reported set is therefore a greedy rank-and-pack screening portfolio, not an optimizer solution.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "The implemented sequence first computes Ge from Equation 17, assigns a(e), substitutes these values into Equation 16 to obtain Qe, sorts all candidate roads in descending Qe, and retains the first 150 as the planning candidate set. Seven budgets span zero to the Central cost of the first 100 ranked candidates. For each budget and sensitivity setting, the same ordered list is scanned once: the assigned action is selected when its setting-specific cost fits the remaining budget, otherwise it is skipped and the scan continues. There is no backtracking, item swapping, or combinatorial search. After the set is formed, the assumed action effects modify closure propensities and the network simulations evaluate Ab(x) in Equation 15. The reported set is therefore a greedy rank-and-pack screening portfolio, not an optimizer solution."
+
+### part-05
+
+- Location: Conclusions, opening sentence
+- Reason: Keep the conclusion consistent with a screened rather than optimized intervention portfolio.
+- Kila decisions: KILA-D-20260904-021
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:58:34Z
+- Author: Codex
+- Markup SHA-256 before: `19b00045e28bb9ecb9dbb7704062d80716166d4a28c02e1ae57ab64e8f763094`
+- Markup SHA-256 after: `c057a58de62f88ca97cd7715615eb37e7c78f89b791ce3bd4e9249a5e7d32bf5`
+- Revision IDs: `503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T225834419655.reviewer-2-comment-9.part-05.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Under the post-earthquake rainfall-warning threshold scenarios, the framework identifies where relative slope disruption may affect roads, where those road disruptions may isolate communities or remove basic-service access, and which road or community actions have the greatest conditional planning benefit.
+~~~~
+
+- After:
+
+~~~~text
+Under the post-earthquake rainfall-warning threshold scenarios, the framework identifies where relative slope disruption may affect roads, where those road disruptions may isolate communities or remove basic-service access, and how road-access actions and community preparedness needs rank under the declared screening rules.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "which"
+     - After: "how"
+  2. `replace`
+     - Before: "road"
+     - After: "road-access"
+  3. `replace`
+     - Before: "or"
+     - After: "actions and"
+  4. `replace`
+     - Before: "actions"
+     - After: "preparedness"
+  5. `replace`
+     - Before: "have"
+     - After: "needs rank under"
+  6. `replace`
+     - Before: "greatest"
+     - After: "declared"
+  7. `replace`
+     - Before: "conditional"
+     - After: "screening"
+  8. `replace`
+     - Before: "planning benefit"
+     - After: "rules"
+
