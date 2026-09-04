@@ -428,10 +428,15 @@ We also clarified that the principal service analysis already reroutes each elig
 The intervention analysis relies on hypothetical costs and effects, and the Central ranking is identical to the equal-cost consequence benchmark, so no incremental optimization advantage has been demonstrated.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for this important observation. We agree that the hypothetical costs and effects do not establish engineering returns and that the identical Central ranking provides no evidence of incremental optimization advantage. The Abstract now explicitly ties the screening priorities to declared cost and effectiveness assumptions, and the Conclusions state this limitation directly.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+The Methods describe a greedy rank-and-pack screening procedure, not an explicit optimization solution. The separate cost and effectiveness comparisons in Appendix Table B13 characterize sensitivity to assumptions rather than validate those assumptions. The Results and Discussion explain why the Central ranking is structurally identical to the equal-cost consequence benchmark under the declared formulation; this equality is not an empirical demonstration of non-inferiority. We therefore frame the contribution as auditable consequence-aware screening, with local cost, effectiveness, and feasibility evidence required before implementation. The revised summary passages read:
+
+"Consequence-aware intervention screening identified auditable road and community priorities under declared cost and effectiveness assumptions, although the Central assigned-action ranking coincided with an equal-cost consequence ranking and therefore did not establish incremental superiority over that simple benchmark."
+(Pages 1–2, Lines 22–25)
+
+"The framework keeps relative disruption scores distinct from calibrated failure probabilities, simulation-conditional isolation distinct from observed outcomes, and planning-unit benefits distinct from engineering returns. Intervention costs and effects remain hypothetical, and the Central ranking equals the equal-cost consequence benchmark; no incremental optimization advantage is demonstrated."
+(Page 48, Lines 1068–1073)
 
 ## Comment 8
 

@@ -5318,3 +5318,80 @@ The equality is an algebraic identity under the declared comparison, not evidenc
   1. `insert-paragraph`
      - Before: ""
      - After: "The equality is an algebraic identity under the declared comparison, not evidence that the two approaches converged empirically. Both scores use the same consequence proxy and action assignment, and the median cross-setting effect-to-cost ratio equals the Central ratio for every action. The linear form of the consequence proxy makes this common factor explicit but does not by itself explain the identity; applying the same alternative proxy to both scores would preserve equality. Cost structure nevertheless affects membership: global scaling retains 100% of the Central Top 30, whereas equal-action and length-only costs retain 70.0% and 40.0%, respectively. The assigned-action framework could diverge from the Central comparator if site-specific or nonlinear costs make the median ratio differ from Central, if selection uses portfolio-level marginal benefits or network interactions, or if independently elicited objectives and constraints are added. Those extensions require local engineering data or stakeholder weights and are not demonstrated here."
+
+## reviewer-3/comment-7
+
+### part-01
+
+- Location: Abstract, intervention-screening sentence
+- Reason: Make the assumed costs and effectiveness explicit at the abstract decision claim.
+- Kila decisions: KILA-D-20260905-005
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T22:36:27Z
+- Author: Mike Li
+- Markup SHA-256 before: `b430ea30321274cfb917770bcd20fb065f7fad9fa46f5f9e5c7230c28a41f99c`
+- Markup SHA-256 after: `0c389b028221315c6d01801d3cc80162edd7e91597fb16453e16e7536117e5b9`
+- Revision IDs: `533`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T073627301463.reviewer-3-comment-7.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Consequence-aware intervention screening identified auditable road and community priorities, although the Central assigned-action ranking coincided with an equal-cost consequence ranking and therefore did not establish incremental superiority over that simple benchmark.
+~~~~
+
+- After:
+
+~~~~text
+Consequence-aware intervention screening identified auditable road and community priorities under declared cost and effectiveness assumptions, although the Central assigned-action ranking coincided with an equal-cost consequence ranking and therefore did not establish incremental superiority over that simple benchmark.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " under declared cost and effectiveness assumptions"
+
+### part-02
+
+- Location: Conclusions, after the sentence distinguishing planning benefits from engineering returns
+- Reason: State that hypothetical intervention assumptions and comparator equality do not demonstrate optimization advantage.
+- Kila decisions: KILA-D-20260905-005
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T22:36:42Z
+- Author: Mike Li
+- Markup SHA-256 before: `0c389b028221315c6d01801d3cc80162edd7e91597fb16453e16e7536117e5b9`
+- Markup SHA-256 after: `9e616282adb838fe858579c862dd365e837baf27368f62753d8cf520159abe6b`
+- Revision IDs: `534`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T073642580175.reviewer-3-comment-7.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The framework keeps relative disruption scores distinct from calibrated failure probabilities, simulation-conditional isolation distinct from observed outcomes, and planning-unit benefits distinct from engineering returns.
+~~~~
+
+- After:
+
+~~~~text
+The framework keeps relative disruption scores distinct from calibrated failure probabilities, simulation-conditional isolation distinct from observed outcomes, and planning-unit benefits distinct from engineering returns. Intervention costs and effects remain hypothetical, and the Central ranking equals the equal-cost consequence benchmark; no incremental optimization advantage is demonstrated.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " Intervention costs and effects remain hypothetical, and the Central ranking equals the equal-cost consequence benchmark; no incremental optimization advantage is demonstrated."
+
