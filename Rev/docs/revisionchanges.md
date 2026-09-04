@@ -5152,3 +5152,131 @@ Under the post-earthquake rainfall-warning threshold scenarios, the framework id
      - Before: "planning benefit"
      - After: "rules"
 
+## reviewer-1/comment-4
+
+### part-01
+
+- Location: Methods > Robustness and sensitivity, comparator sentence
+- Reason: Identify the four tested heuristic comparators and state the evidence boundary for a formal multi-criteria decision model.
+- Kila decisions: KILA-D-20260905-001
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T21:32:33Z
+- Author: Mike Li
+- Markup SHA-256 before: `c057a58de62f88ca97cd7715615eb37e7c78f89b791ce3bd4e9249a5e7d32bf5`
+- Markup SHA-256 after: `8a796d0a79860e71f6df0fdeb47f279b28afd32ef0480c7e67f8a2a4e264990e`
+- Revision IDs: `519, 520, 521, 522, 523, 524, 525, 526`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T063233717401.reviewer-1-comment-4.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Intervention portfolios are compared with hazard-only, emergency-route-only, road-class-only, and equal-cost consequence rankings under matched cost-effect settings.
+~~~~
+
+- After:
+
+~~~~text
+Intervention portfolios are compared with four prespecified heuristics under matched cost-effect settings: hazard-only; Emergency Route Membership-first with Road Disruption Score as a tie-breaker; Road Category-first with Road Disruption Score as a tie-breaker; and equal-cost consequence ranking. No formal multi-criteria decision model was tested because neither stakeholder-elicited criterion weights nor a validated cross-criterion utility function was available.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "hazard-only,"
+     - After: "four"
+  2. `replace`
+     - Before: "emergency-route-only,"
+     - After: "prespecified"
+  3. `replace`
+     - Before: "road-class-only, and equal-cost consequence rankings"
+     - After: "heuristics"
+  4. `insert`
+     - Before: ""
+     - After: ": hazard-only; Emergency Route Membership-first with Road Disruption Score as a tie-breaker; Road Category-first with Road Disruption Score as a tie-breaker; and equal-cost consequence ranking"
+  5. `insert`
+     - Before: ""
+     - After: " No formal multi-criteria decision model was tested because neither stakeholder-elicited criterion weights nor a validated cross-criterion utility function was available."
+
+### part-02
+
+- Location: Results > Intervention Priorities and Budgeted Benefits, comparator interpretation paragraph
+- Reason: Classify the four comparison rules as heuristics and explain why the Central equality holds across the full budget curve.
+- Kila decisions: KILA-D-20260905-001
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T21:32:45Z
+- Author: Mike Li
+- Markup SHA-256 before: `8a796d0a79860e71f6df0fdeb47f279b28afd32ef0480c7e67f8a2a4e264990e`
+- Markup SHA-256 after: `b8268fa36bb83c486f5547426a1a3a39b1ee86efcf32525a8d1c0e823d446f4e`
+- Revision IDs: `527, 528, 529`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T063246068747.reviewer-1-comment-4.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Assigned-action consequence screening separates road-access priorities from community resource-pre-positioning priorities. Figure 8 maps roads by the robust screening score, maps communities by isolation burden and older-population share, and compares budget curves with four simpler rules. The road and community maps are related but not identical: a road-access action is evaluated by the consequences it can avoid, whereas pre-positioning responds to residual community burden. The ranking clearly differs from hazard-only and road-class-only rules because it incorporates dependent communities, alternative scarcity, and population consequences. In the Central setting, however, it coincides with the equal-cost consequence ranking; the evidence therefore supports transparent consequence screening, not incremental superiority over that equivalent simple benchmark.
+~~~~
+
+- After:
+
+~~~~text
+Assigned-action consequence screening separates road-access priorities from community resource-pre-positioning priorities. Figure 8 maps roads by the robust screening score, maps communities by isolation burden and older-population share, and compares budget curves with four prespecified heuristic rules. The road and community maps are related but not identical: a road-access action is evaluated by the consequences it can avoid, whereas pre-positioning responds to residual community burden. The ranking clearly differs from hazard-only and road-class-only rules because it incorporates dependent communities, alternative scarcity, and population consequences. In the Central setting, however, it coincides with the equal-cost consequence ranking; the evidence therefore supports transparent consequence screening, not incremental superiority over that equivalent simple benchmark. The Central equality holds at all seven tested budgets because, for each assigned action, the median low-central-high effect-to-cost ratio in Equation 16 equals its Central ratio.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "simpler"
+     - After: "prespecified heuristic"
+  2. `insert`
+     - Before: ""
+     - After: " The Central equality holds at all seven tested budgets because, for each assigned action, the median low-central-high effect-to-cost ratio in Equation 16 equals its Central ratio."
+
+### part-03
+
+- Location: Discussion > From Hazard Screening to Emergency Action, MCDM interpretation boundary
+- Reason: Explain why a post hoc multi-criteria decision model was not added without independently supported decision weights.
+- Kila decisions: KILA-D-20260905-001
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T21:32:58Z
+- Author: Mike Li
+- Markup SHA-256 before: `b8268fa36bb83c486f5547426a1a3a39b1ee86efcf32525a8d1c0e823d446f4e`
+- Markup SHA-256 after: `885ee8508ea4d4f121aa8280fff675cbbd36ea6326a8e1cfc54adffbe002ad53`
+- Revision IDs: `530`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T063258618010.reviewer-1-comment-4.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Because the Central assigned-action ranking is identical to the equal-cost consequence comparator, the analytical gain lies in traceable consequence and action assignment rather than demonstrated optimization superiority. The screening score does not certify an intervention or guarantee continued access.
+~~~~
+
+- After:
+
+~~~~text
+Because the Central assigned-action ranking is identical to the equal-cost consequence comparator, the analytical gain lies in traceable consequence and action assignment rather than demonstrated optimization superiority. We did not add a post hoc multi-criteria decision model because unelicited weights for hazard, network dependence, vulnerable-population protection, service continuity, and cost would create another unsupported ranking assumption. Such a model is appropriate only after decision-makers define those trade-offs. The screening score does not certify an intervention or guarantee continued access.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: "We did not add a post hoc multi-criteria decision model because unelicited weights for hazard, network dependence, vulnerable-population protection, service continuity, and cost would create another unsupported ranking assumption. Such a model is appropriate only after decision-makers define those trade-offs. "
+

@@ -77,10 +77,19 @@ Thank you for this comment. We evaluated municipality-wide Yatsushiro assignment
 4. Because the central assigned-action ranking matches the simple equal-cost consequence baseline, the authors should clarify if any other heuristics or multi-criteria decision models were tested.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for this important comment. We clarify that the comparison already includes four prespecified heuristic rules: hazard-only; Emergency Route Membership-first with Road Disruption Score as a tie-breaker; Road Category-first with Road Disruption Score as a tie-breaker; and equal-cost consequence ranking. We did not test a formal multi-criteria decision model. A deterministic audit confirms that the Central assigned-action and equal-cost consequence rankings are identical at all seven tested budgets because, for each assigned action, the median low-central-high effect-to-cost ratio used by the assigned-action score equals its Central ratio. We now report this structural reason directly and interpret the result as support for transparent consequence screening rather than superiority over the equivalent simple comparator. We also explain that adding a post hoc multi-criteria model without stakeholder-elicited weights or a validated cross-criterion utility function would introduce an unsupported ranking assumption. The Methods, Results, Discussion, and Appendix have been revised accordingly.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"Intervention portfolios are compared with four prespecified heuristics under matched cost-effect settings: hazard-only; Emergency Route Membership-first with Road Disruption Score as a tie-breaker; Road Category-first with Road Disruption Score as a tie-breaker; and equal-cost consequence ranking. No formal multi-criteria decision model was tested because neither stakeholder-elicited criterion weights nor a validated cross-criterion utility function was available."
+(Page 27, Lines 577–582)
+
+"The Central equality holds at all seven tested budgets because, for each assigned action, the median low-central-high effect-to-cost ratio in Equation 16 equals its Central ratio."
+(Page 36, Lines 783–785)
+
+"Because the Central assigned-action ranking is identical to the equal-cost consequence comparator, the analytical gain lies in traceable consequence and action assignment rather than demonstrated optimization superiority. We did not add a post hoc multi-criteria decision model because unelicited weights for hazard, network dependence, vulnerable-population protection, service continuity, and cost would create another unsupported ranking assumption. Such a model is appropriate only after decision-makers define those trade-offs. The screening score does not certify an intervention or guarantee continued access."
+(Pages 42–43, Lines 932–939)
+
+"The comparator labels denote four fixed heuristics. Hazard only ranks Road Disruption Score; emergency route only and road class only prioritize the named binary or class criterion and use Road Disruption Score to break ties; equal-cost consequence ranks the same consequence-effect-to-cost ratio under each setting. Under the declared action effects and global cost multipliers, the median ratio used by the assigned-action score equals the Central ratio for all three actions, so the two Central orders and all seven budget rows are identical. No formal multi-criteria decision model was tested because the study did not have stakeholder-elicited criterion weights or a validated cross-criterion utility function."
+(Appendix, Pages 10–11, Lines 188–196)
 
 # Reviewer 2
 

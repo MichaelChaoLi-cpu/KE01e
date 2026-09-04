@@ -138,7 +138,8 @@ hazard and consequence pathway.
   risk reduction; and budget.
 - What would verify it: Benefits are monotone with budget, feasible under declared
   constraints, reproducible across Monte Carlo seeds, and compared under identical
-  assumptions with hazard-only, road-class-only, and equal-cost consequence baselines.
+  assumptions with hazard-only, Emergency Route Membership-first, Road Category-first,
+  and equal-cost consequence baselines.
   Equality with the equal-cost consequence baseline is an auditable consistency result,
   not evidence of incremental superiority.
 - What would falsify or weaken it: Highly unstable rankings, negligible improvement,
@@ -786,12 +787,16 @@ and the scan continues. There is no backtracking, item swapping, or combinatoria
 Only after the portfolio has been formed are the assumed action effects applied to closure
 propensities and the network simulations used to evaluate the population-weighted benefit
 in the intervention objective equation. The result is therefore a greedy rank-and-pack
-screening portfolio, not an explicitly optimized solution. Portfolios are compared with
-hazard-only, Emergency Route Membership-only, Road Category-only, and equal-cost consequence
-baselines under the same sensitivity setting \(b\). Because the median low-central-high effect-cost ratio equals the
-central ratio in the declared assumptions, the Central \(Q_e\) order is expected to equal
-the Central equal-cost consequence order; this is reported as a consistency result rather
-than incremental superiority. At the central setting, the modeled cost of a one-kilometre
+screening portfolio, not an explicitly optimized solution. Portfolios are compared with four
+fixed heuristics under the same sensitivity setting \(b\): hazard-only; Emergency Route
+Membership-first with Road Disruption Score as a tie-breaker; Road Category-first with Road
+Disruption Score as a tie-breaker; and equal-cost consequence ranking. Because the median
+low-central-high effect-cost ratio equals the central ratio for every assigned action, the
+Central \(Q_e\) order and the Central equal-cost consequence order are identical across all
+seven tested budgets; this is reported as a structural consistency result rather than
+incremental superiority. No formal multi-criteria decision model is tested because neither
+stakeholder-elicited criterion weights nor a validated cross-criterion utility function is
+available. At the central setting, the modeled cost of a one-kilometre
 road section is 5.0 relative planning units for temporary reinforcement, 2.0 for clearance
 pre-positioning, and 3.7 for alternative-route protection; these anchors are not currency.
 Road-access, information, life-safety, and service-continuity benefits are reported
@@ -830,7 +835,7 @@ Intervention assumptions are also tested one family at a time under Heavy rainfa
 - Terrain and road-transfer checks use an upslope influence set requiring positive Elevation difference and downhill alignment toward sampled road points, with distance decay and normalized directional mean aggregation. Comparisons include warning-zone exposure and low-central-high score-to-closure mappings.
 - The central network screen allows the upper 15 percent of positive Heavy-scenario road scores to fail. Network robustness compares the Primary Emergency Road backbone with the broader Primary-plus-Secondary backbone and evaluates the Low, Central, and High closure mappings with the same five prespecified seeds and 1,000 draws per seed. Their Heavy expected disconnected populations are 351.4, 1,063.6, and 2,073.2; Low and High community-frequency correlations with Central are 0.939 and 0.971, their Top-30 burden overlaps are 70.0% and 80.0%, and 15 Top-30 communities are common to all mappings. Central is the transparent reference, High is a capacity stress test, common priorities support robust first-pass action, and unstable priorities identify where calibration data have the greatest value. The simulation-size comparison evaluates \(M\) across 500, 1,000, and 2,000 draws using one common seed. The coast-inclusive boundary rule is retained only as an audit comparator. A separate fixed-marginal dependence analysis compares independent closures with 1 km and 3 km square clusters at \(\rho=0.25\) and \(0.50\) across all three rainfall scenarios, five seeds, and 1,000 draws per seed. Acceptance requires exact reproduction of the independent branch, small marginal-closure error and bias, and deterministic reruns. The validated broad-strong setting changes mean isolation by +9.2%, +16.0%, and −6.5% under Moderate, Heavy, and Extreme rainfall, respectively; dependence is therefore reported as a non-directional sensitivity bound.
 - Vulnerability heterogeneity reports Total Population and age-specific populations separately and stratifies roads by Road Category and Emergency Route Membership.
-- Intervention robustness first reports the joint Conservative, Central, and Optimistic effect-and-global-cost profiles used in Figure 8, then separates effectiveness, cost structure, and the Equation 17 attachment coefficient one family at a time in Appendix Table B13. All tests use the Heavy scenario, Primary Emergency Road target, fixed candidate set, five prespecified seed sets, and matched common-random-number draws. Effect magnitude controls protected-population magnitude; detailed road membership depends on cost structure; and the tested attachment-weight range does not change the Central Top 30. Each comparator is evaluated under the same applicable cost-effect and seed setting. Central equality with the equal-cost consequence comparator is reported explicitly, and none of the tested numerical values is described as locally calibrated.
+- Intervention robustness first reports the joint Conservative, Central, and Optimistic effect-and-global-cost profiles used in Figure 8, then separates effectiveness, cost structure, and the Equation 17 attachment coefficient one family at a time in Appendix Table B13. All tests use the Heavy scenario, Primary Emergency Road target, fixed candidate set, five prespecified seed sets, and matched common-random-number draws. Effect magnitude controls protected-population magnitude; detailed road membership depends on cost structure; and the tested attachment-weight range does not change the Central Top 30. Four fixed heuristic comparators are evaluated under the same applicable cost-effect and seed setting. The Central assigned-action and equal-cost consequence rows are identical at all seven budgets because every action's low-central-high median effect-cost ratio equals its Central ratio. No formal multi-criteria decision model is tested without independently supported decision criteria and weights, and none of the tested numerical values is described as locally calibrated.
 - Ablations compare the full framework with warning-zone-only, terrain-only, no-threshold-adjustment, hazard-only road ranking, and equal-cost intervention baselines.
 - Failure modes include below-chance warning-zone validation, disagreement between fold AUC and held-out inventory capture, matched road concordance that does not exceed simple baselines, scenario rank correlation above 0.95, baseline-disconnected communities, unresolved service locations, non-converged simulation frequencies, or intervention gains that are immaterial relative to equal-cost consequence ranking.
 
