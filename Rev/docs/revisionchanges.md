@@ -2398,3 +2398,153 @@ Note: Panel a shows the Heavy-rainfall score under the baseline threshold and ov
 - Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 - Endnote relationships SHA-256: `absent`
 
+## reviewer-3/comment-5
+
+### part-02
+
+- Location: Methods > Network Disruption and Community Isolation Simulation, after the paragraph ending 'not a calibrated probability of an observed future event.'
+- Reason: Define the approved fixed-marginal spatial closure-dependence sensitivity analysis.
+- Kila decisions: KILA-D-20260903-027, KILA-D-20260904-001
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T23:23:26Z
+- Author: Kila
+- Markup SHA-256 before: `b4d36bd4f6fd19ec62d6fb98955556b50ea370352ec87703664ef8d1b54e7e70`
+- Markup SHA-256 after: `9db5216649244c35f5e31871d26a42c864709e3ef8b955b103d68c8767638d4a`
+- Revision IDs: `227, 228`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T082327310595.reviewer-3-comment-5.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+To test departure from independent section closures while holding every marginal propensity fixed, we additionally use a spatial-cluster Gaussian copula. For section e in cluster g(e) and draw m, Ze,m=ρZg(e),m+1−ρZe,mind, and the section closes when Ze,m≤Φ−1(pe). Candidate sections are grouped by projected midpoint into fixed 1 km or 3 km square clusters and evaluated at ρ=0.25 and 0.50, alongside the independent ρ=0 reference, for each rainfall scenario, five seeds, and 1,000 draws per seed. Shared cluster shocks introduce positive within-cluster dependence while preserving pe as the marginal closure propensity. The cluster scales and correlations are stress-test assumptions rather than estimated landslide-footprint or failure-process parameters.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "To test departure from independent section closures while holding every marginal propensity fixed, we additionally use a spatial-cluster Gaussian copula. For section e in cluster g(e) and draw m, Ze,m=ρZg(e),m+1−ρZe,mind, and the section closes when Ze,m≤Φ−1(pe). Candidate sections are grouped by projected midpoint into fixed 1 km or 3 km square clusters and evaluated at ρ=0.25 and 0.50, alongside the independent ρ=0 reference, for each rainfall scenario, five seeds, and 1,000 draws per seed. Shared cluster shocks introduce positive within-cluster dependence while preserving pe as the marginal closure propensity. The cluster scales and correlations are stress-test assumptions rather than estimated landslide-footprint or failure-process parameters."
+
+### part-03
+
+- Location: Results > Community Isolation and Population Exposure, after the paragraph on residents aged 65 years or older.
+- Reason: Report the approved magnitude, upper-tail, and local-priority sensitivity results.
+- Kila decisions: KILA-D-20260903-027, KILA-D-20260904-001
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T23:23:27Z
+- Author: Kila
+- Markup SHA-256 before: `9db5216649244c35f5e31871d26a42c864709e3ef8b955b103d68c8767638d4a`
+- Markup SHA-256 after: `dd34b9f58121fcdc5120dee831c893ace3820baaf6cf33c195ac4375f8681ef8`
+- Revision IDs: `229, 230`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T082327694437.reviewer-3-comment-5.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+Spatial closure dependence changes consequence magnitude and local priority membership without a uniform direction across rainfall scenarios. Relative to independent closure, the broad strong setting (3 km clusters, ρ=0.50) changes mean expected isolated population from 189.1 to 206.4 under Moderate rainfall (+9.2%), from 1,121.7 to 1,298.1 under Heavy rainfall (+15.7%), and from 5,032.2 to 4,501.5 under Extreme rainfall (−10.5%). The corresponding per-draw 95th percentiles change by +8.7%, +15.8%, and −5.3%. Under Heavy rainfall, community isolation-frequency rank correlation with the independent reference is 0.948 and top-30 population-burden overlap is 66.7% in the broad strong setting. Across all correlated settings and scenarios, rank correlation remains 0.938–0.996, whereas top-30 overlap ranges from 66.7% to 100% (Appendix Table B8).
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "Spatial closure dependence changes consequence magnitude and local priority membership without a uniform direction across rainfall scenarios. Relative to independent closure, the broad strong setting (3 km clusters, ρ=0.50) changes mean expected isolated population from 189.1 to 206.4 under Moderate rainfall (+9.2%), from 1,121.7 to 1,298.1 under Heavy rainfall (+15.7%), and from 5,032.2 to 4,501.5 under Extreme rainfall (−10.5%). The corresponding per-draw 95th percentiles change by +8.7%, +15.8%, and −5.3%. Under Heavy rainfall, community isolation-frequency rank correlation with the independent reference is 0.948 and top-30 population-burden overlap is 66.7% in the broad strong setting. Across all correlated settings and scenarios, rank correlation remains 0.938–0.996, whereas top-30 overlap ranges from 66.7% to 100% (Appendix Table B8)."
+
+### part-04
+
+- Location: Discussion > Network Dependence and Unequal Community Consequences, after the current second paragraph.
+- Reason: Interpret the distinct roles of topology and spatially dependent closure occurrence.
+- Kila decisions: KILA-D-20260903-027, KILA-D-20260904-001
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T23:23:27Z
+- Author: Kila
+- Markup SHA-256 before: `dd34b9f58121fcdc5120dee831c893ace3820baaf6cf33c195ac4375f8681ef8`
+- Markup SHA-256 after: `6ad00b7761b4a7aa7909bef7a37a6848c768f5037d78bfb18dd0a3c139f1cc3e`
+- Revision IDs: `231, 232`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T082328033793.reviewer-3-comment-5.part-04.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+The sensitivity analysis distinguishes two forms of network dependence. Network topology determines the consequence of a realized closure set, whereas spatial dependence determines which section closures co-occur. Under Heavy rainfall, positive cluster dependence increases both mean and upper-tail isolation; under Extreme rainfall, the same fixed-marginal construction produces less spatially dispersed closure sets and lowers both quantities despite very high community-rank agreement. Independent closure is therefore neither uniformly conservative nor uniformly anti-conservative. The independent model remains a transparent reference, but correlated stress tests are necessary when local preparedness decisions depend on the exact highest-burden communities.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "The sensitivity analysis distinguishes two forms of network dependence. Network topology determines the consequence of a realized closure set, whereas spatial dependence determines which section closures co-occur. Under Heavy rainfall, positive cluster dependence increases both mean and upper-tail isolation; under Extreme rainfall, the same fixed-marginal construction produces less spatially dispersed closure sets and lowers both quantities despite very high community-rank agreement. Independent closure is therefore neither uniformly conservative nor uniformly anti-conservative. The independent model remains a transparent reference, but correlated stress tests are necessary when local preparedness decisions depend on the exact highest-burden communities."
+
+### part-05
+
+- Location: Discussion > Strengths, Limitations, and Future Research, between the main limitations paragraph and the future-work paragraph.
+- Reason: State that the dependence scale and correlation are uncalibrated stress-test assumptions.
+- Kila decisions: KILA-D-20260903-027, KILA-D-20260904-001
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-03T23:23:28Z
+- Author: Kila
+- Markup SHA-256 before: `6ad00b7761b4a7aa7909bef7a37a6848c768f5037d78bfb18dd0a3c139f1cc3e`
+- Markup SHA-256 after: `103d5c60a10a9732566d62efdee6de0f8efb494e99d11b992a5d8a136fa21564`
+- Revision IDs: `233, 234`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T082328456237.reviewer-3-comment-5.part-05.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+The 1 km and 3 km square clusters and ρ=0.25 and 0.50 dependence levels are deliberately broad sensitivity settings rather than estimates from observed co-failures. Square-grid boundaries also discretize processes that would vary continuously in space. The correlated results therefore bound dependence uncertainty but cannot identify an event-specific correlation length, attribute a common physical trigger, or replace calibration using geocoded and time-resolved multi-road failure observations.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "The 1 km and 3 km square clusters and ρ=0.25 and 0.50 dependence levels are deliberately broad sensitivity settings rather than estimates from observed co-failures. Square-grid boundaries also discretize processes that would vary continuously in space. The correlated results therefore bound dependence uncertainty but cannot identify an event-specific correlation length, attribute a common physical trigger, or replace calibration using geocoded and time-resolved multi-road failure observations."
+

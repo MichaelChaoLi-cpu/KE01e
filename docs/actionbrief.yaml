@@ -2362,6 +2362,16 @@ tableDictionary:
     tableExplanation: Reports matched concordance, section-bootstrap intervals, ranking stability, and interpretation
       boundaries for selected and comparator road scores.
     tableSuitableSection: 'Appendix B: Road-Restriction Correspondence'
+  table_spatial_closure_dependence_sensitivity:
+    tableId: table_spatial_closure_dependence_sensitivity
+    tablePath: data/results/tables/Table_spatial_closure_dependence_sensitivity.xlsx
+    tableCaption: Spatial closure-dependence sensitivity
+    tableAim: Tests whether positive within-event spatial dependence changes community-isolation means, tails,
+      and local priority membership while preserving every road section's marginal closure propensity.
+    tableExplanation: Reports the independent reference and 1 km or 3 km Gaussian-copula clusters at rho 0.25
+      or 0.50 for all rainfall scenarios, with total and older-population consequences, P95, rank agreement,
+      top-30 overlap, and community-frequency changes.
+    tableSuitableSection: 'Appendix B: Network Simulation Convergence and Alternative Assumptions'
   table_municipality_isolation_and_service_loss_summary:
     tableId: table_municipality_isolation_and_service_loss_summary
     tablePath: data/results/tables/Table_municipality_isolation_and_service_loss_summary.xlsx
