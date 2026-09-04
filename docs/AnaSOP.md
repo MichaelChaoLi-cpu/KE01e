@@ -738,6 +738,16 @@ Interventions are evaluated with action-appropriate outcomes. Temporary reinforc
 
 Here, \(A_{road}\) is the set of road-access actions, \(x_{e,a}\) equals one when action \(a\) is assigned to road section \(e\), \(\rho_{a,b}\) is the declared low, central, or high proportional effectiveness assumption, and \(\widetilde{p}_{e,b}^{(r,f)}(x)\) is the intervention-adjusted closure propensity. Inspection is treated as an information action, preventive evacuation as a life-safety action, and resource pre-positioning as a service-continuity action. These actions are ranked using exposed population, uncertainty, or avoided Service Reachability Loss as appropriate and are not credited with Avoided Isolation unless a separately justified road-access effect exists.
 
+The three modeled road-access actions represent different mechanisms. Temporary reinforcement is preventive, clearance pre-positioning represents faster restoration, and alternative-route protection represents continuity through a substitute connection. Equation 14 converts them to a common stylized reduction in effective road unavailability for network comparison; it is not a physical model in which every action prevents slope failure. Japanese road-slope guidance supports inspection, risk-based prioritization, and evaluation of countermeasure effects under limited resources, but it does not provide transferable effectiveness values for these heterogeneous actions. The complete declared matrix is:
+
+| intervention type | Conservative | Central | Optimistic |
+|---|---:|---:|---:|
+| Temporary reinforcement | 0.25 | 0.45 | 0.60 |
+| Clearance pre-positioning | 0.10 | 0.20 | 0.30 |
+| Alternative-route protection | 0.20 | 0.35 | 0.50 |
+
+These proportional reductions are planning stress assumptions, not locally measured engineering effectiveness.
+
 For intervention set \(x\), sensitivity setting \(b\), and budget \(B\), population-weighted Avoided Isolation is
 
 \[
@@ -754,8 +764,7 @@ G_e=\Delta N_e^{single}+0.15B_e.
 
 Here, \(\Delta N_e^{single}\) is the population disconnected when road section \(e\) is
 the only closed candidate section and \(B_e\) is the attachment-based community burden
-adjacent to that section. A deterministic feasibility rule assigns one road-access action
-\(a(e)\) to each candidate road. Priority Score is
+adjacent to that section. The coefficient 0.15 is an analyst-set scaling weight that gives the attachment term a limited supporting role when a single-section closure does not capture all local dependence. It is not an estimated physical, economic, or engineering coefficient. One-family-at-a-time sensitivity tests values of 0, 0.075, 0.15, 0.30, and 0.50 while holding action effects and costs fixed. A deterministic feasibility rule assigns one road-access action \(a(e)\) to each candidate road. Priority Score is
 
 \[
 Q_e=\operatorname{median}_{b}\left[
@@ -779,6 +788,22 @@ Road-access, information, life-safety, and service-continuity benefits are repor
 separately and are not collapsed into one score without declared decision weights. Results
 are screening priorities rather than engineering optima.
 
+For road length \(L\) in kilometres, the Central relative cost functions are
+
+\[
+Cost_{reinforcement}(L)=3.0+2.0L,
+\]
+
+\[
+Cost_{clearance}(L)=1.5+0.5L,
+\]
+
+\[
+Cost_{alternative}(L)=2.5+1.2L.
+\]
+
+The Conservative and Optimistic joint profiles multiply these Central costs by 1.2 and 0.8, respectively. The constants encode only an assumed fixed or mobilization component and a length-scaled component. The costs are neither currency nor official unit prices; actual estimation requires site-specific quantities, terrain, access, design, and procurement information.
+
 The intervention baseline, assigned-action portfolios, and all comparator portfolios use
 five independently seeded common-random-number sets. Protected Population is reported as
 the mean and range across seeds; ranking stability and selected-road overlap are reported
@@ -787,17 +812,15 @@ Total Population as the primary key and expected isolated Population Age 65+ onl
 secondary key and separate vulnerability descriptor. No numeric age premium is added to
 Total Population.
 
+Intervention assumptions are also tested one family at a time under Heavy rainfall, the Primary Emergency Road target, a fixed 269.131-unit budget, five prespecified seeds, and 1,000 common-random-number draws per seed. The effectiveness-only comparison holds Central costs and the 0.15 attachment coefficient fixed. The cost-only comparison holds Central effects and the 0.15 coefficient fixed and tests global cost multipliers of 0.8 and 1.2, an equal-action formula \(2.0+1.0L\), and length-only costs using the one-kilometre Central anchors. The coefficient comparison holds Central effects and costs fixed and tests 0–0.50. The Central reference exactly reproduces 100 selected roads and 62.3 protected residents (seed range 59.5–64.3). Effect-only alternatives preserve near-identical ordering but yield 33.3–90.7 protected residents. Cost-only alternatives yield 52.9–67.8 protected residents, with Top-30 overlap declining to 40.0% when fixed cost components are removed. Coefficient alternatives retain all Central Top-30 roads and yield 59.8–62.3 protected residents; the coefficient-zero all-road Spearman value of 0.353 is tie-sensitive because only 216 roads retain a positive score. Appendix Table B13 reports the complete results. These are planning stress tests, not confidence intervals or local engineering calibration.
+
 ### Robustness, Heterogeneity, and Failure Modes
 
 - Rainfall robustness compares the seven-station 2016-2020 and five-station 2016-2025 temporal supports and the Moderate, Heavy, and Extreme independent-event quantiles. The unresolved Yatsushiro assignment is separately bounded by municipality-wide 0.70 and 0.80 cases around the analyst midpoint of 0.75. Bounds are reported at the slope, road, isolation, and service-consequence stages; decision outputs are regenerated only if a material ranking or benefit change is detected.
 - Terrain and road-transfer checks use an upslope influence set requiring positive Elevation difference and downhill alignment toward sampled road points, with distance decay and normalized directional mean aggregation. Comparisons include warning-zone exposure and low-central-high score-to-closure mappings.
 - The central network screen allows the upper 15 percent of positive Heavy-scenario road scores to fail. Network robustness compares the Primary Emergency Road backbone with the broader Primary-plus-Secondary backbone and evaluates the Low, Central, and High closure mappings with the same five prespecified seeds and 1,000 draws per seed. Their Heavy expected disconnected populations are 351.4, 1,063.6, and 2,073.2; Low and High community-frequency correlations with Central are 0.939 and 0.971, their Top-30 burden overlaps are 70.0% and 80.0%, and 15 Top-30 communities are common to all mappings. Central is the transparent reference, High is a capacity stress test, common priorities support robust first-pass action, and unstable priorities identify where calibration data have the greatest value. The simulation-size comparison evaluates \(M\) across 500, 1,000, and 2,000 draws using one common seed. The coast-inclusive boundary rule is retained only as an audit comparator. A separate fixed-marginal dependence analysis compares independent closures with 1 km and 3 km square clusters at \(\rho=0.25\) and \(0.50\) across all three rainfall scenarios, five seeds, and 1,000 draws per seed. Acceptance requires exact reproduction of the independent branch, small marginal-closure error and bias, and deterministic reruns. The validated broad-strong setting changes mean isolation by +9.2%, +16.0%, and −6.5% under Moderate, Heavy, and Extreme rainfall, respectively; dependence is therefore reported as a non-directional sensitivity bound.
 - Vulnerability heterogeneity reports Total Population and age-specific populations separately and stratifies roads by Road Category and Emergency Route Membership.
-- Intervention robustness varies Intervention Cost, assumed effectiveness, budget, and
-  five Monte Carlo seed sets; each comparator is evaluated under the same cost-effect and
-  seed setting, and rank correlations, selection overlap, and seed ranges accompany
-  Priority Score. Central equality with the equal-cost consequence comparator is reported
-  explicitly.
+- Intervention robustness first reports the joint Conservative, Central, and Optimistic effect-and-global-cost profiles used in Figure 8, then separates effectiveness, cost structure, and the Equation 17 attachment coefficient one family at a time in Appendix Table B13. All tests use the Heavy scenario, Primary Emergency Road target, fixed candidate set, five prespecified seed sets, and matched common-random-number draws. Effect magnitude controls protected-population magnitude; detailed road membership depends on cost structure; and the tested attachment-weight range does not change the Central Top 30. Each comparator is evaluated under the same applicable cost-effect and seed setting. Central equality with the equal-cost consequence comparator is reported explicitly, and none of the tested numerical values is described as locally calibrated.
 - Ablations compare the full framework with warning-zone-only, terrain-only, no-threshold-adjustment, hazard-only road ranking, and equal-cost intervention baselines.
 - Failure modes include below-chance warning-zone validation, disagreement between fold AUC and held-out inventory capture, matched road concordance that does not exceed simple baselines, scenario rank correlation above 0.95, baseline-disconnected communities, unresolved service locations, non-converged simulation frequencies, or intervention gains that are immaterial relative to equal-cost consequence ranking.
 
@@ -848,6 +871,7 @@ Interpretation limits are enforced through the support-status column: each workf
 | High-Isolation-Risk Communities | Lists the 30 communities with the highest five-seed mean Heavy-scenario expected isolated Total Population, using expected isolated Population Age 65+ only as a secondary ranking key and separate descriptor. | 30 | 11 | One community | English municipality or ward, centroid coordinates, mesh count, total and older population, candidate connection sections, scenario isolation frequencies, expected isolated population, and principal service loss | done |
 | Intervention Portfolios | Compares five-seed budget-feasible intervention portfolios and their protective benefits across cost-effect settings. | 21 | 10 | One budget and sensitivity-setting combination | Budget, selected roads, intervention mix, realized cost, protected communities, protected total and older population, avoided isolation share, unit-cost benefit, and selection overlap | done |
 | Comparator Robustness | Compares the assigned-action consequence-based screening ranking with hazard-only, emergency-route-only, road-class-only, and equal-cost consequence baselines under matched cost-effect and seed settings. | 84 | 8 | One comparator, sensitivity setting, and budget combination | Setting, comparator, budget, selected roads, realized cost, protected population, avoided isolation share, and unit-cost benefit | done |
+| Intervention Parameter Sensitivity | Separates intervention effectiveness, relative cost structure, and the Equation 17 attachment coefficient one family at a time under a fixed Heavy-scenario budget and matched seeds. | 11 | 12 | One Central reference or single-family alternative | Parameter family, setting, attachment coefficient, positive-score roads, score correlation, Top-30 overlap, selected roads, portfolio overlap, realized cost, action mix, protected-population seed range, and change from Central | done |
 
 ### Variable Coverage Check
 

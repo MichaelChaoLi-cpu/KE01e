@@ -4540,3 +4540,344 @@ The closure-mapping sensitivity separates robust screening priorities from magni
 - Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 - Endnote relationships SHA-256: `absent`
 
+## reviewer-2/comment-6
+
+### part-01
+
+- Location: Methods > Intervention Prioritization and Robustness, after the opening action-classification paragraph
+- Reason: Define the distinct action mechanisms, the common effective-unavailability interpretation, the official-guidance boundary, and the complete effect matrix.
+- Kila decisions: KILA-D-20260904-019
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:09:02Z
+- Author: Kila
+- Markup SHA-256 before: `0ce0d50d15ec4b4ae378b69cfb2f4126ab7bc48a1131c82a439d374ee2deda0c`
+- Markup SHA-256 after: `58bacca5d35759335dd75b00e3971800565c2ce6c6cc54e105cae24bc9917b57`
+- Revision IDs: `438, 439`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T220902493258.reviewer-2-comment-6.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+The action categories reflect different ways of maintaining road access during the planning horizon: temporary reinforcement is preventive, clearance pre-positioning represents faster restoration, and alternative-route protection represents continuity through a substitute connection. Equation 14 treats these distinct mechanisms as a common stylized reduction in effective road unavailability so that their network consequences can be compared; it is not a physical model in which all three actions prevent slope failure. Japanese road-slope guidance supports inspection, risk-based prioritization, and evaluation of countermeasure effects under limited resources (Public Works Research Institute, 2015; Ministry of Land, Infrastructure, Transport and Tourism, 2022), but it does not supply transferable values for these heterogeneous actions. We therefore declare Conservative/Central/Optimistic proportional reductions of 0.25/0.45/0.60 for temporary reinforcement, 0.10/0.20/0.30 for clearance pre-positioning, and 0.20/0.35/0.50 for alternative-route protection. These are planning stress assumptions, not locally measured engineering effectiveness.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "The action categories reflect different ways of maintaining road access during the planning horizon: temporary reinforcement is preventive, clearance pre-positioning represents faster restoration, and alternative-route protection represents continuity through a substitute connection. Equation 14 treats these distinct mechanisms as a common stylized reduction in effective road unavailability so that their network consequences can be compared; it is not a physical model in which all three actions prevent slope failure. Japanese road-slope guidance supports inspection, risk-based prioritization, and evaluation of countermeasure effects under limited resources (Public Works Research Institute, 2015; Ministry of Land, Infrastructure, Transport and Tourism, 2022), but it does not supply transferable values for these heterogeneous actions. We therefore declare Conservative/Central/Optimistic proportional reductions of 0.25/0.45/0.60 for temporary reinforcement, 0.10/0.20/0.30 for clearance pre-positioning, and 0.20/0.35/0.50 for alternative-route protection. These are planning stress assumptions, not locally measured engineering effectiveness."
+
+### part-02
+
+- Location: Methods > Intervention Prioritization and Robustness, after the Equation 16 explanatory paragraph
+- Reason: Disclose the exact Central relative-cost functions, one-kilometre anchors, and site-specific cost boundary.
+- Kila decisions: KILA-D-20260904-019
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:09:23Z
+- Author: Kila
+- Markup SHA-256 before: `58bacca5d35759335dd75b00e3971800565c2ce6c6cc54e105cae24bc9917b57`
+- Markup SHA-256 after: `741ed32f1ffb61b5fe1387962a15b5f004ee376edbee8c5fcfd170ced4b3463c`
+- Revision IDs: `440, 441`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T220923962125.reviewer-2-comment-6.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+For road length L in kilometres, Central costs are 3.0+2.0L for temporary reinforcement, 1.5+0.5L for clearance pre-positioning, and 2.5+1.2L for alternative-route protection, giving one-kilometre anchors of 5.0, 2.0, and 3.7 relative planning units. The constants encode only an assumed fixed/mobilization component and a length-scaled component. They are neither currency nor official unit prices; actual estimation requires site-specific quantities, terrain, access, design, and procurement information.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "For road length L in kilometres, Central costs are 3.0+2.0L for temporary reinforcement, 1.5+0.5L for clearance pre-positioning, and 2.5+1.2L for alternative-route protection, giving one-kilometre anchors of 5.0, 2.0, and 3.7 relative planning units. The constants encode only an assumed fixed/mobilization component and a length-scaled component. They are neither currency nor official unit prices; actual estimation requires site-specific quantities, terrain, access, design, and procurement information."
+
+### part-03
+
+- Location: Methods > Intervention Prioritization and Robustness, Equation 17 explanation
+- Reason: Identify 0.15 as an analyst-set supporting weight and state its tested range.
+- Kila decisions: KILA-D-20260904-019
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:10:24Z
+- Author: Kila
+- Markup SHA-256 before: `741ed32f1ffb61b5fe1387962a15b5f004ee376edbee8c5fcfd170ced4b3463c`
+- Markup SHA-256 after: `54625ef852b4552bba89defe339aaa4ecd5a8c939b7d0f6ae1e19178655422e9`
+- Revision IDs: `442, 443, 444`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T221025062567.reviewer-2-comment-6.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+gives the attachment term a limited supporting role when a single-section closure does not capture all local dependence.
+~~~~
+
+- After:
+
+~~~~text
+is an analyst-set scaling weight that gives the attachment term a limited supporting role when a single-section closure does not capture all local dependence; it is not an estimated physical, economic, or engineering coefficient. We test values of 0, 0.075, 0.15, 0.30, and 0.50 while holding the action effects and costs fixed.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: "is an analyst-set scaling weight that "
+  2. `insert`
+     - Before: ""
+     - After: "; it is not an estimated physical, economic, or engineering coefficient"
+  3. `insert`
+     - Before: ""
+     - After: " We test values of 0, 0.075, 0.15, 0.30, and 0.50 while holding the action effects and costs fixed."
+
+### part-04
+
+- Location: Methods > Intervention Prioritization and Robustness, after the robustness paragraph
+- Reason: State the approved one-family-at-a-time sensitivity design and reported diagnostics.
+- Kila decisions: KILA-D-20260904-019
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:10:46Z
+- Author: Kila
+- Markup SHA-256 before: `54625ef852b4552bba89defe339aaa4ecd5a8c939b7d0f6ae1e19178655422e9`
+- Markup SHA-256 after: `ae412988cc2967b0021746f1b33648426721b18df97484753f7ec14444de53f9`
+- Revision IDs: `445, 446`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T221046442030.reviewer-2-comment-6.part-04.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+Intervention assumptions are tested one family at a time under Heavy rainfall, the Primary Emergency Road target, a fixed 269.131-unit budget, five prespecified seeds, and 1,000 common-random-number draws per seed. The effectiveness-only comparison holds Central costs and the 0.15 attachment coefficient fixed. The cost-only comparison holds Central effects and the 0.15 coefficient fixed and tests global cost multipliers of 0.8 and 1.2, an equal-action formula 2.0+1.0L, and length-only costs using the one-kilometre Central anchors. The coefficient comparison holds Central effects and costs fixed and tests 0–0.50. We report score correlation, Top-30 and Top-150 overlap, fixed-budget portfolio overlap, action mix, and protected-population mean and seed range (Appendix Table B13).
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "Intervention assumptions are tested one family at a time under Heavy rainfall, the Primary Emergency Road target, a fixed 269.131-unit budget, five prespecified seeds, and 1,000 common-random-number draws per seed. The effectiveness-only comparison holds Central costs and the 0.15 attachment coefficient fixed. The cost-only comparison holds Central effects and the 0.15 coefficient fixed and tests global cost multipliers of 0.8 and 1.2, an equal-action formula 2.0+1.0L, and length-only costs using the one-kilometre Central anchors. The coefficient comparison holds Central effects and costs fixed and tests 0–0.50. We report score correlation, Top-30 and Top-150 overlap, fixed-budget portfolio overlap, action mix, and protected-population mean and seed range (Appendix Table B13)."
+
+### part-05
+
+- Location: Results > Intervention Priorities and Budgeted Benefits, after the current budget-results paragraph
+- Reason: Report the distinct ranking and benefit sensitivities of effect, cost, and attachment-weight assumptions.
+- Kila decisions: KILA-D-20260904-019
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:10:47Z
+- Author: Kila
+- Markup SHA-256 before: `ae412988cc2967b0021746f1b33648426721b18df97484753f7ec14444de53f9`
+- Markup SHA-256 after: `5a0cc8debca3f092b7b2cc9d4a394a189f69440c4bcb01bb572806dbefb6dbf5`
+- Revision IDs: `447, 448`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T221047152876.reviewer-2-comment-6.part-05.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+Separating the three assumption families shows different forms of sensitivity (Appendix Table B13). Changing only action effectiveness preserves near-identical road-score ordering (Spearman 1.000; Top-30 overlap 93.3–100%) but changes protected population from 33.3 to 90.7 residents around the Central 62.3. Changing only cost assumptions yields 52.9–67.8 protected residents; Top-30 overlap remains 100% under global scaling, but falls to 70.0% under equal-action costs and 40.0% when fixed cost components are removed. Varying the Equation 17 attachment coefficient from 0 to 0.50 retains all 30 Central top roads and yields 59.8–62.3 protected residents. At zero, only 216 roads retain a positive score, making the all-road Spearman value of 0.353 tie-sensitive despite an unchanged selected portfolio. Thus, effect magnitude governs estimated benefit, detailed road membership depends on cost structure, and 0.15 is not decisive for the tested Top-30 portfolio.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "Separating the three assumption families shows different forms of sensitivity (Appendix Table B13). Changing only action effectiveness preserves near-identical road-score ordering (Spearman 1.000; Top-30 overlap 93.3–100%) but changes protected population from 33.3 to 90.7 residents around the Central 62.3. Changing only cost assumptions yields 52.9–67.8 protected residents; Top-30 overlap remains 100% under global scaling, but falls to 70.0% under equal-action costs and 40.0% when fixed cost components are removed. Varying the Equation 17 attachment coefficient from 0 to 0.50 retains all 30 Central top roads and yields 59.8–62.3 protected residents. At zero, only 216 roads retain a positive score, making the all-road Spearman value of 0.353 tie-sensitive despite an unchanged selected portfolio. Thus, effect magnitude governs estimated benefit, detailed road membership depends on cost structure, and 0.15 is not decisive for the tested Top-30 portfolio."
+
+### part-06
+
+- Location: Figure 8 note
+- Reason: Distinguish the joint effect-cost curves from the separated Appendix sensitivity.
+- Kila decisions: KILA-D-20260904-019
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:10:47Z
+- Author: Kila
+- Markup SHA-256 before: `5a0cc8debca3f092b7b2cc9d4a394a189f69440c4bcb01bb572806dbefb6dbf5`
+- Markup SHA-256 after: `62056dd0273c74ca6757fe75092edf5edb33f40501f042e3af18c57b5ac2ad52`
+- Revision IDs: `449`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T221047860451.reviewer-2-comment-6.part-06.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `8cc96e2185dbabd7f935b2bba2d43f75fae7c302a7fde587a64321d22c581c27`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Note: Panel a maps ranked road-access intervention priorities; panel b maps community resource-pre-positioning priorities with marker size representing isolation burden and color representing older-population share; panel c compares five-seed protected population across budgets and sensitivity settings; panel d compares the Central assigned-action portfolio with setting-matched baselines at maximum budget.
+~~~~
+
+- After:
+
+~~~~text
+Note: Panel a maps ranked road-access intervention priorities; panel b maps community resource-pre-positioning priorities with marker size representing isolation burden and color representing older-population share; panel c compares five-seed protected population across budgets and sensitivity settings; panel d compares the Central assigned-action portfolio with setting-matched baselines at maximum budget. The Conservative, Central, and Optimistic curves in panel c are joint effect-and-global-cost stress profiles; Appendix Table B13 separates effectiveness, cost structure, and the Equation 17 coefficient one family at a time.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " The Conservative, Central, and Optimistic curves in panel c are joint effect-and-global-cost stress profiles; Appendix Table B13 separates effectiveness, cost structure, and the Equation 17 coefficient one family at a time."
+
+### part-07
+
+- Location: Discussion > Strengths, Limitations, and Future Research
+- Reason: State the operational consequence of the separated intervention sensitivity and require local engineering inputs.
+- Kila decisions: KILA-D-20260904-019
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:10:48Z
+- Author: Kila
+- Markup SHA-256 before: `62056dd0273c74ca6757fe75092edf5edb33f40501f042e3af18c57b5ac2ad52`
+- Markup SHA-256 after: `2e23cbfa00a6a6a273f837f4051eec313c93a5dcd926c6bd4495c745efe51493`
+- Revision IDs: `450`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T221048559118.reviewer-2-comment-6.part-07.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Closure propensities, intervention costs, and intervention effects are assumed rather than calibrated; consequence estimates therefore depend strongly on the selected closure mapping.
+~~~~
+
+- After:
+
+~~~~text
+Closure propensities, intervention costs, and intervention effects are assumed rather than calibrated; consequence estimates therefore depend strongly on the selected closure mapping. The separated intervention sensitivity does not validate the Central assumptions. Its ±45–47% effect-driven benefit range shows that protected-population magnitude cannot be interpreted as a locally expected engineering return, while the 40% Top-30 overlap under the length-only cost stress shows that detailed road selection requires site-specific cost estimates. By contrast, the tested attachment-weight range changes protected population by at most 4.1% and retains the Central Top 30. Practical use should therefore begin with field inspection and local bills of quantities, then rerun the transparent screen with action-specific feasibility, effectiveness, restoration time, and cost information.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " The separated intervention sensitivity does not validate the Central assumptions. Its ±45–47% effect-driven benefit range shows that protected-population magnitude cannot be interpreted as a locally expected engineering return, while the 40% Top-30 overlap under the length-only cost stress shows that detailed road selection requires site-specific cost estimates. By contrast, the tested attachment-weight range changes protected population by at most 4.1% and retains the Central Top 30. Practical use should therefore begin with field inspection and local bills of quantities, then rerun the transparent screen with action-specific feasibility, effectiveness, restoration time, and cost information."
+
+### part-08a
+
+- Location: References, after Mager Pozo et al. (2025)
+- Reason: Add the official Japanese road-earthwork inspection source used only to support the inspection and site-specific assessment rationale.
+- Kila decisions: KILA-D-20260904-019
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:10:49Z
+- Author: Kila
+- Markup SHA-256 before: `2e23cbfa00a6a6a273f837f4051eec313c93a5dcd926c6bd4495c745efe51493`
+- Markup SHA-256 after: `7fce58b1dcf5954abb86c1be3baddcf44dd6ccddb8fab26bdedffd11290632f3`
+- Revision IDs: `451, 452`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T221049294086.reviewer-2-comment-6.part-08a.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `bb254856545a759afa7bacf08de5736db1b13978517dd608523543e24a30e136`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+Ministry of Land, Infrastructure, Transport and Tourism. (2022). Road earthwork structure inspection manual [in Japanese]. https://www.mlit.go.jp/road/sisaku/yobohozen/tenken/tenken-yoryo_202205.pdf
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "Ministry of Land, Infrastructure, Transport and Tourism. (2022). Road earthwork structure inspection manual [in Japanese]. https://www.mlit.go.jp/road/sisaku/yobohozen/tenken/tenken-yoryo_202205.pdf"
+
+### part-08b
+
+- Location: References, after Peres and Cancelliere (2021)
+- Reason: Add the official Japanese road-slope asset-management source used only to support risk-based prioritization under limited resources.
+- Kila decisions: KILA-D-20260904-019
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T13:10:49Z
+- Author: Kila
+- Markup SHA-256 before: `7fce58b1dcf5954abb86c1be3baddcf44dd6ccddb8fab26bdedffd11290632f3`
+- Markup SHA-256 after: `98afcd764d19f0c7fbe9844c202a6b5ea0dcd6363c630d94425b3fa0acd1b7f2`
+- Revision IDs: `453, 454`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T221050010284.reviewer-2-comment-6.part-08b.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `bb254856545a759afa7bacf08de5736db1b13978517dd608523543e24a30e136`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+Public Works Research Institute. (2015). Research on asset-management methods for road-slope countermeasures (1) [in Japanese]. https://www.pwri.go.jp/jpn/results/report/report-project/2015/pdf/pro-2-6-1.pdf
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "Public Works Research Institute. (2015). Research on asset-management methods for road-slope countermeasures (1) [in Japanese]. https://www.pwri.go.jp/jpn/results/report/report-project/2015/pdf/pro-2-6-1.pdf"
+
