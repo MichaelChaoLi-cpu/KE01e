@@ -4205,3 +4205,82 @@ These limitations are most consequential for local magnitudes and operational ac
      - Before: ""
      - After: " In particular, the emergency-water coverage gap prevents immediate site-level operational interpretation of that service result. The model cannot represent routes to the announced water points in Uki or Hikawa, compare municipalities on a common destination inventory, or evaluate water availability, operating status, capacity, demand, or access to unresolved sites. The emergency-water result therefore describes conditional connectivity to ten observed destinations and should guide completion and verification of location and operational data rather than prefecture-wide deployment decisions."
 
+## reviewer-4/comment-5
+
+### part-01
+
+- Location: Results > Basic-Service Reachability Loss; immediately before 'Intervention Priorities and Budgeted Benefits'
+- Reason: Quantify the approved uniform-location sensitivity and the class-separable cross-service invariance result.
+- Kila decisions: KILA-D-20260904-015
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T07:59:23Z
+- Author: Mike Li
+- Markup SHA-256 before: `5e7250cf8a5bc3be2e8de82618b81b1fa04fff050fc4b86e2c3b6a36c830d296`
+- Markup SHA-256 after: `e4b6eeb03412a7f4efc88fae81b1231235f0156b82fb172b53658845caa5376e`
+- Revision IDs: `428, 429`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T165923503895.reviewer-4-comment-5.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+A declared uniform-location sensitivity retained the ten observed emergency-water destinations and placed the 26 unresolved announcements uniformly over eligible populated 125 m meshes within their source municipality across 50 placement replicates. Under 1,250 common Heavy-scenario closure draws per placement, the 5th–median–95th percentile expected affected population was 7,052.5–7,322.2–7,936.2 residents, compared with 7,976.1 in the matched observed-only diagnostic (−11.6% to −0.5%). Community-frequency rank correlations were 0.725–0.736–0.998 and Top-30 population-burden overlap was 66.7%–70.0%–96.7%, indicating greater sensitivity of exact local water priorities than of aggregate burden. Changing only emergency-water destinations left shelter, fire-service, and municipal-facility outputs exactly unchanged in 9/9 same-seed invariance checks because service classes are evaluated separately (Appendix Table B11). These hypothetical placements bound sensitivity and do not identify the actual locations or urban–rural distribution of unresolved announcements.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "A declared uniform-location sensitivity retained the ten observed emergency-water destinations and placed the 26 unresolved announcements uniformly over eligible populated 125 m meshes within their source municipality across 50 placement replicates. Under 1,250 common Heavy-scenario closure draws per placement, the 5th–median–95th percentile expected affected population was 7,052.5–7,322.2–7,936.2 residents, compared with 7,976.1 in the matched observed-only diagnostic (−11.6% to −0.5%). Community-frequency rank correlations were 0.725–0.736–0.998 and Top-30 population-burden overlap was 66.7%–70.0%–96.7%, indicating greater sensitivity of exact local water priorities than of aggregate burden. Changing only emergency-water destinations left shelter, fire-service, and municipal-facility outputs exactly unchanged in 9/9 same-seed invariance checks because service classes are evaluated separately (Appendix Table B11). These hypothetical placements bound sensitivity and do not identify the actual locations or urban–rural distribution of unresolved announcements."
+
+### part-02
+
+- Location: Discussion > Network Dependence and Unequal Community Consequences; paragraph beginning 'Road disruption can create geographically uneven population and service-access consequences'
+- Reason: State how missing emergency-water locations constrain aggregate and local-ranking interpretation without affecting independently estimated service classes.
+- Kila decisions: KILA-D-20260904-015
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T07:59:42Z
+- Author: Mike Li
+- Markup SHA-256 before: `e4b6eeb03412a7f4efc88fae81b1231235f0156b82fb172b53658845caa5376e`
+- Markup SHA-256 after: `9b87754965a35eff04b2544d10535b3c2fc3ad7ef4a273a71b39358a77a19919`
+- Revision IDs: `430, 431`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T165942578963.reviewer-4-comment-5.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Emergency-water loss is an especially clear example of destination geography amplifying network dependence, although incomplete location resolution limits the magnitude that can be inferred.
+~~~~
+
+- After:
+
+~~~~text
+Emergency-water loss is an especially clear example of destination geography amplifying network dependence, although incomplete location resolution limits the magnitude and local ranking that can be inferred. Under the uniform-placement sensitivity, aggregate emergency-water burden differed by −11.6% to −0.5% from the matched observed-only diagnostic, but lower-bound Top-30 overlap was 66.7%; the result therefore supports a conditional service-loss conclusion rather than precise local water prioritization. Within the class-separable model, changing emergency-water destinations cannot alter fire-service or municipal-facility rankings.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: "and local ranking "
+  2. `insert`
+     - Before: ""
+     - After: " Under the uniform-placement sensitivity, aggregate emergency-water burden differed by −11.6% to −0.5% from the matched observed-only diagnostic, but lower-bound Top-30 overlap was 66.7%; the result therefore supports a conditional service-loss conclusion rather than precise local water prioritization. Within the class-separable model, changing emergency-water destinations cannot alter fire-service or municipal-facility rankings."
+
