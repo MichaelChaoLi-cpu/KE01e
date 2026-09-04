@@ -206,7 +206,7 @@ def prepare_network_and_outcomes() -> dict[str, object]:
         edge_v,
         admin_union,
     )
-    target_roots = target_definitions["Primary boundary gateways"]
+    target_roots = target_definitions[isolation.PRIMARY_TARGET_NAME]
 
     (
         community,

@@ -155,7 +155,7 @@ def setup_variant(
         "candidate_edge_section": network_edge_section,
         "pair_reduction": pair_reduction,
         "root_count": int(root_count),
-        "target_roots": targets["Primary boundary gateways"],
+        "target_roots": targets[isolation.PRIMARY_TARGET_NAME],
         "community": community,
         "attachment_community": attachment_community,
         "attachment_root": attachment_root,
@@ -175,19 +175,34 @@ def reference_totals() -> dict[str, float]:
     headers = [cell.value for cell in next(worksheet.iter_rows(min_row=2, max_row=2))]
     rows = list(worksheet.iter_rows(min_row=3, values_only=True))
     wanted = {
-        "Moderate": "Moderate Expected Isolated Population",
-        "Heavy": "Heavy Expected Isolated Population",
-        "Extreme": "Extreme Expected Isolated Population",
-        "Heavy age 65+": "Heavy Expected Isolated Population Age 65+",
-        "Shelter": "Heavy Shelter Loss Population (Baseline-Reachable)",
-        "Emergency water": "Heavy Emergency-Water Sensitivity Loss Population (10/36 Geolocated)",
-        "Fire service": "Heavy Fire service Loss Population (Baseline-Reachable)",
-        "Municipal facility": "Heavy Municipal facility Loss Population (Baseline-Reachable)",
+        "Moderate": ("Moderate Expected Isolated Population",),
+        "Heavy": ("Heavy Expected Isolated Population",),
+        "Extreme": ("Extreme Expected Isolated Population",),
+        "Heavy age 65+": ("Heavy Expected Isolated Population Age 65+",),
+        "Shelter": (
+            "Heavy Shelter Loss Population (Any Same-Class Facility)",
+            "Heavy Shelter Loss Population (Baseline-Reachable)",
+        ),
+        "Emergency water": (
+            "Heavy Emergency-Water Sensitivity Loss Population (Any of 10/36 Geolocated Facilities)",
+            "Heavy Emergency-Water Sensitivity Loss Population (10/36 Geolocated)",
+        ),
+        "Fire service": (
+            "Heavy Fire service Loss Population (Any Same-Class Facility)",
+            "Heavy Fire service Loss Population (Baseline-Reachable)",
+        ),
+        "Municipal facility": (
+            "Heavy Municipal facility Loss Population (Any Same-Class Facility)",
+            "Heavy Municipal facility Loss Population (Baseline-Reachable)",
+        ),
     }
-    return {
-        key: float(sum(float(row[headers.index(column)] or 0) for row in rows))
-        for key, column in wanted.items()
-    }
+    totals: dict[str, float] = {}
+    for key, aliases in wanted.items():
+        column = next((alias for alias in aliases if alias in headers), None)
+        if column is None:
+            raise ValueError(f"None of the reference-table columns are present for {key}: {aliases}")
+        totals[key] = float(sum(float(row[headers.index(column)] or 0) for row in rows))
+    return totals
 
 
 def main() -> None:

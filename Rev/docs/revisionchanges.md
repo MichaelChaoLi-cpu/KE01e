@@ -2829,3 +2829,1131 @@ Note: Panels a, b, and c map Heavy-rainfall reachability loss for shelters, fire
      - Before: ""
      - After: " A community loses a service class only when no resolved, road-attached facility in that class remains reachable; the baseline-nearest destination is not fixed after disruption."
 
+## reviewer-3/comment-6
+
+### part-02
+
+- Location: Abstract, sentence beginning 'Under the Heavy rainfall scenario'
+- Reason: Synchronize the headline estimate and define the emergency-backbone disconnection outcome.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:24:08Z
+- Author: Mike Li
+- Markup SHA-256 before: `a2a553ef722142e6a67c191314e6541468bd97fb21adeec3ac46b753ff88e2c0`
+- Markup SHA-256 after: `e9e3d3e5fab960c7bb2624d317cc5449fbf3a30ecc4092e9898bbb561f09dad4`
+- Revision IDs: `283, 284, 285, 286`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T142408876074.reviewer-3-comment-6.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Under the Heavy rainfall scenario, the simulations yielded a mean expected 1,107 isolated residents, including 603 residents aged 65 years or older.
+~~~~
+
+- After:
+
+~~~~text
+Under the Heavy rainfall scenario, the simulations yielded a mean expected 1,064 residents disconnected from the Primary Emergency Road backbone, including 577 residents aged 65 years or older.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "1,107 isolated residents"
+     - After: "1,064 residents disconnected from the Primary Emergency Road backbone"
+  2. `structured-replace`
+     - Before: "603"
+     - After: "577"
+
+### part-03a
+
+- Location: Introduction > Conceptual Framework and Research Questions, third research question
+- Reason: Replace the unsupported external-road wording with the approved operational backbone and same-class service estimands.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:24:25Z
+- Author: Mike Li
+- Markup SHA-256 before: `e9e3d3e5fab960c7bb2624d317cc5449fbf3a30ecc4092e9898bbb561f09dad4`
+- Markup SHA-256 after: `02687650b41172b31bb1d57494d2d0534db57b5eaaa567632bd2c6b03946dd8c`
+- Revision IDs: `287, 288, 289, 290, 291`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T142425247240.reviewer-3-comment-6.part-03a.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Third, which communities and residents lose external-road or basic-service access under conditional road disruption?
+~~~~
+
+- After:
+
+~~~~text
+Third, which communities and residents lose access to the Primary Emergency Road backbone or to any resolved same-class basic-service facility under conditional road disruption?
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "external-road"
+     - After: "access to the Primary Emergency Road backbone"
+  2. `insert`
+     - Before: ""
+     - After: "to any resolved same-class "
+  3. `replace`
+     - Before: "access"
+     - After: "facility"
+
+### part-03b
+
+- Location: Study Area and Data > Data Quality Gates
+- Reason: Align baseline eligibility and non-evaluable-case wording with the Primary Emergency Road backbone.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:24:33Z
+- Author: Mike Li
+- Markup SHA-256 before: `02687650b41172b31bb1d57494d2d0534db57b5eaaa567632bd2c6b03946dd8c`
+- Markup SHA-256 after: `c6a0ab0bfdf491175f49b63fe8958d211f25b2507a177ff16cdf85330ade79b1`
+- Revision IDs: `292, 293, 294, 295, 296, 297, 298, 299, 300, 301`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T142433305428.reviewer-3-comment-6.part-03b.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Six quality gates precede scenario interpretation: valid geometry, complete rainfall windows, coherent road topology, reconciled population totals, baseline connection to the external-road target, and valid service-node attachment. The gates are evaluated before scenario contrasts so that eligibility does not change opportunistically with rainfall severity. A layer or case that fails its applicable gate remains missing, unresolved, disconnected, or non-evaluable. Baseline disconnection is especially important because a community that never reaches the declared external target cannot become newly isolated through the simulated closures.
+~~~~
+
+- After:
+
+~~~~text
+Six quality gates precede scenario interpretation: valid geometry, complete rainfall windows, coherent road topology, reconciled population totals, baseline connection to the Primary Emergency Road backbone, and valid service-node attachment. The gates are evaluated before scenario contrasts so that eligibility does not change opportunistically with rainfall severity. A layer or case that fails its applicable gate remains missing, unresolved, disconnected, or non-evaluable. Baseline disconnection is especially important because a community that never reaches the declared emergency-road backbone cannot become newly disconnected through the simulated closures.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "external-road"
+     - After: "Primary"
+  2. `replace`
+     - Before: "target"
+     - After: "Emergency Road backbone"
+  3. `replace`
+     - Before: "external"
+     - After: "emergency-road"
+  4. `replace`
+     - Before: "target"
+     - After: "backbone"
+  5. `replace`
+     - Before: "isolated"
+     - After: "disconnected"
+
+### part-04
+
+- Location: Methods > Network Disruption and Community Isolation Simulation, first paragraph
+- Reason: Define the operational target, denominator, disruption event, broader comparator, and interpretation boundary.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:24:41Z
+- Author: Mike Li
+- Markup SHA-256 before: `c6a0ab0bfdf491175f49b63fe8958d211f25b2507a177ff16cdf85330ade79b1`
+- Markup SHA-256 after: `692fc7054abcdd8f7f8d8f4b6258fd367cb21d7c978cfe837383d9f1ad7f2c15`
+- Revision IDs: `302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T142442179093.reviewer-3-comment-6.part-04.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Population-centered accessibility analysis can locate people affected by infrastructure disruption (Tariverdi et al., 2023). For this study, communities are defined before disruption as connected clusters of populated meshes attached to the same eligible baseline road component. Each community has an auditable population total and a set of candidate gateway sections. Road-network vulnerability depends on the tested closure extent and regional network structure (Jenelius & Mattsson, 2015). We therefore define the primary external target as stable roots containing primary emergency-road nodes at prefectural boundary gateways and examine alternative emergency-route targets in sensitivity analysis. Communities without valid baseline linkage are classified as non-evaluable rather than newly isolated.
+~~~~
+
+- After:
+
+~~~~text
+Population-centered accessibility analysis can locate people affected by infrastructure disruption (Tariverdi et al., 2023). For this study, communities are defined before disruption as connected clusters of populated meshes attached to the same eligible baseline road component. Each community has an auditable population total and a set of candidate connection sections. Road-network vulnerability depends on the tested closure extent and regional network structure (Jenelius & Mattsson, 2015). We define the primary operational target as every stable baseline root containing at least one Primary Emergency Road node, and baseline eligibility requires a community attachment to a full-network component containing such a root. A community is disconnected when simulated closures remove access from all of its attachments to every remaining primary-backbone target root. This definition measures access to the designated backbone for wide-area emergency movement; it does not imply separation from every road, destination, or place outside the prefecture. A broader comparator additionally admits roots containing Secondary Emergency Road nodes, whereas the former coast-inclusive administrative-boundary search is retained only as an audit comparator. Communities without valid baseline linkage are classified as non-evaluable rather than newly disconnected.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "gateway"
+     - After: "connection"
+  2. `delete`
+     - Before: "therefore "
+     - After: ""
+  3. `replace`
+     - Before: "external"
+     - After: "operational"
+  4. `insert`
+     - Before: ""
+     - After: "every "
+  5. `insert`
+     - Before: ""
+     - After: " baseline root containing at least one Primary Emergency Road node, and baseline eligibility requires a community attachment to a full-network component containing such a root. A community is disconnected when simulated closures remove access from all of its attachments to every remaining primary-backbone target root. This definition measures access to the designated backbone for wide-area emergency movement; it does not imply separation from every road, destination, or place outside the prefecture. A broader comparator additionally admits"
+  6. `replace`
+     - Before: "primary"
+     - After: "Secondary"
+  7. `replace`
+     - Before: "emergency-road"
+     - After: "Emergency Road"
+  8. `insert`
+     - Before: ""
+     - After: ","
+  9. `replace`
+     - Before: "at"
+     - After: "whereas"
+  10. `replace`
+     - Before: "prefectural"
+     - After: "the"
+  11. `replace`
+     - Before: "boundary"
+     - After: "former"
+  12. `replace`
+     - Before: "gateways"
+     - After: "coast-inclusive"
+  13. `replace`
+     - Before: "and"
+     - After: "administrative-boundary"
+  14. `replace`
+     - Before: "examine"
+     - After: "search"
+  15. `replace`
+     - Before: "alternative"
+     - After: "is"
+  16. `replace`
+     - Before: "emergency-route"
+     - After: "retained"
+  17. `replace`
+     - Before: "targets"
+     - After: "only"
+  18. `replace`
+     - Before: "in"
+     - After: "as"
+  19. `replace`
+     - Before: "sensitivity"
+     - After: "an"
+  20. `replace`
+     - Before: "analysis"
+     - After: "audit comparator"
+  21. `replace`
+     - Before: "isolated"
+     - After: "disconnected"
+
+### part-05
+
+- Location: Methods > Network Disruption and Community Isolation Simulation, event indicator sentence
+- Reason: Align the isolation indicator with the implemented graph operation.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:24:50Z
+- Author: Mike Li
+- Markup SHA-256 before: `692fc7054abcdd8f7f8d8f4b6258fd367cb21d7c978cfe837383d9f1ad7f2c15`
+- Markup SHA-256 after: `fe2ecd6f91dfe40c04d7f7e8a87309ad337b80a3561b280b380f0ecdbd0e77e6`
+- Revision IDs: `340, 341, 342, 343, 344, 345`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T142450197575.reviewer-3-comment-6.part-05.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Indicator Ic,m,viso,(r,f,b) equals one when community c loses connection to the external-road target in draw m of replicate v.
+~~~~
+
+- After:
+
+~~~~text
+Indicator Ic,m,viso,(r,f,b) equals one when every road attachment of community c loses connection to every Primary Emergency Road backbone target root in draw m of replicate v.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: "every road attachment of "
+  2. `replace`
+     - Before: "the"
+     - After: "every"
+  3. `replace`
+     - Before: "external-road"
+     - After: "Primary Emergency Road backbone"
+  4. `insert`
+     - Before: ""
+     - After: " root"
+
+### part-06a
+
+- Location: Methods > Robustness and Sensitivity Analysis, target-sensitivity phrase
+- Reason: Identify the approved Primary versus Primary-plus-Secondary target comparison.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:24:57Z
+- Author: Mike Li
+- Markup SHA-256 before: `fe2ecd6f91dfe40c04d7f7e8a87309ad337b80a3561b280b380f0ecdbd0e77e6`
+- Markup SHA-256 after: `dc74d85e0cce3d32d40d871497500e5de5f1c7829e97611f55e4ab24eb3fd367`
+- Revision IDs: `346, 347`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T142458021863.reviewer-3-comment-6.part-06a.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+the unresolved Yatsushiro threshold assignment, external-road targets, closure mappings, simulation size
+~~~~
+
+- After:
+
+~~~~text
+the unresolved Yatsushiro threshold assignment, Primary versus Primary-plus-Secondary Emergency Road backbone targets, closure mappings, simulation size
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "external-road"
+     - After: "Primary versus Primary-plus-Secondary Emergency Road backbone"
+
+### part-06b
+
+- Location: Methods > Robustness and Sensitivity Analysis, traceability-audit qualifier
+- Reason: State that the former coast-inclusive boundary rule is audit-only.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:27:24Z
+- Author: Mike Li
+- Markup SHA-256 before: `dc74d85e0cce3d32d40d871497500e5de5f1c7829e97611f55e4ab24eb3fd367`
+- Markup SHA-256 after: `550ab1f1ed1263e35acb51431955604e0e568248d9657c3f21dc01ba547a0db2`
+- Revision IDs: `348`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T142724985487.reviewer-3-comment-6.part-06b.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The implemented checks vary rainfall temporal support, five rainfall-window weighting schemes, γ = 0.50, 1.00, and 2.00, the all-area f = 1.00 baseline, the unresolved Yatsushiro threshold assignment, Primary versus Primary-plus-Secondary Emergency Road backbone targets, closure mappings, simulation size, intervention costs and effects, and ranking comparators.
+~~~~
+
+- After:
+
+~~~~text
+The implemented checks vary rainfall temporal support, five rainfall-window weighting schemes, γ = 0.50, 1.00, and 2.00, the all-area f = 1.00 baseline, the unresolved Yatsushiro threshold assignment, Primary versus Primary-plus-Secondary Emergency Road backbone targets, closure mappings, simulation size, intervention costs and effects, and ranking comparators. The former coast-inclusive administrative-boundary rule is reproduced only as a traceability audit and is not treated as an operational target.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " The former coast-inclusive administrative-boundary rule is reproduced only as a traceability audit and is not treated as an operational target."
+
+### part-07a
+
+- Location: Results > Community Isolation and Population Exposure, opening wording
+- Reason: Name the revised population-equivalent emergency-backbone disconnection estimand.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:27:32Z
+- Author: Mike Li
+- Markup SHA-256 before: `550ab1f1ed1263e35acb51431955604e0e568248d9657c3f21dc01ba547a0db2`
+- Markup SHA-256 after: `30d9e34f00149c587f56692c746430a7d09fb44e077fd0b8fd6def8bf49d536a`
+- Revision IDs: `349, 350, 351, 352, 353, 354`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T142732860094.reviewer-3-comment-6.part-07a.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Expected isolated population rises monotonically with rainfall severity. Across five simulation seeds, Figure 6 reports means of
+~~~~
+
+- After:
+
+~~~~text
+Expected emergency-backbone disconnection rises monotonically with rainfall severity. Across five simulation seeds, Figure 6 reports mean population-equivalent burdens of
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "isolated"
+     - After: "emergency-backbone"
+  2. `replace`
+     - Before: "population"
+     - After: "disconnection"
+  3. `replace`
+     - Before: "means"
+     - After: "mean population-equivalent burdens"
+
+### part-07h
+
+- Location: Results > Community Isolation and Population Exposure, slope-to-road transfer bounds
+- Reason: Update the downstream transfer bounds and terminology for the revised target.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `structured-reedit`
+- Revises prior parts: reviewer-2/comment-5#part-03
+- Timestamp: 2026-09-04T05:27:53Z
+- Author: Mike Li
+- Markup SHA-256 before: `30d9e34f00149c587f56692c746430a7d09fb44e077fd0b8fd6def8bf49d536a`
+- Markup SHA-256 after: `c73d4080a2e6e18ec001fc2a094d5148e8f8aed27d82a135cba9a147b6d95fec`
+- Revision IDs: `47`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T142753603484.reviewer-3-comment-6.part-07h.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+. Reconstructing the candidate-road set and closure mapping for the strict and permissive transfer boundaries changes Heavy expected isolation to 523.5 and 2,256.3 residents, respectively, compared with 1,121.7 centrally.
+~~~~
+
+- After:
+
+~~~~text
+. Reconstructing the candidate-road set and closure mapping for the strict and permissive transfer boundaries changes Heavy expected disconnection to 518.3 and 1,999.4 residents, respectively, compared with 1,063.6 centrally.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-reedit`
+     - Before: ". Reconstructing the candidate-road set and closure mapping for the strict and permissive transfer boundaries changes Heavy expected isolation to 523.5 and 2,256.3 residents, respectively, compared with 1,121.7 centrally."
+     - After: ". Reconstructing the candidate-road set and closure mapping for the strict and permissive transfer boundaries changes Heavy expected disconnection to 518.3 and 1,999.4 residents, respectively, compared with 1,063.6 centrally."
+
+### part-07b
+
+- Location: Results > Community Isolation and Population Exposure, Heavy mean
+- Reason: Update the Heavy mean for the revised primary target.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `structured-reedit`
+- Revises prior parts: reviewer-2/comment-5#part-03
+- Timestamp: 2026-09-04T05:30:28Z
+- Author: Mike Li
+- Markup SHA-256 before: `c73d4080a2e6e18ec001fc2a094d5148e8f8aed27d82a135cba9a147b6d95fec`
+- Markup SHA-256 after: `81ce311fb4e11ad72099f7808075cb17c073adaa81240c77168a50e10627b596`
+- Revision IDs: `57`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143028461809.reviewer-3-comment-6.part-07b.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+1,121.7
+~~~~
+
+- After:
+
+~~~~text
+1,063.6
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-reedit`
+     - Before: "1,121.7"
+     - After: "1,063.6"
+
+### part-07c
+
+- Location: Results > Community Isolation and Population Exposure, Extreme mean
+- Reason: Update the Extreme mean for the revised primary target.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `structured-reedit`
+- Revises prior parts: reviewer-2/comment-5#part-03
+- Timestamp: 2026-09-04T05:30:36Z
+- Author: Mike Li
+- Markup SHA-256 before: `81ce311fb4e11ad72099f7808075cb17c073adaa81240c77168a50e10627b596`
+- Markup SHA-256 after: `3905812f44ca20e47a54601c09b32adcd1e72204d1de676bb80e048ed1d6069e`
+- Revision IDs: `55`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143037211959.reviewer-3-comment-6.part-07c.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+5,032.2
+~~~~
+
+- After:
+
+~~~~text
+4,217.8
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-reedit`
+     - Before: "5,032.2"
+     - After: "4,217.8"
+
+### part-07d
+
+- Location: Results > Community Isolation and Population Exposure, Heavy seed-range lower bound
+- Reason: Update the Heavy five-seed lower bound.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `structured-reedit`
+- Revises prior parts: reviewer-2/comment-5#part-03
+- Timestamp: 2026-09-04T05:30:45Z
+- Author: Mike Li
+- Markup SHA-256 before: `3905812f44ca20e47a54601c09b32adcd1e72204d1de676bb80e048ed1d6069e`
+- Markup SHA-256 after: `cc8bbcf375c6fac5169a73206769075ce0631bd204c706c30773e0a3643ffd99`
+- Revision IDs: `53`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143045606249.reviewer-3-comment-6.part-07d.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+1,103.7
+~~~~
+
+- After:
+
+~~~~text
+1,050.4
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-reedit`
+     - Before: "1,103.7"
+     - After: "1,050.4"
+
+### part-07e
+
+- Location: Results > Community Isolation and Population Exposure, Heavy seed-range upper bound
+- Reason: Update the Heavy five-seed upper bound.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `structured-reedit`
+- Revises prior parts: reviewer-2/comment-5#part-03
+- Timestamp: 2026-09-04T05:30:54Z
+- Author: Mike Li
+- Markup SHA-256 before: `cc8bbcf375c6fac5169a73206769075ce0631bd204c706c30773e0a3643ffd99`
+- Markup SHA-256 after: `760a7e5065f6fa122557b4101f59c28fdbdd3eee1fd5ce08ce8f1e19747113cf`
+- Revision IDs: `51`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143054437827.reviewer-3-comment-6.part-07e.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+1,139.7
+~~~~
+
+- After:
+
+~~~~text
+1,078.9
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-reedit`
+     - Before: "1,139.7"
+     - After: "1,078.9"
+
+### part-07f
+
+- Location: Results > Community Isolation and Population Exposure, Heavy seed standard deviation
+- Reason: Update the Heavy five-seed standard deviation.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `structured-reedit`
+- Revises prior parts: reviewer-2/comment-5#part-03
+- Timestamp: 2026-09-04T05:31:03Z
+- Author: Mike Li
+- Markup SHA-256 before: `760a7e5065f6fa122557b4101f59c28fdbdd3eee1fd5ce08ce8f1e19747113cf`
+- Markup SHA-256 after: `d5ddb9582fa67164a351100f17c5244d8dfe76b3e9ea277fa6d7f311777454a3`
+- Revision IDs: `49`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143104002020.reviewer-3-comment-6.part-07f.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+13.9
+~~~~
+
+- After:
+
+~~~~text
+11.5
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-reedit`
+     - Before: "13.9"
+     - After: "11.5"
+
+### part-07g
+
+- Location: Results > Community Isolation and Population Exposure, target-definition sensitivity
+- Reason: Replace the former external-target range with the validated backbone comparator and audit-only legacy result.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:31:47Z
+- Author: Mike Li
+- Markup SHA-256 before: `d5ddb9582fa67164a351100f17c5244d8dfe76b3e9ea277fa6d7f311777454a3`
+- Markup SHA-256 after: `120b244d1f8872976eed196c74ce7d74b2576890e6647bb8e771d36e91d73e26`
+- Revision IDs: `355, 356, 357, 358, 359, 360, 361, 362, 363, 364`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143147308092.reviewer-3-comment-6.part-07g.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Alternative external targets yield 1,044–1,108 isolated residents under Heavy rainfall, whereas alternative closure mappings produce the wider 343–2,309 range
+~~~~
+
+- After:
+
+~~~~text
+Expanding the target to the Primary-plus-Secondary Emergency Road backbone yields 992.7 expected disconnected residents under Heavy rainfall; community-frequency rank correlation with the primary definition is 0.964 and top-30 population-burden overlap is 90.0%. The former coast-inclusive boundary proxy yields 1,121.7 residents only in the traceability audit. Alternative closure mappings produce the wider rounded range of 343–2,057 residents
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "Alternative external targets yield "
+     - After: "Expanding the target to the Primary-plus-Secondary Emergency Road backbone yields "
+  2. `structured-replace`
+     - Before: "1,044–1,108"
+     - After: "992.7"
+  3. `structured-replace`
+     - Before: " isolated residents under Heavy rainfall, whereas alternative closure mappings produce the wider "
+     - After: " expected disconnected residents under Heavy rainfall; community-frequency rank correlation with the primary definition is 0.964 and top-30 population-burden overlap is 90.0%. The former coast-inclusive boundary proxy yields 1,121.7 residents only in the traceability audit. Alternative closure mappings produce the wider rounded range of "
+  4. `structured-replace`
+     - Before: "2,309"
+     - After: "2,057"
+  5. `structured-replace`
+     - Before: " range"
+     - After: " residents"
+
+### part-08
+
+- Location: Results > Community Isolation and Population Exposure, age-structured burden
+- Reason: Synchronize age-specific consequences with the revised Primary Emergency Road backbone target.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `structured-reedit`
+- Revises prior parts: reviewer-2/comment-5#part-04
+- Timestamp: 2026-09-04T05:33:20Z
+- Author: Mike Li
+- Markup SHA-256 before: `120b244d1f8872976eed196c74ce7d74b2576890e6647bb8e771d36e91d73e26`
+- Markup SHA-256 after: `daac436414fad339e81ab5be4a2a4c2a63c173f04197e9294d795eac1d9c99d9`
+- Revision IDs: `61`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143320609037.reviewer-3-comment-6.part-08.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Their five-seed mean expected isolated population is 98.0 under Moderate rainfall, 610.2 under Heavy rainfall, and 2,789.3 under Extreme rainfall. Under the strict and permissive transfer boundaries, the Heavy estimate is 280.0 and 1,249.9 older residents, respectively.
+~~~~
+
+- After:
+
+~~~~text
+Their five-seed mean expected disconnected population is 98.0 under Moderate rainfall, 576.6 under Heavy rainfall, and 2,308.2 under Extreme rainfall. Under the strict and permissive transfer boundaries, the Heavy estimate is 277.2 and 1,096.8 older residents, respectively.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-reedit`
+     - Before: "isolated"
+     - After: "disconnected"
+  2. `structured-reedit`
+     - Before: "610.2"
+     - After: "576.6"
+  3. `structured-reedit`
+     - Before: "2,789.3"
+     - After: "2,308.2"
+  4. `structured-reedit`
+     - Before: "280.0"
+     - After: "277.2"
+  5. `structured-reedit`
+     - Before: "1,249.9"
+     - After: "1,096.8"
+
+### part-09
+
+- Location: Results > Community Isolation and Population Exposure, spatial closure dependence
+- Reason: Update the correlated-closure sensitivity results for the revised primary cohort without changing the methodological conclusion.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `structured-reedit`
+- Revises prior parts: reviewer-3/comment-5#part-03
+- Timestamp: 2026-09-04T05:33:28Z
+- Author: Mike Li
+- Markup SHA-256 before: `daac436414fad339e81ab5be4a2a4c2a63c173f04197e9294d795eac1d9c99d9`
+- Markup SHA-256 after: `69af8f57f605e772bcdc704a2040ab61fbdb3c6033912a3fc63317f3cf082edd`
+- Revision IDs: `230`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143329113649.reviewer-3-comment-6.part-09.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Spatial closure dependence changes consequence magnitude and local priority membership without a uniform direction across rainfall scenarios. Relative to independent closure, the broad strong setting (3 km clusters, ρ=0.50) changes mean expected isolated population from 189.1 to 206.4 under Moderate rainfall (+9.2%), from 1,121.7 to 1,298.1 under Heavy rainfall (+15.7%), and from 5,032.2 to 4,501.5 under Extreme rainfall (−10.5%). The corresponding per-draw 95th percentiles change by +8.7%, +15.8%, and −5.3%. Under Heavy rainfall, community isolation-frequency rank correlation with the independent reference is 0.948 and top-30 population-burden overlap is 66.7% in the broad strong setting. Across all correlated settings and scenarios, rank correlation remains 0.938–0.996, whereas top-30 overlap ranges from 66.7% to 100% (Appendix Table B8).
+~~~~
+
+- After:
+
+~~~~text
+Spatial closure dependence changes consequence magnitude and local priority membership without a uniform direction across rainfall scenarios. Relative to independent closure, the broad strong setting (3 km clusters, ρ=0.50) changes mean expected disconnected population from 189.1 to 206.4 under Moderate rainfall (+9.2%), from 1,063.6 to 1,233.9 under Heavy rainfall (+16.0%), and from 4,217.8 to 3,943.1 under Extreme rainfall (−6.5%). The corresponding per-draw 95th percentiles change by +8.7%, +18.0%, and −2.8%. Under Heavy rainfall, community isolation-frequency rank correlation with the independent reference is 0.951 and top-30 population-burden overlap is 70.0% in the broad strong setting. Across all correlated settings and scenarios, rank correlation remains 0.938–0.996, whereas top-30 overlap ranges from 70.0% to 100% (Appendix Table B8).
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-reedit`
+     - Before: "mean expected isolated population"
+     - After: "mean expected disconnected population"
+  2. `structured-reedit`
+     - Before: "1,121.7"
+     - After: "1,063.6"
+  3. `structured-reedit`
+     - Before: "1,298.1"
+     - After: "1,233.9"
+  4. `structured-reedit`
+     - Before: "+15.7%"
+     - After: "+16.0%"
+  5. `structured-reedit`
+     - Before: "5,032.2"
+     - After: "4,217.8"
+  6. `structured-reedit`
+     - Before: "4,501.5"
+     - After: "3,943.1"
+  7. `structured-reedit`
+     - Before: "−10.5%"
+     - After: "−6.5%"
+  8. `structured-reedit`
+     - Before: "+15.8%"
+     - After: "+18.0%"
+  9. `structured-reedit`
+     - Before: "−5.3%"
+     - After: "−2.8%"
+  10. `structured-reedit`
+     - Before: "0.948"
+     - After: "0.951"
+  11. `structured-reedit`
+     - Before: "overlap is 66.7% in"
+     - After: "overlap is 70.0% in"
+  12. `structured-reedit`
+     - Before: "overlap ranges from 66.7% to"
+     - After: "overlap ranges from 70.0% to"
+
+### part-10
+
+- Location: Results > Basic-Service Reachability Loss, relationship wording
+- Reason: Keep the same-class service estimand distinct from emergency-backbone disconnection.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:33:36Z
+- Author: Mike Li
+- Markup SHA-256 before: `69af8f57f605e772bcdc704a2040ab61fbdb3c6033912a3fc63317f3cf082edd`
+- Markup SHA-256 after: `1cdf516b6e967b219db621c61a4a1278816901cf1023aa8ec945f60fb0531e47`
+- Revision IDs: `365, 366, 367, 368`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143336528658.reviewer-3-comment-6.part-10.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+shape service consequences beyond external-road isolation
+~~~~
+
+- After:
+
+~~~~text
+shape service consequences beyond disconnection from the Primary Emergency Road backbone
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "external-road"
+     - After: "disconnection"
+  2. `replace`
+     - Before: "isolation"
+     - After: "from the Primary Emergency Road backbone"
+
+### part-11
+
+- Location: Results > Intervention Priorities and Budgeted Benefits, budget consequences
+- Reason: Propagate the revised disconnection estimand into the decision-stage results.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:33:45Z
+- Author: Mike Li
+- Markup SHA-256 before: `1cdf516b6e967b219db621c61a4a1278816901cf1023aa8ec945f60fb0531e47`
+- Markup SHA-256 after: `a0eb66df662fed83c04a554c2ee912576e94fec2de28d6ce528b2f1928cc25dd`
+- Revision IDs: `369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143345948889.reviewer-3-comment-6.part-11.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Protected population increases monotonically across the evaluated budgets for all three sensitivity settings. At the highest budget of 270.28 relative planning units, the five-seed mean is 31.0 residents under Conservative assumptions, 63.2 under Central assumptions, and 101.1 under Optimistic assumptions. The respective portfolios select 84, 100, and 124 roads; the Central seed range is 60.4–66.5 protected residents. Under matched Central assumptions, the assigned-action ranking substantially exceeds hazard-only, emergency-route-only, and road-class-only rules but equals the 63.2-person benefit of the equal-cost consequence comparator. The spread across settings and equality with that benchmark support conditional budget curves and selection stability rather than an engineering optimum or a uniquely superior prioritization rule.
+~~~~
+
+- After:
+
+~~~~text
+Protected population increases monotonically across the evaluated budgets for all three sensitivity settings. At the highest budget of 269.13 relative planning units, the five-seed mean is 31.2 residents under Conservative assumptions, 62.3 under Central assumptions, and 99.6 under Optimistic assumptions. The respective portfolios select 84, 100, and 124 roads; the Central seed range is 59.5–64.3 protected residents. Under matched Central assumptions, the assigned-action ranking substantially exceeds hazard-only, emergency-route-only, and road-class-only rules but equals the 62.3-person benefit of the equal-cost consequence comparator. The spread across settings and equality with that benchmark support conditional budget curves and selection stability rather than an engineering optimum or a uniquely superior prioritization rule.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "270.28"
+     - After: "269.13"
+  2. `structured-replace`
+     - Before: "31.0"
+     - After: "31.2"
+  3. `structured-replace`
+     - Before: "63.2 under Central"
+     - After: "62.3 under Central"
+  4. `structured-replace`
+     - Before: "101.1"
+     - After: "99.6"
+  5. `structured-replace`
+     - Before: "60.4–66.5"
+     - After: "59.5–64.3"
+  6. `structured-replace`
+     - Before: "63.2-person"
+     - After: "62.3-person"
+
+### part-12a
+
+- Location: Discussion > From Hazard Screening to Emergency Action
+- Reason: Replace residual gateway wording with the emergency-road-backbone connection concept.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:33:53Z
+- Author: Mike Li
+- Markup SHA-256 before: `a0eb66df662fed83c04a554c2ee912576e94fec2de28d6ce528b2f1928cc25dd`
+- Markup SHA-256 after: `cf78a14b7f48adda6e63f2340772bb83387901ebe6d3704abfc25c69d5522e34`
+- Revision IDs: `381, 382, 383, 384, 385, 386, 387`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143353552567.reviewer-3-comment-6.part-12a.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+A road with a high disruption score may have modest consequences when alternatives remain available, whereas a moderately exposed section may be consequential when it is a scarce gateway for populated communities (Nitheesh & Bhavathrathan, 2025).
+~~~~
+
+- After:
+
+~~~~text
+A road with a high disruption score may have modest consequences when alternatives remain available, whereas a moderately exposed section may be consequential when it provides a scarce connection from populated communities to the emergency-road backbone (Nitheesh & Bhavathrathan, 2025).
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "is"
+     - After: "provides"
+  2. `replace`
+     - Before: "gateway"
+     - After: "connection"
+  3. `replace`
+     - Before: "for"
+     - After: "from"
+  4. `insert`
+     - Before: ""
+     - After: " to the emergency-road backbone"
+
+### part-12b
+
+- Location: Discussion > Network Dependence and Unequal Community Consequences, first paragraph
+- Reason: Align the road-criticality interpretation with the primary operational target.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:34:01Z
+- Author: Mike Li
+- Markup SHA-256 before: `cf78a14b7f48adda6e63f2340772bb83387901ebe6d3704abfc25c69d5522e34`
+- Markup SHA-256 after: `8080b56362860157d423e7fa9e2825fa28be3a7fb6c44ecdeeb1632fa71cc560`
+- Revision IDs: `388, 389, 390, 391, 392, 393`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143401880001.reviewer-3-comment-6.part-12b.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Sections below aligned hazardous terrain receive higher disruption scores, but large isolation consequences arise only when closing those sections removes a scarce connection to the external-road target.
+~~~~
+
+- After:
+
+~~~~text
+Sections below aligned hazardous terrain receive higher disruption scores, but large disconnection consequences arise only when closing those sections removes a scarce connection to the Primary Emergency Road backbone.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "isolation"
+     - After: "disconnection"
+  2. `replace`
+     - Before: "external-road"
+     - After: "Primary"
+  3. `replace`
+     - Before: "target"
+     - After: "Emergency Road backbone"
+
+### part-12c
+
+- Location: Discussion > Network Dependence and Unequal Community Consequences, second paragraph
+- Reason: Replace residual gateway-availability terminology.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:34:10Z
+- Author: Mike Li
+- Markup SHA-256 before: `8080b56362860157d423e7fa9e2825fa28be3a7fb6c44ecdeeb1632fa71cc560`
+- Markup SHA-256 after: `6b2ba0aaa1d1125d690404781144f3443e8ef7ece5996ec146bd3665193497f4`
+- Revision IDs: `394, 395`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143410272459.reviewer-3-comment-6.part-12c.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+population, older residents, gateway availability, and service destinations
+~~~~
+
+- After:
+
+~~~~text
+population, older residents, emergency-backbone connection availability, and service destinations
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "gateway"
+     - After: "emergency-backbone connection"
+
+### part-12d
+
+- Location: Discussion > Strengths, Limitations, and Future Research
+- Reason: Replace the final residual gateway assumption label while preserving prior tracked edits.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:34:17Z
+- Author: Mike Li
+- Markup SHA-256 before: `6b2ba0aaa1d1125d690404781144f3443e8ef7ece5996ec146bd3665193497f4`
+- Markup SHA-256 after: `adff27bdd2f904922789e525538414c158ec68d8fcfb9b6bfd4473580abac900`
+- Revision IDs: `396, 397`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143417621109.reviewer-3-comment-6.part-12d.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+alternative closure, gateway, and intervention assumptions
+~~~~
+
+- After:
+
+~~~~text
+alternative closure, emergency-road-backbone target, and intervention assumptions
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "gateway"
+     - After: "emergency-road-backbone target"
+
+### part-13-note
+
+- Location: Figures > Figure 6 note
+- Reason: Define isolation as Primary Emergency Road backbone disconnection and identify the broader comparator.
+- Kila decisions: KILA-D-20260904-006, KILA-D-20260904-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T05:35:22Z
+- Author: Mike Li
+- Markup SHA-256 before: `adff27bdd2f904922789e525538414c158ec68d8fcfb9b6bfd4473580abac900`
+- Markup SHA-256 after: `9202f69a2d21a247db04bb45e6485b9dd00789e10a5c20c02be71f8380bd3f8e`
+- Revision IDs: `398`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143522518920.reviewer-3-comment-6.part-13-note.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `8cc96e2185dbabd7f935b2bba2d43f75fae7c302a7fde587a64321d22c581c27`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Note: Panels a, b, and c map community isolation frequency weighted by total population under Moderate, Heavy, and Extreme rainfall; panel b also reports simulation and target-definition sensitivity; panel d maps age-65-and-older exposure under Extreme rainfall using the same conditional isolation-frequency scale.
+~~~~
+
+- After:
+
+~~~~text
+Note: Panels a, b, and c map community isolation frequency weighted by total population under Moderate, Heavy, and Extreme rainfall; panel b also reports simulation and target-definition sensitivity; panel d maps age-65-and-older exposure under Extreme rainfall using the same conditional isolation-frequency scale. Isolation denotes loss of connection to every stable root containing a Primary Emergency Road node; the all-emergency-road result is the broader target comparator.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " Isolation denotes loss of connection to every stable root containing a Primary Emergency Road node; the all-emergency-road result is the broader target comparator."
+
+### part-13-figure6
+
+- Location: Figures > Figure 6 embedded raster
+- Reason: Replace Figure 6 with the validated Primary Emergency Road backbone result display.
+- Kila decisions: KILA-D-20260904-007
+- Mode: `figure-replace`
+- Timestamp: 2026-09-04T05:35:33.823018Z
+- Author: Kila
+- Markup SHA-256 before: `9202f69a2d21a247db04bb45e6485b9dd00789e10a5c20c02be71f8380bd3f8e`
+- Markup SHA-256 after: `465d13cc9612cec0d65d931b14b9b41234632535fa10bef3d836223c29d60e06`
+- Revision IDs: not applicable (approved embedded-media replacement)
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143533823018.reviewer-3-comment-6.part-13-figure6.docx`
+- Figure relationship: `rId14` -> `word/media/image6.png`
+- Verified caption: Figure 6. Community isolation frequency and exposed population
+- Replacement asset: `data/results/figures/Figure_community_isolation_frequency_and_exposed_population.png`
+- Original image SHA-256: `b4b29006d8e18e7eeebca994d5f5befac6cca1c0b763a6ece4fc62e9f6b51533`
+- Replacement image SHA-256: `479c3a5b184d8ad55fd6a8297142737d51f7cabdb453a21a4e509913217ed592`
+- Image format and dimensions preserved: `true` (PNG, 4339 x 3335, RGBA)
+- Non-target package members preserved byte-for-byte: `true`
+- XML and DOCX ZIP verification: `passed`
+- Track-revisions setting preserved: `true`
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+
+### part-13-figure8
+
+- Location: Figures > Figure 8 embedded raster
+- Reason: Replace Figure 8 with the validated intervention results propagated from the revised primary target.
+- Kila decisions: KILA-D-20260904-007
+- Mode: `figure-replace`
+- Timestamp: 2026-09-04T05:35:43.009810Z
+- Author: Kila
+- Markup SHA-256 before: `465d13cc9612cec0d65d931b14b9b41234632535fa10bef3d836223c29d60e06`
+- Markup SHA-256 after: `5533f5984f9d942be23306198cbc33441c513812fdd39edf0f0fe367b8134488`
+- Revision IDs: not applicable (approved embedded-media replacement)
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T143543009810.reviewer-3-comment-6.part-13-figure8.docx`
+- Figure relationship: `rId16` -> `word/media/image8.png`
+- Verified caption: Figure 8. Intervention priorities and benefits across planning budgets
+- Replacement asset: `data/results/figures/Figure_intervention_priorities_and_budgeted_benefits.png`
+- Original image SHA-256: `e1a473e3073c2644842b55cdb3a00eee2992830f8618efc3b590f116609d0a43`
+- Replacement image SHA-256: `298bcbc5116a9f0adf560dd1c336fc52b01628471e034122c117dec03bc4ef19`
+- Image format and dimensions preserved: `true` (PNG, 4385 x 3335, RGBA)
+- Non-target package members preserved byte-for-byte: `true`
+- XML and DOCX ZIP verification: `passed`
+- Track-revisions setting preserved: `true`
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+

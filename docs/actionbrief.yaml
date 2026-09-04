@@ -107,7 +107,7 @@ datasetDictionary:
       missing values, and retained source provenance without imputation.
   kumamoto_emergency_transport_roads_2024_preprocessed:
     datasetSourceName: MLIT National Land Numerical Information N10 emergency transport roads
-    datasetDescription: Official emergency-route lines used to define gateway targets and network strata.
+    datasetDescription: Official emergency-route lines used to define emergency-road-backbone targets and network strata.
     datasetAttribute: table
     datasetProvider: Ministry of Land, Infrastructure, Transport and Tourism (MLIT)
     datasetGenerationInfo: Official N10 route features copied from the audited KE01b asset.
@@ -2135,8 +2135,9 @@ variableDictionary:
     variableNameInArticle: Monte Carlo Community Isolation Frequency
     variableAttribute: continuous
     variableUnit: proportion of draws
-    variableDescription: Fraction of disruption draws in which a community loses access to the declared external-road
-      target.
+    variableDescription: Fraction of disruption draws in which a baseline-eligible community loses access to every
+      stable network root containing a Primary Emergency Road node; the broader comparator also admits roots containing
+      Secondary Emergency Road nodes.
     variableSource: kumamoto_population_mesh_125m_preprocessed
     observationNumber: 0
   isolated_population:
@@ -2410,7 +2411,7 @@ tableDictionary:
     tableCaption: Top thirty high-isolation-risk communities
     tableAim: Lists the 30 communities with the highest Heavy-scenario expected isolated Total Population, using
       expected isolated Population Age 65+ only as a secondary key and separate descriptor.
-    tableExplanation: Lists population clusters with their locations, gateway counts, ordered isolation frequencies,
+    tableExplanation: Lists population clusters with their locations, candidate connection-section counts, ordered isolation frequencies,
       affected populations, and principal service loss.
     tableSuitableSection: 'Appendix C: High-Isolation-Risk Communities'
   table_intervention_portfolios:
@@ -2514,7 +2515,8 @@ analysisStructureBrief:
     interpretation: Matched restrictions support relative screening performance beyond road-length and warning-zone
       comparators, but the road score is not an empirically calibrated closure probability.
   - levelName: Community isolation simulation
-    levelAim: Estimate how ordered road-closure scenarios disconnect populated communities from external-road gateways.
+    levelAim: Estimate how ordered road-closure scenarios disconnect populated communities from the Primary Emergency
+      Road backbone.
     inputs:
     - Road Disruption Score
     - Community ID
@@ -2528,8 +2530,9 @@ analysisStructureBrief:
     - Community Isolation Frequency and Exposed Population
     - High-Isolation-Risk Communities
     - Municipality Isolation and Service-Loss Summary
-    interpretation: Frequencies are conditional on the declared closure mapping and external target; 500, 1,000,
-      and 2,000 draw convergence plus alternative targets and mappings bound sensitivity.
+    interpretation: Frequencies are conditional on the declared closure mapping and emergency-road-backbone target;
+      500, 1,000, and 2,000 draw convergence, a Primary-plus-Secondary backbone comparator, and alternative closure
+      mappings bound sensitivity. The former coast-inclusive boundary search is retained only as an audit comparator.
   - levelName: Basic-service consequence estimation
     levelAim: Measure service disconnection and travel-time penalties among communities that are reachable at baseline.
     inputs:

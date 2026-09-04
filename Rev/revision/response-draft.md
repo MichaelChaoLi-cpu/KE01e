@@ -342,10 +342,41 @@ The new results show that dependence is consequential but not uniformly directio
 In addition, defining isolation through connection to prefectural-boundary gateways requires stronger operational justification, and service loss should allow communities to reroute to alternative facilities rather than only assessing access to the baseline nearest destination.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for identifying both the unsupported boundary-gateway interpretation and the need to make facility substitution explicit. We agree that proximity to the unioned prefectural boundary, which also contains coastline and island shoreline, does not establish an operational interprefectural gateway. We therefore replaced that rule with a network-based definition. The primary target now comprises every stable baseline root containing at least one Primary Emergency Road node. Baseline eligibility requires a community attachment to a full-network component containing such a root, and disconnection occurs only when every community attachment loses access to every remaining primary-backbone target root. The text also clarifies that this outcome represents disconnection from the designated emergency-road backbone, not literal separation from every road, destination, or place outside Kumamoto Prefecture.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+We recalculated the complete network-consequence chain under this definition for all three rainfall scenarios and five seeds. The revised Heavy estimate is 1,063.6 expected disconnected residents, with a five-seed range of 1,050.4–1,078.9. Expanding the target to roots containing Primary or Secondary Emergency Road nodes gives 992.7 expected disconnected residents, a community-frequency rank correlation of 0.964, and 90.0% overlap in the top-30 population-burden communities. The former coast-inclusive boundary rule is retained only as a traceability audit and is clearly distinguished from the operational analysis. Figures 6 and 8, the downstream tables, and Appendix Table B10 were updated accordingly.
+
+We also clarified that the principal service analysis already reroutes each eligible community after every disruption draw to all resolved, road-attached facilities in the same service class. A service is classified as unreachable only when no such facility remains reachable. To demonstrate the effect of this choice, Appendix Table B9 reports a paired restrictive comparator that holds the baseline-nearest destination fixed. Under Heavy rainfall, allowing same-class rerouting avoids classifying an additional 607.4 residents as losing shelter access, 5,819.7 as losing fire-service access, and 1,874.1 as losing municipal-facility access. We explicitly state that this network substitution does not guarantee facility operability, capacity, or actual destination choice during an emergency.
+
+"Under the Heavy rainfall scenario, the simulations yielded a mean expected 1,064 residents disconnected from the Primary Emergency Road backbone, including 577 residents aged 65 years or older."
+(Page 1, Lines 15–17)
+
+"Third, which communities and residents lose access to the Primary Emergency Road backbone or to any resolved same-class basic-service facility under conditional road disruption?"
+(Pages 5–6, Lines 102–104)
+
+"Six quality gates precede scenario interpretation: valid geometry, complete rainfall windows, coherent road topology, reconciled population totals, baseline connection to the Primary Emergency Road backbone, and valid service-node attachment."
+(Page 11, Lines 222–224)
+
+"We define the primary operational target as every stable baseline root containing at least one Primary Emergency Road node, and baseline eligibility requires a community attachment to a full-network component containing such a root. A community is disconnected when simulated closures remove access from all of its attachments to every remaining primary-backbone target root. This definition measures access to the designated backbone for wide-area emergency movement; it does not imply separation from every road, destination, or place outside the prefecture. A broader comparator additionally admits roots containing Secondary Emergency Road nodes, whereas the former coast-inclusive administrative-boundary search is retained only as an audit comparator. Communities without valid baseline linkage are classified as non-evaluable rather than newly disconnected."
+(Page 20, Lines 422–432)
+
+"The former coast-inclusive administrative-boundary rule is reproduced only as a traceability audit and is not treated as an operational target."
+(Page 25, Lines 530–532)
+
+"Expanding the target to the Primary-plus-Secondary Emergency Road backbone yields 992.7 expected disconnected residents under Heavy rainfall; community-frequency rank correlation with the primary definition is 0.964 and top-30 population-burden overlap is 90.0%. The former coast-inclusive boundary proxy yields 1,121.7 residents only in the traceability audit."
+(Page 29, Lines 631–635)
+
+"After each disruption draw, shortest paths are recomputed to all resolved, road-attached destinations in that class, so a farther same-class facility may replace the baseline-nearest facility. Service reachability is lost only when no destination in the class remains reachable."
+(Page 22, Lines 464–467)
+
+"A paired destination-estimand audit confirms that the principal results already allow substitution among facilities in the same class. If the baseline-nearest destination were instead held fixed, Heavy-scenario affected population would increase from 609.9 to 1,217.4 for shelters, from 1,286.7 to 7,106.4 for fire services, and from 937.3 to 2,811.3 for municipal facilities. Same-class rerouting therefore prevents 607.4, 5,819.7, and 1,874.1 residents, respectively, from being classified as losing the service, equal to 49.9%, 81.9%, and 66.7% of the corresponding fixed-destination losses (Appendix Table B9)."
+(Page 31, Lines 673–679)
+
+"A road with a high disruption score may have modest consequences when alternatives remain available, whereas a moderately exposed section may be consequential when it provides a scarce connection from populated communities to the emergency-road backbone (Nitheesh & Bhavathrathan, 2025)."
+(Page 34, Lines 732–735)
+
+"Isolation denotes loss of connection to every stable root containing a Primary Emergency Road node; the all-emergency-road result is the broader target comparator."
+(Page 50, Lines 44–45)
 
 ## Comment 7
 

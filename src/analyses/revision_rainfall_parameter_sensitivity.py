@@ -402,7 +402,7 @@ def setup_network(
         "candidate_v": candidate_v,
         "candidate_edge_section": candidate_edge_section,
         "root_count": root_count,
-        "target_roots": targets["Primary boundary gateways"],
+        "target_roots": targets[isolation.PRIMARY_TARGET_NAME],
         "attachment_community": attachment_community,
         "attachment_root": attachment_root,
         "community": community,

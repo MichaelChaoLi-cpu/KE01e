@@ -62,6 +62,9 @@ MAX_CLOSURE_PROPENSITY = 0.30
 MONTE_CARLO_DRAWS = 1000
 RANDOM_SEED = 20260809
 REPLICATE_SEEDS = tuple(RANDOM_SEED + 1000 * index for index in range(5))
+PRIMARY_TARGET_NAME = "Primary emergency-road backbone"
+BROADER_TARGET_NAME = "All emergency-road backbone"
+LEGACY_TARGET_NAME = "Legacy coast-inclusive boundary proxy"
 
 
 def planar_coordinates(longitude_latitude: np.ndarray, reference_latitude: float) -> np.ndarray:
@@ -82,7 +85,12 @@ def external_target_definitions(
     edge_v: np.ndarray,
     admin_union: object,
 ) -> tuple[dict[str, np.ndarray], set[str]]:
-    """Define fixed external/backbone anchors and two robustness alternatives."""
+    """Define the operational emergency-road backbone and audit targets.
+
+    Baseline eligibility is tied to full-network components containing at least
+    one Primary Emergency Road node.  The former coast-inclusive administrative-
+    boundary rule is retained only as a traceability comparator.
+    """
     membership = edges["Emergency Route Membership"].astype("string")
     primary_edge = membership.eq("Primary Emergency Road").to_numpy()
     any_emergency_edge = membership.ne("None").to_numpy()
@@ -94,18 +102,15 @@ def external_target_definitions(
     primary_boundary = primary_nodes[
         shapely.distance(node_geometry[primary_nodes], boundary) <= 0.02
     ]
-    emergency_boundary = emergency_nodes[
-        shapely.distance(node_geometry[emergency_nodes], boundary) <= 0.02
-    ]
     if len(primary_boundary) < 4:
         raise RuntimeError("Too few primary emergency-route boundary anchors.")
     targets = {
-        "Primary boundary gateways": np.unique(stable_labels[primary_boundary]).astype("int32"),
-        "All emergency boundary gateways": np.unique(stable_labels[emergency_boundary]).astype("int32"),
-        "All primary-route roots": np.unique(stable_labels[primary_nodes]).astype("int32"),
+        PRIMARY_TARGET_NAME: np.unique(stable_labels[primary_nodes]).astype("int32"),
+        BROADER_TARGET_NAME: np.unique(stable_labels[emergency_nodes]).astype("int32"),
+        LEGACY_TARGET_NAME: np.unique(stable_labels[primary_boundary]).astype("int32"),
     }
     target_components = set(
-        nodes.iloc[primary_boundary]["Network Component ID"].astype(str).unique()
+        nodes.iloc[primary_nodes]["Network Component ID"].astype(str).unique()
     )
     return targets, target_components
 
@@ -499,7 +504,7 @@ def main() -> None:
         edge_v,
         admin_union,
     )
-    target_roots = target_definitions["Primary boundary gateways"]
+    target_roots = target_definitions[PRIMARY_TARGET_NAME]
 
     (
         community,
@@ -573,22 +578,28 @@ def main() -> None:
     # computational diagnostic and must not mix single-seed and averaged estimators.
     convergence[1000] = replicate_frequencies["Heavy"][0]
     target_sensitivity = {
-        name: cached_isolation(
-            f"target_{name.lower().replace(' ', '_')}_seed_{RANDOM_SEED}_m1000",
-            candidate_u,
-            candidate_v,
-            candidate_edge_section,
-            heavy_propensity,
-            root_count,
-            roots,
-            attachment_community,
-            attachment_root,
-            len(community),
-            RANDOM_SEED,
-            report_progress=False,
-        )
-        for name, roots in target_definitions.items()
-        if name != "Primary boundary gateways"
+        BROADER_TARGET_NAME: np.mean(
+            np.vstack(
+                [
+                    cached_isolation(
+                        f"target_all_emergency_road_backbone_seed_{seed}_m1000",
+                        candidate_u,
+                        candidate_v,
+                        candidate_edge_section,
+                        heavy_propensity,
+                        root_count,
+                        target_definitions[BROADER_TARGET_NAME],
+                        attachment_community,
+                        attachment_root,
+                        len(community),
+                        seed,
+                        report_progress=False,
+                    )
+                    for seed in REPLICATE_SEEDS
+                ]
+            ),
+            axis=0,
+        ).astype("float32")
     }
     closure_sensitivity = {
         label: cached_isolation(
@@ -833,8 +844,8 @@ def main() -> None:
             f"Yatsushiro 0.70–0.80 assignment bounds: "
             f"{min(yatsushiro_bound_expected.values()):,.0f}–"
             f"{max(yatsushiro_bound_expected.values()):,.0f}\n"
-            f"Target sensitivity, expected isolated: "
-            f"{min(target_expected.values()):,.0f}–{max(target_expected.values()):,.0f}\n"
+            f"All-emergency-road target, expected isolated: "
+            f"{target_expected[BROADER_TARGET_NAME]:,.0f}\n"
             f"Closure mapping sensitivity: "
             f"{min(closure_expected.values()):,.0f}–{max(closure_expected.values()):,.0f}"
         ),
@@ -868,7 +879,7 @@ def main() -> None:
     print(f"Candidate road sections: {len(candidate_ids):,} ({candidate.mean():.1%})")
     print(f"Stable contracted network roots: {root_count:,}")
     print(f"Candidate inter-root road edges: {len(candidate_u):,}")
-    print(f"Emergency-road target roots: {len(target_roots):,}")
+    print(f"Primary emergency-road target roots: {len(target_roots):,}")
     print(f"Baseline communities: {len(community):,}")
     for key, value in diagnostics.items():
         print(f"{key}: {value:,.0f}")

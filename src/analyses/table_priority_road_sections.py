@@ -445,7 +445,7 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
         edge_v,
         admin_union,
     )
-    target_roots = target_definitions["Primary boundary gateways"]
+    target_roots = target_definitions[isolation.PRIMARY_TARGET_NAME]
     (
         community,
         attachment_community,

@@ -5,7 +5,7 @@ Plan: List the 30 communities with the largest Heavy-scenario total-population
 isolation burden, using older-population burden only to break ties.
 Framework: AnaSOP Sections 5-7 use the accepted baseline community definition,
 1,000-draw scenario-conditional isolation frequencies, Heavy-scenario service
-loss simulation, and candidate gateway-road dependence. Frequencies are model-
+loss simulation, and candidate network-connection dependence. Frequencies are model-
 conditional screening results, not calibrated real-world probabilities.
 """
 from __future__ import annotations
@@ -63,7 +63,7 @@ def community_admin_names(context: dict[str, object]) -> np.ndarray:
     return np.asarray(names, dtype=object)
 
 
-def gateway_section_counts(context: dict[str, object]) -> np.ndarray:
+def connection_section_counts(context: dict[str, object]) -> np.ndarray:
     """Count Heavy-active candidate sections crossing each community's attached roots."""
     community_count = len(context["community"])
     attachment_community = context["attachment_community"]
@@ -95,7 +95,7 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
     older_burden = heavy * older
     order = np.lexsort((-older_burden, -total_burden))[:TOP_COMMUNITIES]
     municipality_names = community_admin_names(context)
-    gateway_counts = gateway_section_counts(context)
+    connection_counts = connection_section_counts(context)
 
     rows: list[dict[str, object]] = []
     core_service_classes = tuple(
@@ -128,7 +128,7 @@ def build_table() -> tuple[pd.DataFrame, dict[str, object]]:
                 ),
                 "Mesh Count": int(community.iloc[position]["Mesh_Count"]),
                 "Population (Total / Age 65+)": f"{total[position]:,.0f} / {older[position]:,.0f}",
-                "Candidate Gateway Section Count": int(gateway_counts[position]),
+                "Candidate Connection Section Count": int(connection_counts[position]),
                 "Moderate Isolation Frequency": float(frequencies["Moderate"][position]),
                 "Heavy Isolation Frequency": float(heavy[position]),
                 "Extreme Isolation Frequency": float(frequencies["Extreme"][position]),
