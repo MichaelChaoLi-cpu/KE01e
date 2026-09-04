@@ -4284,3 +4284,259 @@ Emergency-water loss is an especially clear example of destination geography amp
      - Before: ""
      - After: " Under the uniform-placement sensitivity, aggregate emergency-water burden differed by −11.6% to −0.5% from the matched observed-only diagnostic, but lower-bound Top-30 overlap was 66.7%; the result therefore supports a conditional service-loss conclusion rather than precise local water prioritization. Within the class-separable model, changing emergency-water destinations cannot alter fire-service or municipal-facility rankings."
 
+## reviewer-4/comment-4
+
+### part-01
+
+- Location: Methods > Road closure simulation, declared closure mappings
+- Reason: State the maximum section closure propensity used by each declared mapping.
+- Kila decisions: KILA-D-20260904-017
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T12:08:04Z
+- Author: Kila
+- Markup SHA-256 before: `9b87754965a35eff04b2544d10535b3c2fc3ad7ef4a273a71b39358a77a19919`
+- Markup SHA-256 after: `a60e3e863576be31719ef1cffc4f1ac125d71c40031706f19bbd0895a222c7cd`
+- Revision IDs: `432, 433`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T210804335464.reviewer-4-comment-4.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+We apply declared low, central, and high monotone functions gb to De(r,f).
+~~~~
+
+- After:
+
+~~~~text
+We apply declared low, central, and high monotone functions gb to De(r,f), with maximum section closure propensities of 0.15, 0.30, and 0.45, respectively.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "We apply declared low, central, and high monotone functions gb to De(r,f)."
+     - After: "We apply declared low, central, and high monotone functions gb to De(r,f), with maximum section closure propensities of 0.15, 0.30, and 0.45, respectively."
+
+### part-02a
+
+- Location: Results > Community Isolation and Population Exposure, closure-mapping sentence opening
+- Reason: Identify the matched five-seed Low, Central, and High comparison.
+- Kila decisions: KILA-D-20260904-017
+- Mode: `reedit`
+- Revises prior parts: reviewer-3/comment-6#part-07g
+- Timestamp: 2026-09-04T12:08:57Z
+- Author: Kila
+- Markup SHA-256 before: `a60e3e863576be31719ef1cffc4f1ac125d71c40031706f19bbd0895a222c7cd`
+- Markup SHA-256 after: `0a4f7159bf333f048d7873eb2230d7a81d6d8dee46dc9ded15fcf94f28b8836b`
+- Revision IDs: `360`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T210857635413.reviewer-4-comment-4.part-02a.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Alternative closure mappings produce the wider rounded range of 
+~~~~
+
+- After:
+
+~~~~text
+Under matched five-seed comparisons, the Low, Central, and High closure mappings yield 
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "Alternative"
+     - After: "Under matched five-seed comparisons, the Low, Central, and High"
+  2. `replace`
+     - Before: "produce"
+     - After: "yield"
+  3. `delete`
+     - Before: "the wider rounded range of "
+     - After: ""
+
+### part-02b
+
+- Location: Results > Community Isolation and Population Exposure, Low closure-mapping result
+- Reason: Replace the old single-seed lower endpoint with the matched five-seed mean and list punctuation.
+- Kila decisions: KILA-D-20260904-017
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T12:09:12Z
+- Author: Kila
+- Markup SHA-256 before: `0a4f7159bf333f048d7873eb2230d7a81d6d8dee46dc9ded15fcf94f28b8836b`
+- Markup SHA-256 after: `553254e04a702f60cf289b130701b9443ac4cfdc8f3acabab0294c34e0ea81a8`
+- Revision IDs: `434, 435`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T210912191851.reviewer-4-comment-4.part-02b.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+343–
+~~~~
+
+- After:
+
+~~~~text
+351.4, 
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: "343–"
+     - After: "351.4, "
+
+### part-02c
+
+- Location: Results > Community Isolation and Population Exposure, Central and High closure-mapping results
+- Reason: Replace the old single-seed upper endpoint with matched five-seed Central and High means.
+- Kila decisions: KILA-D-20260904-017
+- Mode: `structured-reedit`
+- Revises prior parts: reviewer-3/comment-6#part-07g
+- Timestamp: 2026-09-04T12:10:20Z
+- Author: Kila
+- Markup SHA-256 before: `553254e04a702f60cf289b130701b9443ac4cfdc8f3acabab0294c34e0ea81a8`
+- Markup SHA-256 after: `ad4a0af77a04aab411021ce924a149d921a7d3b38a5db1b3c99cc48873b826c0`
+- Revision IDs: `358`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T211020645672.reviewer-4-comment-4.part-02c.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+2,057
+~~~~
+
+- After:
+
+~~~~text
+1,063.6
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-reedit`
+     - Before: "2,057"
+     - After: "1,063.6"
+
+### part-02d
+
+- Location: Results > Community Isolation and Population Exposure, policy-relevant ranking stability
+- Reason: Report the matched mapping interpretation, ranking correlations, Top-30 overlap, and common priority set.
+- Kila decisions: KILA-D-20260904-017
+- Mode: `structured-reedit`
+- Revises prior parts: reviewer-3/comment-6#part-07g
+- Timestamp: 2026-09-04T12:11:41Z
+- Author: Kila
+- Markup SHA-256 before: `ad4a0af77a04aab411021ce924a149d921a7d3b38a5db1b3c99cc48873b826c0`
+- Markup SHA-256 after: `d96ac2e1d3bec329eb69b8cdf620e77be9b33f4a0cc43c62ab4fd397fab0f5b7`
+- Revision IDs: `356`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T211141332563.reviewer-4-comment-4.part-02d.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Under matched five-seed comparisons, the Low, Central, and High closure mappings yield 351.4, 1,063.6 residents.
+~~~~
+
+- After:
+
+~~~~text
+Under matched five-seed comparisons, the Low, Central, and High closure mappings yield 351.4, 1,063.6, and 2,073.2 expected disconnected residents under Heavy rainfall, respectively. Although the magnitude range is wide, community-frequency rank correlations with the Central mapping are 0.939 for Low and 0.971 for High, with corresponding Top-30 population-burden overlaps of 70.0% and 80.0%; 15 of the 30 communities are common to all three mappings (Appendix Table B12).
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-reedit`
+     - Before: " residents"
+     - After: ", and 2,073.2 expected disconnected residents under Heavy rainfall, respectively. Although the magnitude range is wide, community-frequency rank correlations with the Central mapping are 0.939 for Low and 0.971 for High, with corresponding Top-30 population-burden overlaps of 70.0% and 80.0%; 15 of the 30 communities are common to all three mappings (Appendix Table B12)"
+
+### part-03
+
+- Location: Discussion > Emergency Intervention and Planning Implications, after community preparedness paragraph
+- Reason: Explain how emergency managers should use the mapping bounds and where additional calibration data have the greatest value.
+- Kila decisions: KILA-D-20260904-017
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T12:12:24Z
+- Author: Kila
+- Markup SHA-256 before: `d96ac2e1d3bec329eb69b8cdf620e77be9b33f4a0cc43c62ab4fd397fab0f5b7`
+- Markup SHA-256 after: `3da10e9e7d109f6bd7e173a79d3e5bb47d9c95d7b941460d1d03ec62e257aa96`
+- Revision IDs: `436, 437`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T211224791787.reviewer-4-comment-4.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+The closure-mapping sensitivity separates robust screening priorities from magnitude-dependent planning. The Central mapping remains the transparent reference; the High mapping is a capacity stress test, not a most-likely forecast or a substitute for local engineering evidence. The 15 communities retained in the Top 30 under all three mappings provide a robust first-pass set for field verification and preparedness, whereas locations whose frequencies or ranks change materially should not be treated as precise local priorities. Reducing that uncertainty requires geocoded road failures and non-failures linked to event rainfall, together with evidence on slope-to-road reach and blockage, so that the score-to-closure mapping can be calibrated.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "The closure-mapping sensitivity separates robust screening priorities from magnitude-dependent planning. The Central mapping remains the transparent reference; the High mapping is a capacity stress test, not a most-likely forecast or a substitute for local engineering evidence. The 15 communities retained in the Top 30 under all three mappings provide a robust first-pass set for field verification and preparedness, whereas locations whose frequencies or ranks change materially should not be treated as precise local priorities. Reducing that uncertainty requires geocoded road failures and non-failures linked to event rainfall, together with evidence on slope-to-road reach and blockage, so that the score-to-closure mapping can be calibrated."
+
+### part-05-figure6
+
+- Location: Figures > Figure 6 embedded raster
+- Reason: Synchronize the closure-mapping sensitivity note with the matched five-seed estimator.
+- Kila decisions: KILA-D-20260904-017
+- Mode: `figure-replace`
+- Timestamp: 2026-09-04T12:15:16.512249Z
+- Author: Kila
+- Markup SHA-256 before: `3da10e9e7d109f6bd7e173a79d3e5bb47d9c95d7b941460d1d03ec62e257aa96`
+- Markup SHA-256 after: `0ce0d50d15ec4b4ae378b69cfb2f4126ab7bc48a1131c82a439d374ee2deda0c`
+- Revision IDs: not applicable (approved embedded-media replacement)
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260904T211516512249.reviewer-4-comment-4.part-05-figure6.docx`
+- Figure relationship: `rId14` -> `word/media/image6.png`
+- Verified caption: Figure 6. Community isolation frequency and exposed population
+- Replacement asset: `data/results/figures/Figure_community_isolation_frequency_and_exposed_population.png`
+- Original image SHA-256: `479c3a5b184d8ad55fd6a8297142737d51f7cabdb453a21a4e509913217ed592`
+- Replacement image SHA-256: `a6246e1c200c13f8b6afa0849408e20384fcc9ae424082f010c1ad1cfcf04823`
+- Image format and dimensions preserved: `true` (PNG, 4339 x 3335, RGBA)
+- Non-target package members preserved byte-for-byte: `true`
+- XML and DOCX ZIP verification: `passed`
+- Track-revisions setting preserved: `true`
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+

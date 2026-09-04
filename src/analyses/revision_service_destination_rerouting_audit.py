@@ -195,7 +195,7 @@ def build_context() -> dict[str, object]:
         root_count,
     )
 
-    _, target_components = isolation.external_target_definitions(
+    target_definitions, target_components = isolation.external_target_definitions(
         nodes,
         node_geometry,
         stable_labels,
@@ -237,7 +237,11 @@ def build_context() -> dict[str, object]:
         "selected_mesh": selected_mesh,
         "selected_mesh_geometry": selected_mesh_geometry,
         "pair_reduction": pair_reduction,
+        "candidate_u": candidate_u,
+        "candidate_v": candidate_v,
+        "candidate_edge_section": candidate_edge_section,
         "root_count": root_count,
+        "target_roots": target_definitions[isolation.PRIMARY_TARGET_NAME],
         "section_propensity": section_propensity,
         "service_roots": service_roots,
         "source_counts": source_counts,

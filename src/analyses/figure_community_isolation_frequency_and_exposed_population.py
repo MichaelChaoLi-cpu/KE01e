@@ -602,20 +602,33 @@ def main() -> None:
         ).astype("float32")
     }
     closure_sensitivity = {
-        label: cached_isolation(
-            f"closure_{label.lower()}_seed_{RANDOM_SEED}_m1000",
-            candidate_u,
-            candidate_v,
-            candidate_edge_section,
-            closure_propensity(candidate_scores["Heavy"], heavy_lower, heavy_upper, maximum),
-            root_count,
-            target_roots,
-            attachment_community,
-            attachment_root,
-            len(community),
-            RANDOM_SEED,
-            report_progress=False,
-        )
+        label: np.mean(
+            np.vstack(
+                [
+                    cached_isolation(
+                        f"closure_{label.lower()}_seed_{seed}_m1000",
+                        candidate_u,
+                        candidate_v,
+                        candidate_edge_section,
+                        closure_propensity(
+                            candidate_scores["Heavy"],
+                            heavy_lower,
+                            heavy_upper,
+                            maximum,
+                        ),
+                        root_count,
+                        target_roots,
+                        attachment_community,
+                        attachment_root,
+                        len(community),
+                        seed,
+                        report_progress=False,
+                    )
+                    for seed in REPLICATE_SEEDS
+                ]
+            ),
+            axis=0,
+        ).astype("float32")
         for label, maximum in (("Low", 0.15), ("High", 0.45))
     }
 

@@ -494,10 +494,23 @@ $$
 4. Under heavy rainfall, alternative closure mappings produce an isolated population range of 343-2,309, spanning nearly a sevenfold difference. Does this substantial uncertainty imply limited guidance value for policy-making from the current framework? How should emergency managers interpret such a wide range? Should conservative planning adopt "worst-case" mapping scenarios, or should priority be given to data collection to reduce mapping uncertainty?
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for this important comment. We agree that the wide range indicates substantial structural uncertainty in the score-to-closure mapping and that it must be interpreted explicitly for policy use. We first audited the endpoints. Following the corrected network-target definition described elsewhere in the revision, the quoted values were obsolete; the remaining Low and High sensitivity estimates were each based on one seed, whereas the Central estimate was a five-seed mean. We therefore recalculated all three mappings under matched conditions: the same five prespecified seeds, 1,000 draws per seed, Heavy rainfall, candidate-road set, network, communities, and Primary Emergency Road target. The revised Low, Central, and High estimates are 351.4, 1,063.6, and 2,073.2 expected disconnected residents. The Low-to-High span is about 150 times the Central across-seed standard deviation, confirming that mapping uncertainty dominates Monte Carlo variation in consequence magnitude.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+This uncertainty limits use of the model as a precise forecast, but it does not eliminate its value as a screening tool. Community-frequency rank correlations with the Central mapping remain 0.939 under Low and 0.971 under High; Top-30 population-burden overlap is 70.0% and 80.0%, respectively; and 15 communities remain in the Top 30 under all three mappings. We therefore do not recommend automatically treating the High mapping as the most likely case. Instead, the Central mapping is retained as the transparent reference, the High mapping is used as a capacity stress test, and the 15 common communities form a robust first-pass set for field verification and preparedness. Locations whose frequencies or ranks change materially should not be treated as precise priorities and are the appropriate targets for additional geocoded road-failure, event-rainfall, slope-to-road reach, and blockage data. The Low and High mappings are planning stress bounds, not confidence limits or calibrated forecasts.
+
+We revised the Methods, Results, and Discussion accordingly; added the matched five-seed comparison as Appendix Table B12; and regenerated Figure 6 so that its closure-mapping annotation uses the same estimator for all three mappings.
+
+"We apply declared low, central, and high monotone functions \(g_b\) to \(D_e^{(r,f)}\), with maximum section closure propensities of 0.15, 0.30, and 0.45, respectively."
+(Pages 18–19, Lines 387–388)
+
+"Under matched five-seed comparisons, the Low, Central, and High closure mappings yield 351.4, 1,063.6, and 2,073.2 expected disconnected residents under Heavy rainfall, respectively. Although the magnitude range is wide, community-frequency rank correlations with the Central mapping are 0.939 for Low and 0.971 for High, with corresponding Top-30 population-burden overlaps of 70.0% and 80.0%; 15 of the 30 communities are common to all three mappings (Appendix Table B12)."
+(Page 30, Lines 646–651)
+
+"The closure-mapping sensitivity separates robust screening priorities from magnitude-dependent planning. The Central mapping remains the transparent reference; the High mapping is a capacity stress test, not a most-likely forecast or a substitute for local engineering evidence. The 15 communities retained in the Top 30 under all three mappings provide a robust first-pass set for field verification and preparedness, whereas locations whose frequencies or ranks change materially should not be treated as precise local priorities. Reducing that uncertainty requires geocoded road failures and non-failures linked to event rainfall, together with evidence on slope-to-road reach and blockage, so that the score-to-closure mapping can be calibrated."
+(Page 41, Lines 885–893)
+
+"Under matched five-seed comparisons, the Low, Central, and High mappings (maximum section closure propensities 0.15, 0.30, and 0.45) yield 351.4, 1,063.6, and 2,073.2 expected disconnected residents, respectively. Relative to Central, community-frequency rank correlation is 0.939 under Low and 0.971 under High, while Top-30 population-burden overlap is 70.0% and 80.0%; 15 Top-30 communities are common to all three mappings (Appendix Table B12). The Low-to-High span is about 150 times the Central across-seed standard deviation, so mapping uncertainty dominates Monte Carlo variation in magnitude even though much of the priority ordering is retained."
+(Appendix, Page 6, Lines 124–132)
 
 ## Comment 5
 
