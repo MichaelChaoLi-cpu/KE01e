@@ -5395,3 +5395,125 @@ The framework keeps relative disruption scores distinct from calibrated failure 
      - Before: ""
      - After: " Intervention costs and effects remain hypothetical, and the Central ranking equals the equal-cost consequence benchmark; no incremental optimization advantage is demonstrated."
 
+## reviewer-3/comment-3
+
+### part-01
+
+- Location: Abstract, final sentence
+- Reason: State the limited spatial reprioritization contribution in the abstract.
+- Kila decisions: KILA-D-20260905-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T23:16:36Z
+- Author: Mike Li
+- Markup SHA-256 before: `9e616282adb838fe858579c862dd365e837baf27368f62753d8cf520159abe6b`
+- Markup SHA-256 after: `c2f77fba594a275382a5f5377541a3ae7c6cfcc20938943528a7d5305d103466`
+- Revision IDs: `535`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T081636287904.reviewer-3-comment-3.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The outputs support pre-rainfall inspection, access protection, and resource pre-positioning, but remain scenario-conditional: disruption scores are not calibrated failure probabilities, simulated service loss is not observed response failure, and intervention rankings require field and engineering review.
+~~~~
+
+- After:
+
+~~~~text
+Rainfall severity mainly changes score magnitude and simulated disconnection burden, with little spatial reprioritization of roads. The outputs support pre-rainfall inspection, access protection, and resource pre-positioning, but remain scenario-conditional: disruption scores are not calibrated failure probabilities, simulated service loss is not observed response failure, and intervention rankings require field and engineering review.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: "Rainfall severity mainly changes score magnitude and simulated disconnection burden, with little spatial reprioritization of roads. "
+
+### part-02
+
+- Location: Results > Operational Threshold Retention and Slope Disruption, spatial rankings sentence
+- Reason: Correct stale correlations and distinguish all-road from positive-score support.
+- Kila decisions: KILA-D-20260905-007
+- Mode: `structured-replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T23:16:48Z
+- Author: Mike Li
+- Markup SHA-256 before: `c2f77fba594a275382a5f5377541a3ae7c6cfcc20938943528a7d5305d103466`
+- Markup SHA-256 after: `70ba18e64e42c09fc398e26133a85d8b4b483c66044fbf8c50b88c0515f433a5`
+- Revision IDs: `536, 537, 538, 539, 540, 541, 542, 543`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T081648912259.reviewer-3-comment-3.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: OMML inside tracked insertion
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Spatial rankings, however, change little: Moderate and Heavy road scores have rank correlation 1.000, and Extreme and Heavy scores have correlation 0.999.
+~~~~
+
+- After:
+
+~~~~text
+Spatial rankings, however, change little: across all 343,844 analysis-eligible road sections, Moderate and Heavy road scores have Spearman rank correlation 0.9993, and Extreme and Heavy scores have correlation 0.9988. Excluding the 120,218 sections with zero scores in all three scenarios leaves correlations of 0.9977 and 0.9960 across 223,626 positively scored sections, respectively.
+~~~~
+
+- Minimal tracked fragments:
+  1. `structured-replace`
+     - Before: ": "
+     - After: ": across all 343,844 analysis-eligible road sections, "
+  2. `structured-replace`
+     - Before: "rank correlation"
+     - After: "Spearman rank correlation"
+  3. `structured-replace`
+     - Before: "1.000"
+     - After: "0.9993"
+  4. `structured-replace`
+     - Before: "0.999."
+     - After: "0.9988. Excluding the 120,218 sections with zero scores in all three scenarios leaves correlations of 0.9977 and 0.9960 across 223,626 positively scored sections, respectively."
+
+### part-03
+
+- Location: Discussion > Compound-Hazard Interpretation, end of first paragraph
+- Reason: Distinguish consequence magnitude stress tests from demonstrated spatial reprioritization.
+- Kila decisions: KILA-D-20260905-007
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T23:17:03Z
+- Author: Mike Li
+- Markup SHA-256 before: `70ba18e64e42c09fc398e26133a85d8b4b483c66044fbf8c50b88c0515f433a5`
+- Markup SHA-256 after: `74dc675d80d449f08391c996e8e50336223704877e442c1507b11c27414f6e57`
+- Revision IDs: `544`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T081704075534.reviewer-3-comment-3.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+Their purpose is comparative planning, not reconstruction of the physical state of every slope.
+~~~~
+
+- After:
+
+~~~~text
+Their purpose is comparative planning, not reconstruction of the physical state of every slope. Within the fixed threshold geography, the rainfall scenarios combine unchanged terrain and transfer structure with station-supported quantile loading rather than event-specific storm footprints. Their principal role is to stress-test disruption and network-consequence magnitudes; the larger simulated burdens do not demonstrate improved spatial road prioritization.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " Within the fixed threshold geography, the rainfall scenarios combine unchanged terrain and transfer structure with station-supported quantile loading rather than event-specific storm footprints. Their principal role is to stress-test disruption and network-consequence magnitudes; the larger simulated burdens do not demonstrate improved spatial road prioritization."
+

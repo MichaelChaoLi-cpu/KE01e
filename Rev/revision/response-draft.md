@@ -343,10 +343,18 @@ Second, many influential parameters—including terrain weights, equal rainfall-
 Third, road rankings are almost identical across rainfall scenarios, with correlations of 0.999-1.000, indicating that rainfall severity changes score magnitude but provides virtually no spatial reprioritization; this substantially weakens the central scenario-based claim.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for identifying this limitation. We agree that the rainfall scenarios do not demonstrate meaningful spatial reprioritization of roads. The revised Abstract and Discussion limit the contribution to changes in disruption-score magnitude and conditional network consequences, and the Results now report the correlation denominators explicitly.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+Recalculation from the unchanged road-score arrays gives Moderate–Heavy and Extreme–Heavy Spearman correlations of 0.9993 and 0.9988 across all 343,844 analysis-eligible sections. The earlier Moderate–Heavy value of 1.000 is corrected. Removing the 120,218 sections with zero scores in every scenario leaves correlations of 0.9977 and 0.9960 across 223,626 positively scored sections. Thus, shared zero scores partly increase the full-network correlations but do not account for the near-invariant ordering. With terrain and transfer structure fixed, the station-supported quantile scenarios serve as magnitude stress tests rather than event-specific storm footprints. The simulated consequence contrasts remain conditional on the declared closure mapping and network target; larger burdens are not evidence of improved spatial prioritization. The revised passages state:
+
+"Rainfall severity mainly changes score magnitude and simulated disconnection burden, with little spatial reprioritization of roads."
+(Page 2, Lines 25–27)
+
+"Spatial rankings, however, change little: across all 343,844 analysis-eligible road sections, Moderate and Heavy road scores have Spearman rank correlation 0.9993, and Extreme and Heavy scores have correlation 0.9988. Excluding the 120,218 sections with zero scores in all three scenarios leaves correlations of 0.9977 and 0.9960 across 223,626 positively scored sections, respectively."
+(Page 29, Lines 633–637)
+
+"Their purpose is comparative planning, not reconstruction of the physical state of every slope. Within the fixed threshold geography, the rainfall scenarios combine unchanged terrain and transfer structure with station-supported quantile loading rather than event-specific storm footprints. Their principal role is to stress-test disruption and network-consequence magnitudes; the larger simulated burdens do not demonstrate improved spatial road prioritization."
+(Page 39, Lines 859–864)
 
 ## Comment 4
 
