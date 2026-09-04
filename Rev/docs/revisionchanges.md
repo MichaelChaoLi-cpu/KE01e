@@ -5280,3 +5280,41 @@ Because the Central assigned-action ranking is identical to the equal-cost conse
      - Before: ""
      - After: "We did not add a post hoc multi-criteria decision model because unelicited weights for hazard, network dependence, vulnerable-population protection, service continuity, and cost would create another unsupported ranking assumption. Such a model is appropriate only after decision-makers define those trade-offs. "
 
+## reviewer-4/comment-3
+
+### part-01
+
+- Location: Discussion > Emergency Intervention and Planning Implications; new paragraph after intervention-screening paragraph
+- Reason: Explain the algebraic identity, cost-structure evidence, and prospective conditions for divergence.
+- Kila decisions: KILA-D-20260905-003
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-04T22:02:19Z
+- Author: Mike Li
+- Markup SHA-256 before: `885ee8508ea4d4f121aa8280fff675cbbd36ea6326a8e1cfc54adffbe002ad53`
+- Markup SHA-256 after: `b430ea30321274cfb917770bcd20fb065f7fad9fa46f5f9e5c7230c28a41f99c`
+- Revision IDs: `531, 532`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T070219527389.reviewer-4-comment-3.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+The equality is an algebraic identity under the declared comparison, not evidence that the two approaches converged empirically. Both scores use the same consequence proxy and action assignment, and the median cross-setting effect-to-cost ratio equals the Central ratio for every action. The linear form of the consequence proxy makes this common factor explicit but does not by itself explain the identity; applying the same alternative proxy to both scores would preserve equality. Cost structure nevertheless affects membership: global scaling retains 100% of the Central Top 30, whereas equal-action and length-only costs retain 70.0% and 40.0%, respectively. The assigned-action framework could diverge from the Central comparator if site-specific or nonlinear costs make the median ratio differ from Central, if selection uses portfolio-level marginal benefits or network interactions, or if independently elicited objectives and constraints are added. Those extensions require local engineering data or stakeholder weights and are not demonstrated here.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "The equality is an algebraic identity under the declared comparison, not evidence that the two approaches converged empirically. Both scores use the same consequence proxy and action assignment, and the median cross-setting effect-to-cost ratio equals the Central ratio for every action. The linear form of the consequence proxy makes this common factor explicit but does not by itself explain the identity; applying the same alternative proxy to both scores would preserve equality. Cost structure nevertheless affects membership: global scaling retains 100% of the Central Top 30, whereas equal-action and length-only costs retain 70.0% and 40.0%, respectively. The assigned-action framework could diverge from the Central comparator if site-specific or nonlinear costs make the median ratio differ from Central, if selection uses portfolio-level marginal benefits or network interactions, or if independently elicited objectives and constraints are added. Those extensions require local engineering data or stakeholder weights and are not demonstrated here."
