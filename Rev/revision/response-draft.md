@@ -1,4 +1,4 @@
-# Response to reviewers and editors of manuscript number [MANUSCRIPT ID]
+# Response to reviewers and editors of manuscript number PDISAS-D-26-00681
 
 # Revision Summary
 
@@ -6,11 +6,15 @@ Thanks for the editor and reviewers' careful review. We hereby resubmit a substa
 
 The main changes in the revised manuscript are:
 
-- [Revision summary item 1: describe the major manuscript-level change.]
-- [Revision summary item 2: describe the major theoretical or conceptual change.]
-- [Revision summary item 3: describe the major methodological or robustness-check change.]
-- [Revision summary item 4: describe the major results, discussion, table, or figure change.]
-- [Revision summary item 5: describe language polishing, consistency checks, or formatting changes.]
+- The title and conceptual framing now identify the study as an analysis of post-earthquake rainfall-warning threshold scenarios. The revised literature comparison locates its contribution in linking those scenarios to road disruption, community disconnection, service access, and preparedness priorities, without implying an estimated physical earthquake effect or a uniquely novel decision chain.
+- The rainfall analysis now includes a quantitative compatibility test against a JMA-type reconstruction, an all-area unadjusted-threshold comparator, and sensitivity to rainfall-window weights and the rainfall-loading coefficient. The manuscript distinguishes official regional retention factors from the analyst-defined Yatsushiro midpoint and reports its boundary sensitivity. These checks support relative scenario screening rather than equivalence to an operational warning indicator.
+- The validation sections now separate the roles of the historical landslide inventory and the later road-restriction evidence. The road comparison uses event deduplication, a triggering-mechanism audit, matched road controls, and event-weighted estimates with episode-clustered uncertainty. The dry earthquake-proximate restriction episodes provide supplementary terrain-to-road ranking evidence, not validation of rainfall-triggered disruption or calibrated closure probabilities.
+- The slope-to-road method now reports the sampling grid, influence-set construction, directional and relief thresholds, transfer weights, and normalized aggregation explicitly. Added parameter tests trace changes in road support and priorities through to network consequences and distinguish the screening envelope from a calibrated physical runout model.
+- Community disconnection is now defined relative to the designated Primary Emergency Road backbone, with a broader emergency-road target comparator. The service analysis explicitly allows rerouting to any reachable facility of the same class and reports a fixed-destination comparison, while keeping baseline-ineligible communities outside disruption-induced losses.
+- Expanded uncertainty checks examine closure-propensity mappings, spatially correlated closures, and terrain-weight composition alongside the other parameter tests. The revised reporting separates Monte Carlo variation from parameter and structural sensitivity and uses a common-seed convergence comparison. It also states where local priorities remain assumption-dependent and where joint uncertainty propagation is not evaluated.
+- Emergency-water access is presented as conditional sensitivity evidence because only 10 of 36 announced destinations have resolved locations. The revised data audit describes the uneven coverage, tests hypothetical locations for unresolved destinations, and shows which other service results remain unchanged. The discussion explains why this evidence cannot support precise local water-deployment decisions.
+- The intervention section now describes the implemented greedy rank-and-pack procedure and distinguishes portfolio construction from subsequent network-benefit evaluation. Comparisons use matched cost-effect settings, with separate sensitivity tests for effectiveness, cost structure, and the consequence-proxy coefficient. The manuscript explains why the Central portfolio coincides with the equal-cost consequence comparator and makes no claim of incremental optimization superiority.
+- The Highlights, Abstract, Results, figures, and supplementary tables are reconciled with the revised network definitions and numerical outputs. The revision corrects the earlier headline discrepancies, documents rounding and simulation uncertainty, and updates the associated descriptions so that readers can trace reported outcomes to the supporting analyses.
 
 The revised manuscript also addresses the editor's and reviewers' other comments, and detailed responses to each reviewer follow.
 
@@ -23,10 +27,9 @@ Reviewers have now commented on your paper. You will see that they are advising 
 If you decide to revise the work, please submit a list of changes or a rebuttal against each point which is being raised when you submit the revised manuscript.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for the opportunity to revise our manuscript and for coordinating the reviewers' detailed assessments. We submit a revised manuscript with a summary of the principal changes above and a point-by-point response to every reviewer comment below. The revision adds quantitative checks of the rainfall-threshold formulation and slope-to-road transfer, re-evaluates the road evidence at the physical-event level, and clarifies how community disconnection and access to alternative service facilities are measured. Additional sensitivity analyses examine the assumptions that affect consequence magnitudes and local priorities, and the revised numerical summaries are consistent across the main manuscript and supplementary materials.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+The manuscript now defines its contribution more precisely as a traceable regional screening framework connecting post-earthquake rainfall-warning settings with road-access and community-preparedness decisions. The discussion distinguishes the evidence supporting each analytical stage from the assumptions requiring field verification, including incomplete emergency-water locations and hypothetical intervention costs and effects. It also explains the equality with the Central equal-cost consequence benchmark, without claiming an optimization advantage. These revisions retain the study's practical value in identifying locations for inspection, access protection, and preparedness while making the conditions of that use explicit. We appreciate the opportunity to have the revised work reconsidered.
 
 # Reviewer 1
 
@@ -38,10 +41,10 @@ Reviewer 1: 1. Only 10 of the 36 announced emergency water points were geolocate
 Thank you for this comment. We audited all 36 announced emergency-water destinations by municipality, name class, coordinate completeness, and location-resolution status. The revised Data section now shows that the ten resolved destinations are concentrated in Yatsushiro and are all school-named exact matches to the retained 2012 facility register, while every announced point in Uki and Hikawa remains outside the routing denominator. We also expanded the limitations section and Appendix to state explicitly that this conditional result cannot support prefecture-wide deployment, cross-municipality comparison, or conclusions about water availability, operating status, capacity, demand, or routes to unresolved sites. We did not impute missing coordinates; instead, the result is now framed as connectivity to the ten observed destinations and as evidence that location and operational data must be completed before site-level planning.
 
 "The emergency-water source contains 36 announcements from Yatsushiro City (28), Uki City (6), and Hikawa Town (2). Only 10 records (27.8%) have resolved coordinates; all are Yatsushiro school-named locations matched exactly to the retained 2012 facility register, whereas 18 Yatsushiro, six Uki, and two Hikawa announcements remain unmatched. Consequently, the routing denominator represents only one of the three source municipalities and is not a complete prefecture-wide emergency-water inventory."
-(Page 10, Lines 208–214)
+(Page 11, Lines 231–237)
 
 "In particular, the emergency-water coverage gap prevents immediate site-level operational interpretation of that service result. The model cannot represent routes to the announced water points in Uki or Hikawa, compare municipalities on a common destination inventory, or evaluate water availability, operating status, capacity, demand, or access to unresolved sites. The emergency-water result therefore describes conditional connectivity to ten observed destinations and should guide completion and verification of location and operational data rather than prefecture-wide deployment decisions."
-(Pages 41–42, Lines 900–907)
+(Page 49, Lines 1078–1085)
 
 "The emergency-water subset is geographically and institutionally concentrated. The 10 resolved records are Yatsushiro school-named locations matched exactly to the retained 2012 facility register; the unresolved records comprise 18 of 28 Yatsushiro announcements, all six Uki announcements, and both Hikawa announcements. By name class, resolution is 10/13 for schools and 0/14, 0/8, and 0/1 for community centres, government/disaster centres, and other locations, respectively. These counts establish non-uniform data support but cannot identify urban–rural missingness without coordinates."
 (Appendix, Pages 1–2, Lines 22–28)
@@ -54,13 +57,13 @@ Thank you for this comment. We audited all 36 announced emergency-water destinat
 Thank you for this comment. We evaluated municipality-wide Yatsushiro assignments of 0.70 and 0.80 around the analyst-defined 0.75 midpoint while retaining the current Primary Emergency Road backbone, Heavy rainfall scenario, five simulation seeds, and current service-routing specification. The bounds change the Heavy disconnected-population estimate by −4.4% to +5.2%, while community-frequency rank correlations remain 0.989–1.000 and Top-30 burden overlap remains 93.3%. Across shelters, fire services, and municipal facilities, affected-population changes remain within −6.5% to +8.0%, with frequency rank correlations of 0.990–1.000 and Top-30 overlap of 86.7%–93.3%. We therefore added the requested sensitivity statement, synchronized the service results and Figure 7, and retained the explicit limitation that 0.75 is an analyst-defined midpoint rather than an official municipality-wide value.
 
 "Municipality-wide Yatsushiro assignments of 0.70 and 0.80 bound the Heavy result at 1,016.6–1,118.7 residents (−4.4% to +5.2% relative to the 0.75 midpoint), with community-frequency rank correlations of 0.989–1.000 and 93.3% Top-30 population-burden overlap. The midpoint assumption therefore changes consequence magnitude modestly without materially changing the community-priority pattern within the tested bounds."
-(Page 29, Lines 631–636)
+(Page 34, Lines 723–728)
 
 "Municipality-wide Yatsushiro assignments of 0.70 and 0.80 bound affected populations at 570.5–657.0 for shelters, 1,215.1–1,389.7 for fire services, 898.6–984.2 for municipal facilities, and 7,582.5–8,238.8 for emergency water. Relative to the 0.75 midpoint, changes remain within −6.5% to +8.0% across the three primary service classes; frequency rank correlations are 0.990–1.000 and Top-30 burden overlap is 86.7%–93.3%."
-(Page 32, Lines 690–694)
+(Pages 36–37, Lines 786–791)
 
 "Figure 7. Basic-service reachability loss under road disruption"
-(Page 51, Line 48)
+(Page 60, Line 48)
 
 ## Comment 3
 
@@ -70,7 +73,7 @@ Thank you for this comment. We evaluated municipality-wide Yatsushiro assignment
 Thank you for this suggestion. The revised Discussion, under “Strengths, Limitations, and Future Research,” explains how a physically based runout model could replace the directional transfer approximation when event-specific source and deposit mapping, material parameters, and independent observations support calibration and validation. It also identifies blockage-duration and repair-time modeling as a subsequent extension. These are future developments, not capabilities demonstrated by the current screening model. The revised sentence states:
 
 "A physically based runout model could replace the directional transfer approximation once event-specific source and deposit polygons, material or rheological parameters, and independent footprint or road-impact observations are available for calibration and validation; blockage-duration and repair-time models could then distinguish short interruption from prolonged isolation."
-(Page 49, Lines 1083–1087)
+(Page 50, Lines 1102–1106)
 
 ## Comment 4
 
@@ -80,13 +83,13 @@ Thank you for this suggestion. The revised Discussion, under “Strengths, Limit
 Thank you for this important comment. We clarify that the comparison already includes four prespecified heuristic rules: hazard-only; Emergency Route Membership-first with Road Disruption Score as a tie-breaker; Road Category-first with Road Disruption Score as a tie-breaker; and equal-cost consequence ranking. We did not test a formal multi-criteria decision model. A deterministic audit confirms that the Central assigned-action and equal-cost consequence rankings are identical at all seven tested budgets because, for each assigned action, the median low-central-high effect-to-cost ratio used by the assigned-action score equals its Central ratio. We now report this structural reason directly and interpret the result as support for transparent consequence screening rather than superiority over the equivalent simple comparator. We also explain that adding a post hoc multi-criteria model without stakeholder-elicited weights or a validated cross-criterion utility function would introduce an unsupported ranking assumption. The Methods, Results, Discussion, and Appendix have been revised accordingly.
 
 "Intervention portfolios are compared with four prespecified heuristics under matched cost-effect settings: hazard-only; Emergency Route Membership-first with Road Disruption Score as a tie-breaker; Road Category-first with Road Disruption Score as a tie-breaker; and equal-cost consequence ranking. No formal multi-criteria decision model was tested because neither stakeholder-elicited criterion weights nor a validated cross-criterion utility function was available."
-(Page 27, Lines 577–582)
+(Pages 28–29, Lines 603–608)
 
 "The Central equality holds at all seven tested budgets because, for each assigned action, the median low-central-high effect-to-cost ratio in Equation 16 equals its Central ratio."
-(Page 36, Lines 783–785)
+(Page 38, Lines 820–822)
 
 "Because the Central assigned-action ranking is identical to the equal-cost consequence comparator, the analytical gain lies in traceable consequence and action assignment rather than demonstrated optimization superiority. We did not add a post hoc multi-criteria decision model because unelicited weights for hazard, network dependence, vulnerable-population protection, service continuity, and cost would create another unsupported ranking assumption. Such a model is appropriate only after decision-makers define those trade-offs. The screening score does not certify an intervention or guarantee continued access."
-(Pages 42–43, Lines 932–939)
+(Page 45, Lines 984–991)
 
 "The comparator labels denote four fixed heuristics. Hazard only ranks Road Disruption Score; emergency route only and road class only prioritize the named binary or class criterion and use Road Disruption Score to break ties; equal-cost consequence ranks the same consequence-effect-to-cost ratio under each setting. Under the declared action effects and global cost multipliers, the median ratio used by the assigned-action score equals the Central ratio for all three actions, so the two Central orders and all seven budget rows are identical. No formal multi-criteria decision model was tested because the study did not have stakeholder-elicited criterion weights or a validated cross-criterion utility function."
 (Appendix, Pages 10–11, Lines 188–196)
@@ -344,13 +347,13 @@ Thank you for highlighting this terminology issue. We agree that “earthquake-a
 (Page 1, Lines 9–11)
 
 "Compound hazards; Post-earthquake rainfall-warning criteria; Landslide disruption; Road networks; Community isolation; Service accessibility"
-(Page 2, Lines 28–29)
+(Page 2, Lines 33–34)
 
 "Operational Threshold Retention and Slope Disruption"
-(Page 23, Line 482)
+(Page 31, Line 661)
 
-"Under the post-earthquake rainfall-warning threshold scenarios, the framework identifies where relative slope disruption may affect roads, where those road disruptions may isolate communities or remove basic-service access, and which road or community actions have the greatest conditional planning benefit."
-(Page 34, Lines 732–735)
+"Under the post-earthquake rainfall-warning threshold scenarios, the framework identifies where relative slope disruption may affect roads, where those road disruptions may isolate communities or remove basic-service access, and how road-access actions and community preparedness needs rank under the declared screening rules."
+(Page 51, Lines 1116–1119)
 
 ## Comment 2
 
@@ -360,17 +363,17 @@ Second, many influential parameters—including terrain weights, equal rainfall-
 Thank you for identifying the need to examine these assumptions more systematically. The revised Methods, Results, Discussion, and Appendix Tables B14–B15 add terrain-weight sensitivity and bring the completed parameter tests together, while distinguishing transparent reference settings from empirically calibrated parameters. The new terrain experiment retains the original standardization, perturbs each coefficient by factors of 0.50 and 1.50, and renormalizes the vector to preserve its total weight. No alternative is selected for favorable validation or consequence results. The Methods state:
 
 "To test dependence on relative composition, we multiply one coefficient at a time by 0.50 or 1.50 and renormalize all four coefficients to their original sum of 2.25, yielding eight alternatives to Central. The original feature standardization remains fixed, and no alternative is selected using validation or consequence performance. These perturbations are declared stress tests, not empirical coefficient bounds or evidence that the Central weights are optimal."
-(Page 16, Lines 333–338)
+(Page 17, Lines 351–356)
 
 Each specification reaches the Heavy-rainfall disconnection and intervention endpoints, with road candidates and portfolios rebuilt rather than held at their Central membership. The Methods define the propagation and its limits:
 
 "All nine terrain-weight specifications produce slope and road scores for three rainfall scenarios; Heavy disconnection and fixed-budget Central intervention are propagated with five seeds and 1,000 draws per seed. Candidate roads, reduced networks, and priorities are rebuilt for each specification, with common random variates aligned by road-section identity. Appendix Tables B14–B15 separate within-specification Monte Carlo variation from parameter and structural stress ranges. This staged analysis does not evaluate all cross-family interactions or terrain-weight effects on service endpoints and is not a comprehensive probabilistic uncertainty propagation."
-(Page 28, Lines 593–601)
+(Page 29, Lines 611–619)
 
 The results reveal material dependence on terrain-weight composition, despite positive-support road-score correlations of at least 0.963 across the three rainfall scenarios. Table B14 reports every prespecified alternative, and the Results distinguish consequence magnitude from shortlist stability:
 
 "Across the nine specifications, Heavy disconnected population ranges from 490.5 to 3,323.7 residents, including 248.7–1,845.2 aged 65 and older, compared with Central values of 1,063.6 and 576.6. With Central intervention effects and costs and the same budget, protected population ranges from 41.6 to 115.7 residents around 62.3. Community Top-30 overlap falls to 56.7%, intervention Top-30 overlap to 50.0%, and selected-portfolio overlap to 51.0%."
-(Page 38, Lines 828–833)
+(Page 39, Lines 846–851)
 
 Table B15 also summarizes the tested rainfall-window weights and rainfall coefficient, slope-to-road transfer, closure mapping and dependence, intervention effectiveness and costs, and the attachment coefficient. It identifies which settings reach downstream endpoints. In particular, the effectiveness-only tests yield 33.3–90.7 protected residents, cost-only tests yield 52.9–67.8, and attachment coefficients of 0–0.50 yield 59.8–62.3. These are family-specific stress ranges, not a pooled confidence interval. The new Appendix notes make that distinction explicit:
 
@@ -380,7 +383,7 @@ Table B15 also summarizes the tested rainfall-window weights and rainfall coeffi
 The contribution remains the linked, auditable comparison of slope disruption, road dependence, community consequences, and intervention priorities. The additional evidence identifies where assumptions materially change those comparisons; it does not establish an optimal weight vector or validate local engineering returns. The Discussion now states:
 
 "The terrain-weight stress test also shows that the fixed context coefficients materially affect both consequence magnitude and detailed road selection. The framework therefore offers an auditable chain of conditional comparisons, not an empirically preferred weight vector or a universally stable local shortlist."
-(Page 47, Lines 1042–1045)
+(Page 48, Lines 1061–1064)
 
 ## Comment 3
 
@@ -395,10 +398,10 @@ Recalculation from the unchanged road-score arrays gives Moderate–Heavy and Ex
 (Page 2, Lines 25–27)
 
 "Spatial rankings, however, change little: across all 343,844 analysis-eligible road sections, Moderate and Heavy road scores have Spearman rank correlation 0.9993, and Extreme and Heavy scores have correlation 0.9988. Excluding the 120,218 sections with zero scores in all three scenarios leaves correlations of 0.9977 and 0.9960 across 223,626 positively scored sections, respectively."
-(Page 29, Lines 633–637)
+(Page 31, Lines 665–669)
 
 "Their purpose is comparative planning, not reconstruction of the physical state of every slope. Within the fixed threshold geography, the rainfall scenarios combine unchanged terrain and transfer structure with station-supported quantile loading rather than event-specific storm footprints. Their principal role is to stress-test disruption and network-consequence magnitudes; the larger simulated burdens do not demonstrate improved spatial road prioritization."
-(Page 39, Lines 859–864)
+(Pages 41–42, Lines 902–907)
 
 ## Comment 4
 
@@ -412,10 +415,10 @@ The revised historical evaluation restricts pseudo-background sampling to the GS
 The revised road audit distinguishes 10 physical restriction episodes from their 94 linked sections, of which 93 have eligible matched controls. Matching accounts for municipality or ward, road category, emergency-route membership, and section-length decile. Equal episode weighting and episode-cluster bootstrapping avoid treating multiple sections from one episode as independent events. Heavy-score concordance is 0.723 (95% CI 0.598–0.840), compared with 0.698 (0.554–0.845) for road length. The paired Heavy-minus-length contrast is 0.025 (−0.073 to 0.116); the Heavy-minus-warning contrast is 0.178 (−0.011 to 0.353). Both intervals include zero, so neither comparison demonstrates superiority. Nor do these wide intervals establish equivalence. Because the retained episodes occur in a dry earthquake-proximate window, the comparison remains supplementary terrain-to-road correspondence rather than validation of rainfall-triggered disruption. The revised passages state:
 
 "The framework evaluates historical slope-ranking alignment and supplementary road-ranking correspondence, converts road scores into bounded closure propensities, simulates network consequences, and compares consequence-aware interventions under planning budgets."
-(Page 4, Lines 78–81)
+(Page 5, Lines 95–98)
 
 "The main limitations arise from incomplete inventories and simplified process representation. The historical terrain score shows moderate, spatially variable discrimination, while the road comparison has only 10 physical episodes and wide paired confidence intervals. Failure to establish superiority over a comparator is not evidence of equivalence."
-(Page 45, Lines 997–1001)
+(Pages 47–48, Lines 1039–1043)
 
 ## Comment 5
 
@@ -424,22 +427,22 @@ The independent Bernoulli closure assumption also neglects spatially correlated 
 **Response:**
 Thank you for identifying the omitted dependence among road-section failures. We retained the independent Bernoulli implementation as the transparent central reference, but added a fixed-marginal spatial-cluster Gaussian-copula sensitivity analysis. Candidate sections were grouped into 1 km and 3 km projected square clusters and evaluated at within-cluster dependence levels of 0.25 and 0.50 for all three rainfall scenarios, five seeds, and 1,000 draws per seed. This construction introduces shared cluster shocks while preserving each section's central marginal closure propensity, so the comparison isolates the consequence of co-occurring closures rather than changing marginal hazards.
 
-The new results show that dependence is consequential but not uniformly directional. Under the broad strong setting, mean expected isolated population changes by +9.2%, +15.7%, and −10.5% under Moderate, Heavy, and Extreme rainfall, respectively; the corresponding per-draw 95th percentiles change by +8.7%, +15.8%, and −5.3%. Community rankings remain broadly stable, but the Heavy top-30 burden overlap falls to 66.7%, indicating greater sensitivity in exact local priorities. We therefore clarify that independent closure is neither uniformly conservative nor anti-conservative, and that the uncalibrated cluster scales and correlations are stress-test bounds rather than fitted process parameters. All 15 settings and validation-relevant priority metrics are reported in Appendix Table B8.
+The new results show that dependence is consequential but not uniformly directional. Under the broad strong setting, mean expected disconnected population changes by +9.2%, +16.0%, and −6.5% under Moderate, Heavy, and Extreme rainfall, respectively; the corresponding per-draw 95th percentiles change by +8.7%, +18.0%, and −2.8%. Community rankings remain broadly stable, but the Heavy top-30 burden overlap falls to 70.0%, indicating greater sensitivity in exact local priorities. We therefore clarify that independent closure is neither uniformly conservative nor anti-conservative, and that the uncalibrated cluster scales and correlations are stress-test bounds rather than fitted process parameters. All 15 settings and validation-relevant priority metrics are reported in Appendix Table B8.
 
 "To test departure from independent section closures while holding every marginal propensity fixed, we additionally use a spatial-cluster Gaussian copula. For section \(e\) in cluster \(g(e)\) and draw \(m\), \(Z_{e,m}=\sqrt{\rho}Z_{g(e),m}+\sqrt{1-\rho}Z^{\mathrm{ind}}_{e,m}\), and the section closes when \(Z_{e,m}\leq\Phi^{-1}(p_e)\). Candidate sections are grouped by projected midpoint into fixed 1 km or 3 km square clusters and evaluated at \(\rho=0.25\) and \(0.50\), alongside the independent \(\rho=0\) reference, for each rainfall scenario, five seeds, and 1,000 draws per seed. Shared cluster shocks introduce positive within-cluster dependence while preserving \(p_e\) as the marginal closure propensity. The cluster scales and correlations are stress-test assumptions rather than estimated landslide-footprint or failure-process parameters."
-(Page 21, Lines 435–443)
+(Page 23, Lines 477–485)
 
-"Spatial closure dependence changes consequence magnitude and local priority membership without a uniform direction across rainfall scenarios. Relative to independent closure, the broad strong setting (3 km clusters, \(\rho=0.50\)) changes mean expected isolated population from 189.1 to 206.4 under Moderate rainfall (+9.2%), from 1,121.7 to 1,298.1 under Heavy rainfall (+15.7%), and from 5,032.2 to 4,501.5 under Extreme rainfall (−10.5%). The corresponding per-draw 95th percentiles change by +8.7%, +15.8%, and −5.3%. Under Heavy rainfall, community isolation-frequency rank correlation with the independent reference is 0.948 and top-30 population-burden overlap is 66.7% in the broad strong setting. Across all correlated settings and scenarios, rank correlation remains 0.938–0.996, whereas top-30 overlap ranges from 66.7% to 100% (Appendix Table B8)."
-(Pages 29–30, Lines 629–638)
+"Spatial closure dependence changes consequence magnitude and local priority membership without a uniform direction across rainfall scenarios. Relative to independent closure, the broad strong setting (3 km clusters, \(\rho=0.50\)) changes mean expected disconnected population from 189.1 to 206.4 under Moderate rainfall (+9.2%), from 1,063.6 to 1,233.9 under Heavy rainfall (+16.0%), and from 4,217.8 to 3,943.1 under Extreme rainfall (−6.5%). The corresponding per-draw 95th percentiles change by +8.7%, +18.0%, and −2.8%. Under Heavy rainfall, community isolation-frequency rank correlation with the independent reference is 0.951 and top-30 population-burden overlap is 70.0% in the broad strong setting. Across all correlated settings and scenarios, rank correlation remains 0.938–0.996, whereas top-30 overlap ranges from 70.0% to 100% (Appendix Table B8)."
+(Page 35, Lines 750–760)
 
 "The sensitivity analysis distinguishes two forms of network dependence. Network topology determines the consequence of a realized closure set, whereas spatial dependence determines which section closures co-occur. Under Heavy rainfall, positive cluster dependence increases both mean and upper-tail isolation; under Extreme rainfall, the same fixed-marginal construction produces less spatially dispersed closure sets and lowers both quantities despite very high community-rank agreement. Independent closure is therefore neither uniformly conservative nor uniformly anti-conservative. The independent model remains a transparent reference, but correlated stress tests are necessary when local preparedness decisions depend on the exact highest-burden communities."
-(Page 36, Lines 775–783)
+(Pages 44–45, Lines 966–974)
 
 "The 1 km and 3 km square clusters and \(\rho=0.25\) and \(0.50\) dependence levels are deliberately broad sensitivity settings rather than estimates from observed co-failures. Square-grid boundaries also discretize processes that would vary continuously in space. The correlated results therefore bound dependence uncertainty but cannot identify an event-specific correlation length, attribute a common physical trigger, or replace calibration using geocoded and time-resolved multi-road failure observations."
-(Page 39, Lines 847–852)
+(Pages 49–50, Lines 1086–1091)
 
-"Appendix Table B8 isolates spatial closure dependence while retaining each candidate section's central marginal closure propensity. The independent implementation exactly reproduces the existing five-seed simulation. Under the broad strong setting, mean expected isolated population changes by +9.2%, +15.7%, and −10.5% for Moderate, Heavy, and Extreme rainfall, respectively, and the corresponding per-draw 95th percentiles change by +8.7%, +15.8%, and −5.3%. Community-frequency rank correlations remain high, but lower top-30 overlap under Heavy rainfall shows that local preparedness priorities are more dependence-sensitive than the broad geographic ordering. Because the scale and correlation settings are not calibrated, the table reports sensitivity bounds rather than alternative forecasts."
-(Appendix, Pages 5–6, Lines 114–123; Table B8 on Appendix Page 28)
+"Appendix Table B8 isolates spatial closure dependence while retaining each candidate section's central marginal closure propensity. The independent implementation exactly reproduces the revised five-seed simulation. Under the broad strong setting, mean expected disconnected population changes by +9.2%, +16.0%, and −6.5% for Moderate, Heavy, and Extreme rainfall, respectively, and the corresponding per-draw 95th percentiles change by +8.7%, +18.0%, and −2.8%. Community-frequency rank correlations remain high, but 70.0% top-30 overlap under Heavy rainfall shows that local preparedness priorities are more dependence-sensitive than the broad geographic ordering. Because the scale and correlation settings are not calibrated, the table reports sensitivity bounds rather than alternative forecasts."
+(Appendix, Pages 6–7, Lines 133–142; Table B8 on Appendix Page 34)
 
 ## Comment 6
 
@@ -456,31 +459,31 @@ We also clarified that the principal service analysis already reroutes each elig
 (Page 1, Lines 15–17)
 
 "Third, which communities and residents lose access to the Primary Emergency Road backbone or to any resolved same-class basic-service facility under conditional road disruption?"
-(Pages 5–6, Lines 102–104)
+(Page 6, Lines 124–126)
 
 "Six quality gates precede scenario interpretation: valid geometry, complete rainfall windows, coherent road topology, reconciled population totals, baseline connection to the Primary Emergency Road backbone, and valid service-node attachment."
-(Page 11, Lines 222–224)
+(Page 12, Lines 251–253)
 
 "We define the primary operational target as every stable baseline root containing at least one Primary Emergency Road node, and baseline eligibility requires a community attachment to a full-network component containing such a root. A community is disconnected when simulated closures remove access from all of its attachments to every remaining primary-backbone target root. This definition measures access to the designated backbone for wide-area emergency movement; it does not imply separation from every road, destination, or place outside the prefecture. A broader comparator additionally admits roots containing Secondary Emergency Road nodes, whereas the former coast-inclusive administrative-boundary search is retained only as an audit comparator. Communities without valid baseline linkage are classified as non-evaluable rather than newly disconnected."
-(Page 20, Lines 422–432)
+(Page 22, Lines 456–466)
 
 "The former coast-inclusive administrative-boundary rule is reproduced only as a traceability audit and is not treated as an operational target."
-(Page 25, Lines 530–532)
+(Page 28, Lines 599–601)
 
 "Expanding the target to the Primary-plus-Secondary Emergency Road backbone yields 992.7 expected disconnected residents under Heavy rainfall; community-frequency rank correlation with the primary definition is 0.964 and top-30 population-burden overlap is 90.0%. The former coast-inclusive boundary proxy yields 1,121.7 residents only in the traceability audit."
-(Page 29, Lines 631–635)
+(Page 34, Lines 728–732)
 
 "After each disruption draw, shortest paths are recomputed to all resolved, road-attached destinations in that class, so a farther same-class facility may replace the baseline-nearest facility. Service reachability is lost only when no destination in the class remains reachable."
-(Page 22, Lines 464–467)
+(Page 24, Lines 498–501)
 
 "A paired destination-estimand audit confirms that the principal results already allow substitution among facilities in the same class. If the baseline-nearest destination were instead held fixed, Heavy-scenario affected population would increase from 609.9 to 1,217.4 for shelters, from 1,286.7 to 7,106.4 for fire services, and from 937.3 to 2,811.3 for municipal facilities. Same-class rerouting therefore prevents 607.4, 5,819.7, and 1,874.1 residents, respectively, from being classified as losing the service, equal to 49.9%, 81.9%, and 66.7% of the corresponding fixed-destination losses (Appendix Table B9)."
-(Page 31, Lines 673–679)
+(Page 36, Lines 775–781)
 
 "A road with a high disruption score may have modest consequences when alternatives remain available, whereas a moderately exposed section may be consequential when it provides a scarce connection from populated communities to the emergency-road backbone (Nitheesh & Bhavathrathan, 2025)."
-(Page 34, Lines 732–735)
+(Page 40, Lines 875–878)
 
 "Isolation denotes loss of connection to every stable root containing a Primary Emergency Road node; the all-emergency-road result is the broader target comparator."
-(Page 50, Lines 44–45)
+(Page 59, Lines 44–45)
 
 ## Comment 7
 
@@ -495,7 +498,7 @@ The Methods describe a greedy rank-and-pack screening procedure, not an explicit
 (Pages 1–2, Lines 22–25)
 
 "The framework keeps relative disruption scores distinct from calibrated failure probabilities, simulation-conditional isolation distinct from observed outcomes, and planning-unit benefits distinct from engineering returns. Intervention costs and effects remain hypothetical, and the Central ranking equals the equal-cost consequence benchmark; no incremental optimization advantage is demonstrated."
-(Page 48, Lines 1068–1073)
+(Page 51, Lines 1126–1131)
 
 ## Comment 8
 
@@ -539,19 +542,19 @@ We also corrected the historical inventory chronology and support definition. Th
 The revised manuscript now separates the evidential roles of the two datasets throughout the Methods, Results, Discussion, limitations, Figure 2, Figure 4, and Appendix Tables A1 and B1. The 2016 inventory provides a same-region test of whether persistent terrain covariates rank mapped mass-movement locations higher across held-out spatial blocks. The 2026 records provide only supplementary road-ranking correspondence after terrain-to-road translation. The datasets are not pooled, and neither check validates transfer of the 2016 shaking state, a 2026 rainfall trigger, disturbance depth, closure probability, or calibrated physical susceptibility. Official JMA and GSI source URLs have also been added to the Data Availability statement.
 
 "The two earthquakes are geographically relevant but not physically interchangeable. Official JMA records identify the 16 April 2016 main shock as magnitude 7.3 (Mw 7.0) at 12 km depth and the 28 July 2026 earthquake as magnitude 7.1 at 16 km depth; both reached JMA intensity 7, and their epicentres were approximately 16.3 km apart. At the 2016 main-shock time, seven project stations recorded 0 mm over the preceding 24 h and 1.0–6.5 mm over the preceding 72 h, whereas all ten retained 2026 road-restriction episodes had 0 mm over the preceding 72 h across the ten-station audit."
-(Page 7, Lines 139–146)
+(Page 8, Lines 164–171)
 
 "Historical alignment with the interpreted 2016 landslide inventory is evaluated only within the union of the official April and July GSI air-photo interpretation footprints. Because 28 July 2016 is the inventory update date rather than the earthquake date, warning-zone exposure is restricted to 29,632 polygons designated on or before the earthquake sequence began on 14 April 2016; later and unknown-date polygons are excluded, while the complete current warning-zone layer remains available for 2026 screening."
-(Page 16, Lines 333–338)
+(Pages 17–18, Lines 369–374)
 
 "Within the GSI interpretation footprint, the corrected historical comparison uses 857 unique presence cells, 8,570 pseudo-background cells, and 29,632 warning-zone polygons designated before the 2016 earthquake sequence. The frozen transparent terrain score has a mean spatial area under the curve of 0.705, a fold range of 0.550–0.787, and held-out top-quartile capture of 46.5%; the fitted full terrain-plus-warning comparator has a mean of 0.685 and a fold range of 0.500–0.804."
-(Page 25, Lines 529–534)
+(Page 30, Lines 642–647)
 
 "The 2016 and 2026 evidence checks are deliberately non-pooled and do not constitute cross-event validation. Within the GSI interpretation footprint, the 2016 inventory tests whether the frozen terrain-context score ranks mapped earthquake-generated mass-movement centres higher across held-out spatial blocks. That same-region check is relevant because the terrain covariates are persistent, but it does not establish transfer of the 2016 shaking or disturbance state to 2026."
-(Page 33, Lines 712–717)
+(Page 42, Lines 908–913)
 
 "The station-supported rainfall surface cannot reproduce local variability between gauges, and the official retention factors are area-level settings rather than a measured shaking or soil-strength field. Neither event dataset measures slip-surface depth, soil-profile disturbance, or post-earthquake change in shear strength, so no equivalence of subsurface damage is assumed between 2016 and 2026."
-(Page 37, Lines 805–810)
+(Page 48, Lines 1054–1059)
 
 ## Comment 2
 
@@ -561,7 +564,7 @@ The revised manuscript now separates the evidential roles of the two datasets th
 Thank you for identifying this gap. We revised the Directional Slope-to-Road Translation subsection to define the component-level sample index, the upslope influence set, the relief and cosine-alignment filters, the 78.5° angular tolerance, the exponential distance decay, and the section-level aggregation explicitly. Equation 7 now presents the complete implemented formulation, including the union of sample-point influence sets and the normalized weighted road score. We also corrected the Appendix cross-references to Tables B6a, B6b, and B7. Regarding validation, we now distinguish road-level ranking correspondence on a separate restriction dataset from physical runout validation. The available GSI inventory contains interpreted points rather than deposit polygons, so it cannot independently validate deposit extent or runout geometry. We state this limitation directly and identify the event-specific source, deposit, material, and independent footprint data needed for a future physically based model.
 
 "With j indexing the component-level sample points described above, the aggregated transfer weight qie sums, over every eligible j, the product of an exponential distance term with a 2.5-cell e-folding length, alignment clipped to [0, 1], and a relief term clipped to [0.20, 1.00] after division by 100 m."
-(Page 16, Lines 334–337)
+(Page 19, Lines 399–402)
 
 Equation 7 (mathematical transcription):
 $$
@@ -573,16 +576,16 @@ q_{ie}=\sum_{j:i\in U_{ej}}\exp\!\left(-\frac{d_{ije}}{2.5}\right)\operatorname{
 D_e^{(r,f)}=\begin{cases}\displaystyle\frac{\sum_{i\in U_e}q_{ie}H_i^{(r,f)}}{\sum_{i\in U_e}q_{ie}}, & \sum_{i\in U_e}q_{ie}>0,\\0, & \text{otherwise}.\end{cases}
 \end{gathered}
 $$
-(Page 17, Line 346)
+(Page 20, Line 411)
 
-"The matched restriction comparison evaluates road-level ranking correspondence; it does not independently validate landslide-deposit extent or physical runout geometry, because the available GSI inventory comprises 1,044 interpreted point locations rather than mapped deposit polygons."
-(Page 26, Lines 545–548)
+"More importantly, the dry event window means that this comparison evaluates only whether the terrain-to-road ranking corresponds with earthquake-proximate mass-movement restrictions; it does not validate rainfall-triggered disruption, scenario-sensitive spatial ranking, closure probability, landslide-deposit extent, or physical runout geometry."
+(Page 33, Lines 709–713)
 
-"The framework uses readable score construction, spatially separated slope validation, road-restriction correspondence on a separate infrastructure dataset, ordered common-random-number simulations, age-specific population consequences, and comparator portfolios."
-(Page 34, Lines 729–732)
+"The framework uses readable score construction, spatially separated slope validation, event-deduplicated and trigger-audited road-restriction correspondence on a separate infrastructure dataset, ordered common-random-number simulations, age-specific population consequences, and comparator portfolios."
+(Page 47, Lines 1028–1032)
 
 "A physically based runout model could replace the directional transfer approximation once event-specific source and deposit polygons, material or rheological parameters, and independent footprint or road-impact observations are available for calibration and validation; blockage-duration and repair-time models could then distinguish short interruption from prolonged isolation."
-(Pages 35–36, Lines 766–770)
+(Page 50, Lines 1102–1106)
 
 ## Comment 3
 
@@ -594,7 +597,7 @@ Thank you for identifying this important limitation. The revised Discussion and 
 The cost sensitivity distinguishes affordability from selection. Uniform cost scaling preserves ordering, whereas equal-action and length-only costs retain 70.0% and 40.0% of the Central Top 30. These changes demonstrate dependence on cost structure, not superiority over a comparator using the same inputs. The new discussion identifies conditions that could produce divergence, including a median ratio different from Central, portfolio-level marginal benefits and network interactions, or independently elicited objectives and constraints. Such extensions require local engineering evidence or stakeholder preferences; they are not implemented or shown to outperform the comparator in this study.
 
 "The equality is an algebraic identity under the declared comparison, not evidence that the two approaches converged empirically. Both scores use the same consequence proxy and action assignment, and the median cross-setting effect-to-cost ratio equals the Central ratio for every action. The linear form of the consequence proxy makes this common factor explicit but does not by itself explain the identity; applying the same alternative proxy to both scores would preserve equality. Cost structure nevertheless affects membership: global scaling retains 100% of the Central Top 30, whereas equal-action and length-only costs retain 70.0% and 40.0%, respectively. The assigned-action framework could diverge from the Central comparator if site-specific or nonlinear costs make the median ratio differ from Central, if selection uses portfolio-level marginal benefits or network interactions, or if independently elicited objectives and constraints are added. Those extensions require local engineering data or stakeholder weights and are not demonstrated here."
-(Page 43, Lines 940–952)
+(Pages 45–46, Lines 992–1004)
 
 "The identity can be stated at road level. The assigned-action score multiplies the road consequence proxy by the median effect-to-cost ratio across Conservative, Central, and Optimistic settings; the Central comparator multiplies the same proxy by the Central ratio for the same assigned action. Since those two ratios are equal for all three actions, the scores are equal for every road before ranking. The linear definition of the consequence proxy is therefore not a sufficient explanation: any consequence proxy used identically in both branches would leave this ratio identity unchanged. Uniform global cost scaling likewise preserves the score order, although it changes how many roads fit a fixed budget. The existing cost sensitivity shows that equal-action and length-only cost structures reduce Top-30 overlap with the Central reference to 70.0% and 40.0%, respectively, but this sensitivity is not evidence of superiority over a comparator built from the same inputs. Distinct rankings require the robust median ratio to differ from the Central ratio, or require an independently specified decision model with site-specific nonlinear costs, portfolio interactions, constraints, or stakeholder-weighted objectives."
 (Appendix, Page 11, Lines 197–210)
@@ -611,13 +614,13 @@ This uncertainty limits use of the model as a precise forecast, but it does not 
 We revised the Methods, Results, and Discussion accordingly; added the matched five-seed comparison as Appendix Table B12; and regenerated Figure 6 so that its closure-mapping annotation uses the same estimator for all three mappings.
 
 "We apply declared low, central, and high monotone functions \(g_b\) to \(D_e^{(r,f)}\), with maximum section closure propensities of 0.15, 0.30, and 0.45, respectively."
-(Pages 18–19, Lines 387–388)
+(Page 20, Lines 415–416)
 
 "Under matched five-seed comparisons, the Low, Central, and High closure mappings yield 351.4, 1,063.6, and 2,073.2 expected disconnected residents under Heavy rainfall, respectively. Although the magnitude range is wide, community-frequency rank correlations with the Central mapping are 0.939 for Low and 0.971 for High, with corresponding Top-30 population-burden overlaps of 70.0% and 80.0%; 15 of the 30 communities are common to all three mappings (Appendix Table B12)."
-(Page 30, Lines 646–651)
+(Page 34, Lines 732–737)
 
 "The closure-mapping sensitivity separates robust screening priorities from magnitude-dependent planning. The Central mapping remains the transparent reference; the High mapping is a capacity stress test, not a most-likely forecast or a substitute for local engineering evidence. The 15 communities retained in the Top 30 under all three mappings provide a robust first-pass set for field verification and preparedness, whereas locations whose frequencies or ranks change materially should not be treated as precise local priorities. Reducing that uncertainty requires geocoded road failures and non-failures linked to event rainfall, together with evidence on slope-to-road reach and blockage, so that the score-to-closure mapping can be calibrated."
-(Page 41, Lines 885–893)
+(Pages 46–47, Lines 1017–1025)
 
 "Under matched five-seed comparisons, the Low, Central, and High mappings (maximum section closure propensities 0.15, 0.30, and 0.45) yield 351.4, 1,063.6, and 2,073.2 expected disconnected residents, respectively. Relative to Central, community-frequency rank correlation is 0.939 under Low and 0.971 under High, while Top-30 population-burden overlap is 70.0% and 80.0%; 15 Top-30 communities are common to all three mappings (Appendix Table B12). The Low-to-High span is about 150 times the Central across-seed standard deviation, so mapping uncertainty dominates Monte Carlo variation in magnitude even though much of the priority ordering is retained."
 (Appendix, Page 6, Lines 124–132)
@@ -634,13 +637,13 @@ We added a declared municipality-stratified uniform-location sensitivity that re
 The hypothetical water placements cannot alter fire-service or municipal-facility rankings because each service class is evaluated independently rather than combined through cross-service weights. We verified this directly: shelter, fire-service, and municipal-facility loss, excess-time, and baseline arrays remained exactly unchanged in 9/9 same-seed checks. The emergency-water missingness therefore limits the reliability of that service category, but it does not invalidate the separately estimated community-disconnection, shelter, fire-service, or municipal-facility results. The synthetic placements are sensitivity assumptions, not recovered locations, and do not establish water availability, capacity, operating status, or demand.
 
 "A declared uniform-location sensitivity retained the ten observed emergency-water destinations and placed the 26 unresolved announcements uniformly over eligible populated 125 m meshes within their source municipality across 50 placement replicates. Under 1,250 common Heavy-scenario closure draws per placement, the 5th–median–95th percentile expected affected population was 7,052.5–7,322.2–7,936.2 residents, compared with 7,976.1 in the matched observed-only diagnostic (−11.6% to −0.5%). Community-frequency rank correlations were 0.725–0.736–0.998 and Top-30 population-burden overlap was 66.7%–70.0%–96.7%, indicating greater sensitivity of exact local water priorities than of aggregate burden. Changing only emergency-water destinations left shelter, fire-service, and municipal-facility outputs exactly unchanged in 9/9 same-seed invariance checks because service classes are evaluated separately (Appendix Table B11). These hypothetical placements bound sensitivity and do not identify the actual locations or urban–rural distribution of unresolved announcements."
-(Page 33, Lines 704–716)
+(Page 37, Lines 795–807)
 
 "Emergency-water loss is an especially clear example of destination geography amplifying network dependence, although incomplete location resolution limits the magnitude and local ranking that can be inferred. Under the uniform-placement sensitivity, aggregate emergency-water burden differed by −11.6% to −0.5% from the matched observed-only diagnostic, but lower-bound Top-30 overlap was 66.7%; the result therefore supports a conditional service-loss conclusion rather than precise local water prioritization. Within the class-separable model, changing emergency-water destinations cannot alter fire-service or municipal-facility rankings."
-(Page 38, Lines 827–834)
+(Pages 43–44, Lines 947–954)
 
 "Appendix Table B11 treats the 26 unresolved announcements as a declared placement sensitivity rather than recovered data. In 50 replicates, the 18 Yatsushiro, six Uki, and two Hikawa records are distributed uniformly without replacement over eligible populated 125 m meshes in their source municipality and evaluated under five network seeds × 250 common Heavy-scenario closure draws. The expected affected-population range changes by −11.6% to −0.5% relative to the matched observed-only diagnostic, but community-frequency correlation and Top-30 overlap fall to 0.725 and 66.7% at their lower bounds. A same-seed test changes only water destinations and leaves shelter, fire-service, and municipal-facility loss, excess-time, and baseline arrays identical in 9/9 checks. This is a hypothetical sensitivity and not evidence of the actual missing locations."
-(Appendix, Page 8, Lines 162–171)
+(Appendix, Page 9, Lines 167–176)
 
 ## Comment 6
 
@@ -650,13 +653,13 @@ The hypothetical water placements cannot alter fire-service or municipal-facilit
 Thank you for this important comment. We agree that the Kumamoto retention values themselves should not be transferred to another earthquake or jurisdiction. We revised the Study Area and Data, Discussion, and Conclusions to distinguish the transferability of the framework from the portability of its upstream coefficients. Application elsewhere now requires locally supported retention settings, a compatible rainfall indicator, and renewed checks before downstream interpretation. We also clarify that InSAR and geotechnical measurements are complementary evidence: where coverage and calibration are adequate, they can support a physical disturbance model that replaces the administrative proxy rather than serving as direct one-for-one substitutes for an operational coefficient.
 
 "The numerical values are event- and area-specific and are not transferred to another earthquake or jurisdiction. Applying the framework elsewhere requires locally issued or empirically estimated retention settings, a rainfall indicator compatible with how those settings were defined, and renewed compatibility and sensitivity checks before downstream consequences are interpreted."
-(Page 8, Lines 150–154)
+(Pages 9–10, Lines 195–200)
 
 "Repeated InSAR deformation observations and targeted geotechnical measurements, including field shear-strength tests, could support a spatially explicit disturbance model where coverage and calibration are adequate. These data are complementary evidence rather than one-for-one substitutes for an operational warning coefficient; once validated, such a physical model could replace the administrative retention proxy at the susceptibility stage while the downstream road-network and consequence modules remain applicable."
-(Pages 33–34, Lines 724–730)
+(Page 50, Lines 1094–1100)
 
 "Within the event and area for which they are issued, official threshold adjustments can therefore inform more than a revised hazard map: they can support a consistent comparison of inspection targets, access-protection candidates, community preparedness needs, and resource-pre-positioning priorities before heavy rainfall."
-(Pages 34–35, Lines 749–753)
+(Page 51, Lines 1122–1126)
 
 ## Comment 7
 
