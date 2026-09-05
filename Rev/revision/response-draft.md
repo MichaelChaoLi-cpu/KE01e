@@ -333,10 +333,30 @@ Thank you for highlighting this terminology issue. We agree that “earthquake-a
 Second, many influential parameters—including terrain weights, equal rainfall-duration weights, the rainfall coefficient, score-to-closure functions, intervention effectiveness, relative costs, and the 0.15 consequence coefficient—are assumed without sufficient justification or comprehensive uncertainty analysis.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for identifying the need to examine these assumptions more systematically. The revised Methods, Results, Discussion, and Appendix Tables B14–B15 add terrain-weight sensitivity and bring the completed parameter tests together, while distinguishing transparent reference settings from empirically calibrated parameters. The new terrain experiment retains the original standardization, perturbs each coefficient by factors of 0.50 and 1.50, and renormalizes the vector to preserve its total weight. No alternative is selected for favorable validation or consequence results. The Methods state:
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"To test dependence on relative composition, we multiply one coefficient at a time by 0.50 or 1.50 and renormalize all four coefficients to their original sum of 2.25, yielding eight alternatives to Central. The original feature standardization remains fixed, and no alternative is selected using validation or consequence performance. These perturbations are declared stress tests, not empirical coefficient bounds or evidence that the Central weights are optimal."
+(Page 16, Lines 333–338)
+
+Each specification reaches the Heavy-rainfall disconnection and intervention endpoints, with road candidates and portfolios rebuilt rather than held at their Central membership. The Methods define the propagation and its limits:
+
+"All nine terrain-weight specifications produce slope and road scores for three rainfall scenarios; Heavy disconnection and fixed-budget Central intervention are propagated with five seeds and 1,000 draws per seed. Candidate roads, reduced networks, and priorities are rebuilt for each specification, with common random variates aligned by road-section identity. Appendix Tables B14–B15 separate within-specification Monte Carlo variation from parameter and structural stress ranges. This staged analysis does not evaluate all cross-family interactions or terrain-weight effects on service endpoints and is not a comprehensive probabilistic uncertainty propagation."
+(Page 28, Lines 593–601)
+
+The results reveal material dependence on terrain-weight composition, despite positive-support road-score correlations of at least 0.963 across the three rainfall scenarios. Table B14 reports every prespecified alternative, and the Results distinguish consequence magnitude from shortlist stability:
+
+"Across the nine specifications, Heavy disconnected population ranges from 490.5 to 3,323.7 residents, including 248.7–1,845.2 aged 65 and older, compared with Central values of 1,063.6 and 576.6. With Central intervention effects and costs and the same budget, protected population ranges from 41.6 to 115.7 residents around 62.3. Community Top-30 overlap falls to 56.7%, intervention Top-30 overlap to 50.0%, and selected-portfolio overlap to 51.0%."
+(Page 38, Lines 828–833)
+
+Table B15 also summarizes the tested rainfall-window weights and rainfall coefficient, slope-to-road transfer, closure mapping and dependence, intervention effectiveness and costs, and the attachment coefficient. It identifies which settings reach downstream endpoints. In particular, the effectiveness-only tests yield 33.3–90.7 protected residents, cost-only tests yield 52.9–67.8, and attachment coefficients of 0–0.50 yield 59.8–62.3. These are family-specific stress ranges, not a pooled confidence interval. The new Appendix notes make that distinction explicit:
+
+"Within-specification seed variation, parameter/structural stress ranges, and limitations of data or validation support represent different uncertainties. Existing within-family combinations do not test all cross-family interactions across the complete decision chain. These are staged sensitivity checks, not a comprehensive probabilistic propagation."
+(Appendix, Page 37, Lines 31–33)
+
+The contribution remains the linked, auditable comparison of slope disruption, road dependence, community consequences, and intervention priorities. The additional evidence identifies where assumptions materially change those comparisons; it does not establish an optimal weight vector or validate local engineering returns. The Discussion now states:
+
+"The terrain-weight stress test also shows that the fixed context coefficients materially affect both consequence magnitude and detailed road selection. The framework therefore offers an auditable chain of conditional comparisons, not an empirically preferred weight vector or a universally stable local shortlist."
+(Page 47, Lines 1042–1045)
 
 ## Comment 3
 

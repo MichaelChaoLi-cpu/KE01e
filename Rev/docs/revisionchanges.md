@@ -5605,3 +5605,225 @@ The main limitations arise from incomplete inventories and simplified process re
      - Before: ""
      - After: " The historical terrain score shows moderate, spatially variable discrimination, while the road comparison has only 10 physical episodes and wide paired confidence intervals. Failure to establish superiority over a comparator is not evidence of equivalence."
 
+## reviewer-3/comment-2
+
+### part-01
+
+- Location: Methods: terrain-weight stress design
+- Reason: Apply the exact approved terrain-sensitivity proposal.
+- Kila decisions: KILA-D-20260905-013
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-05T01:02:52Z
+- Author: Kila
+- Markup SHA-256 before: `d4e6b1448c2e3af007c92ed0809e25635c242dfc3028526c3cada87a922f200c`
+- Markup SHA-256 after: `b8d87b9f628d9bb5717e198a541bd13d0938da8cb345bc9d3f60ab25521796ac`
+- Revision IDs: `556`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T100252496420.reviewer-3-comment-2.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The score represents comparative terrain context; its coefficients are not causal effects or site-specific material properties.
+~~~~
+
+- After:
+
+~~~~text
+The score represents comparative terrain context; its coefficients are not causal effects or site-specific material properties. To test dependence on relative composition, we multiply one coefficient at a time by 0.50 or 1.50 and renormalize all four coefficients to their original sum of 2.25, yielding eight alternatives to Central. The original feature standardization remains fixed, and no alternative is selected using validation or consequence performance. These perturbations are declared stress tests, not empirical coefficient bounds or evidence that the Central weights are optimal.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " To test dependence on relative composition, we multiply one coefficient at a time by 0.50 or 1.50 and renormalize all four coefficients to their original sum of 2.25, yielding eight alternatives to Central. The original feature standardization remains fixed, and no alternative is selected using validation or consequence performance. These perturbations are declared stress tests, not empirical coefficient bounds or evidence that the Central weights are optimal."
+
+### part-02
+
+- Location: Methods: endpoints and staged uncertainty boundary
+- Reason: Apply the exact approved terrain-sensitivity proposal.
+- Kila decisions: KILA-D-20260905-013
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-05T01:03:06Z
+- Author: Kila
+- Markup SHA-256 before: `b8d87b9f628d9bb5717e198a541bd13d0938da8cb345bc9d3f60ab25521796ac`
+- Markup SHA-256 after: `ef5cbffe224061c9e5d748861aaa19b4494c160ef184e0a54c5be0c18f3da216`
+- Revision IDs: `557`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T100306321003.reviewer-3-comment-2.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+In this study, transition-specific checks attribute instability to a defined analytical stage rather than presenting one undifferentiated uncertainty range.
+~~~~
+
+- After:
+
+~~~~text
+In this study, transition-specific checks attribute instability to a defined analytical stage rather than presenting one undifferentiated uncertainty range. All nine terrain-weight specifications produce slope and road scores for three rainfall scenarios; Heavy disconnection and fixed-budget Central intervention are propagated with five seeds and 1,000 draws per seed. Candidate roads, reduced networks, and priorities are rebuilt for each specification, with common random variates aligned by road-section identity. Appendix Tables B14–B15 separate within-specification Monte Carlo variation from parameter and structural stress ranges. This staged analysis does not evaluate all cross-family interactions or terrain-weight effects on service endpoints and is not a comprehensive probabilistic uncertainty propagation.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " All nine terrain-weight specifications produce slope and road scores for three rainfall scenarios; Heavy disconnection and fixed-budget Central intervention are propagated with five seeds and 1,000 draws per seed. Candidate roads, reduced networks, and priorities are rebuilt for each specification, with common random variates aligned by road-section identity. Appendix Tables B14–B15 separate within-specification Monte Carlo variation from parameter and structural stress ranges. This staged analysis does not evaluate all cross-family interactions or terrain-weight effects on service endpoints and is not a comprehensive probabilistic uncertainty propagation."
+
+### part-03
+
+- Location: Results: terrain-weight consequences
+- Reason: Apply the exact approved terrain-sensitivity proposal.
+- Kila decisions: KILA-D-20260905-013, KILA-D-20260905-014
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Immutable style anchor: reviewer-2/comment-6#part-05; content ID 448; paragraph-mark ID 447
+- Timestamp: 2026-09-05T01:17:00Z
+- Author: Kila
+- Markup SHA-256 before: `ef5cbffe224061c9e5d748861aaa19b4494c160ef184e0a54c5be0c18f3da216`
+- Markup SHA-256 after: `29720f0484bcdf699f16132f34ecb2d3578cf382d0e4110f46348d3e6e9aebab`
+- Revision IDs: `558, 559`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T101700351179.reviewer-3-comment-2.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+Terrain-weight composition produces additional sensitivity (Appendix Table B14). Across the nine specifications, Heavy disconnected population ranges from 490.5 to 3,323.7 residents, including 248.7–1,845.2 aged 65 and older, compared with Central values of 1,063.6 and 576.6. With Central intervention effects and costs and the same budget, protected population ranges from 41.6 to 115.7 residents around 62.3. Community Top-30 overlap falls to 56.7%, intervention Top-30 overlap to 50.0%, and selected-portfolio overlap to 51.0%. Across all three rainfall scenarios, positive-support road-score correlations remain at least 0.963, but upper-1% road membership overlap falls to 44.8%. High overall rank agreement therefore does not imply stable local shortlists or consequence magnitudes.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "Terrain-weight composition produces additional sensitivity (Appendix Table B14). Across the nine specifications, Heavy disconnected population ranges from 490.5 to 3,323.7 residents, including 248.7–1,845.2 aged 65 and older, compared with Central values of 1,063.6 and 576.6. With Central intervention effects and costs and the same budget, protected population ranges from 41.6 to 115.7 residents around 62.3. Community Top-30 overlap falls to 56.7%, intervention Top-30 overlap to 50.0%, and selected-portfolio overlap to 51.0%. Across all three rainfall scenarios, positive-support road-score correlations remain at least 0.963, but upper-1% road membership overlap falls to 44.8%. High overall rank agreement therefore does not imply stable local shortlists or consequence magnitudes."
+
+### part-04
+
+- Location: Discussion: interpretation of assumption dependence
+- Reason: Apply the exact approved terrain-sensitivity proposal.
+- Kila decisions: KILA-D-20260905-013
+- Mode: `reedit`
+- Revises prior parts: reviewer-2/comment-6#part-07
+- Timestamp: 2026-09-05T01:17:12Z
+- Author: Kila
+- Markup SHA-256 before: `29720f0484bcdf699f16132f34ecb2d3578cf382d0e4110f46348d3e6e9aebab`
+- Markup SHA-256 after: `c1afea6b8b08e3f5d02c9b21051f83fd8086b0c96f7e059c5df2c3f9d9e2ad09`
+- Revision IDs: `450`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T101712329090.reviewer-3-comment-2.part-04.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The separated intervention sensitivity does not validate the Central assumptions.
+~~~~
+
+- After:
+
+~~~~text
+The terrain-weight stress test also shows that the fixed context coefficients materially affect both consequence magnitude and detailed road selection. The framework therefore offers an auditable chain of conditional comparisons, not an empirically preferred weight vector or a universally stable local shortlist. The separated intervention sensitivity does not validate the Central assumptions.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: "The terrain-weight stress test also shows that the fixed context coefficients materially affect both consequence magnitude and detailed road selection. The framework therefore offers an auditable chain of conditional comparisons, not an empirically preferred weight vector or a universally stable local shortlist. "
+
+
+### part-05
+
+- Location: Appendix, after the preceding B-table notes and before C1
+- Mode: `appendix-table-add` (explicit direct-edit authorization)
+- Kila decisions: KILA-D-20260905-013; KILA-D-20260905-014
+- Timestamp: 2026-09-05T10:21:40.318428+09:00
+- Before: no B14 block; all existing content retained
+- Appendix SHA-256 before: `9d60133727dd75a355f127baad71831d1581d5e2983c5a2d3a570052ff78df3d`
+- Appendix SHA-256 after: `4d33d507fe490f40ad8dd844553df1188bbdaea98c5c44e07902eb55528ee089`
+- Backup: `/Users/lichao/Research/KE01e/Rev/revision/.kila-backups/Appendix.before-r3c2-b14.20260905T102140316425.docx`
+- Original body XML, tables, bookmarks and protected package members preserved: true
+- Workbook: `data/results/tables/Table_terrain_weight_sensitivity.xlsx`
+- Workbook SHA-256: `72b92a68d198e4fc6e374d80c2596dfb27dd2224620a4d75f7b7e7286f9c3a32`
+- Exact added content:
+
+~~~~text
+Table B14. Terrain-weight composition sensitivity
+Weight stress | Disconnected population | Age 65+ | Protected population [seed range] | Community Top 30 (%) | Intervention Top 30 (%) | Portfolio overlap (%)
+Central | 1,063.6 | 576.6 | 62.3 [59.5–64.3] | 100.0 | 100.0 | 100.0
+Elevation ×0.50 | 1,017.4 | 550.0 | 60.5 [57.5–62.5] | 93.3 | 96.7 | 97.0
+Elevation ×1.50 | 1,120.4 | 610.0 | 65.7 [62.8–70.6] | 93.3 | 100.0 | 97.0
+Slope ×0.50 | 490.5 | 248.7 | 41.6 [39.3–42.4] | 63.3 | 50.0 | 51.0
+Slope ×1.50 | 1,961.2 | 1,082.6 | 88.2 [81.7–90.9] | 70.0 | 86.7 | 84.0
+Curvature ×0.50 | 811.2 | 434.4 | 54.9 [53.4–56.7] | 83.3 | 80.0 | 91.0
+Curvature ×1.50 | 1,334.1 | 729.5 | 69.7 [68.2–71.2] | 96.7 | 90.0 | 93.0
+Warning exposure ×0.50 | 3,323.7 | 1,845.2 | 115.7 [111.9–120.9] | 56.7 | 80.0 | 77.0
+Warning exposure ×1.50 | 500.3 | 255.2 | 42.2 [40.4–45.2] | 63.3 | 56.7 | 58.0
+Notes: Central weights for elevation, slope, absolute curvature, and warning exposure are 0.15, 1.00, 0.35, and 0.75. Each labeled coefficient is multiplied before all four are renormalized to sum to 2.25; the original standardization stays fixed. All results use Heavy rainfall, the Primary Emergency Road target, five seeds of 1,000 draws, and Central intervention effects and costs at a fixed 269.131-unit budget. Overlap is relative to Central; the portfolio denominator is its 100 selected roads. Population values are five-seed means; brackets show seed minima and maxima, not confidence bounds. These are declared composition stress tests, not empirical coefficient intervals. Across all three rainfall scenarios, minimum positive-support road correlation and upper-1% overlap are 0.963 and 44.8%. Full coefficient vectors, candidate membership, scenario-specific ranking diagnostics and seed-level results accompany the reproducible analysis outputs.
+~~~~
+
+### part-06
+
+- Location: Appendix, after the preceding B-table notes and before C1
+- Mode: `appendix-table-add` (explicit direct-edit authorization)
+- Kila decisions: KILA-D-20260905-013; KILA-D-20260905-014
+- Timestamp: 2026-09-05T10:21:52.684050+09:00
+- Before: no B15 block; all existing content retained
+- Appendix SHA-256 before: `4d33d507fe490f40ad8dd844553df1188bbdaea98c5c44e07902eb55528ee089`
+- Appendix SHA-256 after: `e80a31d978b3a046f0e94600d7166cfac3fa955a296d4926d7e641851b311128`
+- Backup: `/Users/lichao/Research/KE01e/Rev/revision/.kila-backups/Appendix.before-r3c2-b15.20260905T102152683086.docx`
+- Original body XML, tables, bookmarks and protected package members preserved: true
+- Workbook: `data/results/tables/Table_staged_parameter_sensitivity_coverage.xlsx`
+- Workbook SHA-256: `d09bd2981dae2db601efffd86f4cacd953cdedd2d4d6c95c0e38324699ab1d52`
+- Exact added content:
+
+~~~~text
+Table B15. Staged parameter-sensitivity coverage
+Parameter family | Tested alternatives | Heavy consequence range | Coverage and interpretation limit
+Terrain composition | Central + 8 normalized one-weight stresses | Disconnected: 490.5–3,323.7; protected: 41.6–115.7 | All 9: three-scenario slope/road scores and Heavy disconnection/intervention; no service propagation or empirical weight bounds.
+Rainfall windows / gamma | 5 weight profiles × 3 gamma values | Disconnected: 765.7–1,874.6 | All 15: three-scenario scores; 5 prespecified settings: Heavy disconnection.
+Slope-to-road transfer | 15 parameter specifications; 3 joint downstream settings | Disconnected: 518.3–1,999.4 | Three-scenario disconnection and service results for Central/strict/permissive transfer; not calibrated runout.
+Closure mapping | Maximum propensity 0.15 / 0.30 / 0.45 | Disconnected: 351.4–2,073.2 | Heavy disconnection and community ranks; not calibrated failure probabilities.
+Closure dependence | Independent; 1 / 3 km × dependence 0.25 / 0.50 | Disconnected: 1,063.6–1,233.9 | Three-scenario disconnection means, tails and rankings; not inferred co-failure scales.
+Intervention effectiveness | Conservative / Central / Optimistic effects | Protected: 33.3–90.7 | Central costs and attachment weight fixed; not measured engineering efficacy.
+Intervention costs | Global ×0.8 / ×1.2; equal-action; length-only | Protected: 52.9–67.8 | Central effects and attachment weight fixed; no currency calibration or constructability assessment.
+Attachment coefficient | 0 / 0.075 / 0.15 / 0.30 / 0.50 | Protected: 59.8–62.3 | Central effects/costs fixed; coefficient-zero all-road correlation is tie-sensitive.
+Notes: Ranges summarize five-seed means under the declared family-specific settings, not confidence intervals or a joint uncertainty envelope. Disconnected population refers to loss of the Primary Emergency Road target under Heavy rainfall. Protected population refers to Central-budget intervention comparisons; the terrain test holds Central effects and costs fixed, whereas the intervention rows change only their named family. Detailed methods and outputs are retained in Tables B5–B8 and B12–B14. Within-specification seed variation, parameter/structural stress ranges, and limitations of data or validation support represent different uncertainties. Existing within-family combinations do not test all cross-family interactions across the complete decision chain. These are staged sensitivity checks, not a comprehensive probabilistic propagation.
+~~~~
+
+### part-06-layout
+
+- Location: Appendix, new B15/C1 boundary
+- Mode: layout-only correction of agent-added blank break
+- Kila decisions: KILA-D-20260905-013; KILA-D-20260905-014
+- Before: one agent-added empty page-break paragraph immediately before C1, whose original pageBreakBefore already starts a page
+- After: remove only that new empty break; all words, tables and pre-existing XML unchanged
+- Appendix SHA-256 before: `e80a31d978b3a046f0e94600d7166cfac3fa955a296d4926d7e641851b311128`
+- Appendix SHA-256 after: `87d28965abc0ec681c810d3a18904ddad2d9de9c0b4738e3f6a96eb7e10b8ff8`
+- Backup: `/Users/lichao/Research/KE01e/Rev/revision/.kila-backups/Appendix.before-r3c2-layout.20260905T102402283219.docx`
+- Verification: every remaining body element byte-identical; all other package members byte-identical; rerender required
