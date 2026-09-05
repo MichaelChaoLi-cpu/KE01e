@@ -295,10 +295,30 @@ Thank you for identifying this ambiguity. We clarified throughout the manuscript
 10. The numerical values reported in the Highlights are inconsistent with those in the Abstract and Results. Please correct these values and confirm numerical consistency throughout the manuscript.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for identifying this inconsistency. The submitted Highlights contained incorrect, outdated population values, and we apologize for the error. The revised Highlights now agrees with the Abstract and Results. Under the revised Primary Emergency Road backbone definition, the central Heavy-scenario means are 1,063.6 disconnected residents, including 576.6 residents aged 65 or older; the Abstract and Highlights report these as 1,064 and 577 after rounding. These are simulation-based mean expected populations, not observed counts of isolated residents. The revised numerical highlight states:
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"Heavy-scenario mean disconnection is 1,064 residents, including 577 aged 65 or older."
+(Highlights, Page 1, Item 2)
+
+We also checked the headline outcomes and their repeated numerical summaries across the main text, figures and supplementary tables against the underlying results, including reconciliation of the municipality-level totals. This check identified an outdated section-weighted correspondence result in Appendix Table B5 and its accompanying explanation. Both now use the episode-weighted measure: 0.723 centrally, with a range of 0.711–0.726 across 15 rainfall-parameter combinations. This is a specification range, not a confidence interval. The corrected explanation reads:
+
+"Across five window-weight schemes and three γ values, the minimum road-ranking correlation was 0.989, minimum top-1% overlap was 0.879, and episode-weighted road-restriction correspondence ranged from 0.711 to 0.726."
+(Appendix, Page 5, Lines 103–105)
+
+The Highlights and Table B5 also consistently identify the limited role of the ten dry-window physical restriction episodes. The revised highlight reads:
+
+"Ten dry-window restriction episodes provide supplementary ranking evidence."
+(Highlights, Page 1, Item 3)
+
+The interpretation cell in the corresponding Table B5 row states:
+
+"Supplementary dry-event correspondence; not rainfall-trigger validation"
+(Appendix, Page 29, Table B5, Episode-weighted road-restriction correspondence row)
+
+Finally, the Appendix clarifies why summing rounded municipality-level displays can differ slightly from the prefecture-wide totals calculated before rounding:
+
+"Prefecture-wide totals are calculated from unrounded values; sums of the displayed municipality-level values can differ slightly because of rounding."
+(Appendix, Page 12, Lines 237–239)
 
 # Reviewer 3
 

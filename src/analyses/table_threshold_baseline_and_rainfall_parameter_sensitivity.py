@@ -22,6 +22,7 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 ROOT = Path(__file__).resolve().parents[2]
 COMMENT3 = ROOT / "data/exp/revision/reviewer-2-comment-3"
 COMMENT4 = ROOT / "data/exp/revision/reviewer-2-comment-4"
+COMMENT7 = ROOT / "data/exp/revision/reviewer-2-comment-7"
 OUT = (
     ROOT
     / "data/results/tables/Table_threshold_baseline_and_rainfall_parameter_sensitivity.xlsx"
@@ -97,7 +98,7 @@ def build_workbook() -> None:
     service_path = COMMENT3 / "service_reachability_threshold_comparison.csv"
     score_path = COMMENT3 / "slope_and_road_threshold_comparison.csv"
     road_sensitivity_path = COMMENT4 / "road_score_sensitivity.csv"
-    matched_path = COMMENT4 / "matched_validation_and_ordering.csv"
+    matched_path = COMMENT7 / "rainfall_parameter_event_clustered_validation.csv"
     isolation_sensitivity_path = COMMENT4 / "community_isolation_parameter_sensitivity.csv"
     compatibility_path = COMMENT4 / "weight_scheme_jma_compatibility.csv"
 
@@ -106,6 +107,12 @@ def build_workbook() -> None:
     scores = read_csv(score_path)
     road_sensitivity = read_csv(road_sensitivity_path)
     matched = read_csv(matched_path)
+    if len(matched) != 15 or any(int(row["Physical Episodes"]) != 10 for row in matched):
+        raise RuntimeError("Expected 15 episode-weighted specifications with 10 physical episodes each.")
+    matched_central = exactly_one(matched, Specification="equal__g1.00")
+    independent_central = exactly_one(read_csv(COMMENT7 / "event_clustered_validation.csv"), Specification="Heavy road score")
+    if abs(float(matched_central["Episode-Weighted Concordance"]) - float(independent_central["Episode-Weighted Concordance"])) > 1e-12:
+        raise RuntimeError("Heavy episode-weighted central estimates disagree.")
     isolation_sensitivity = read_csv(isolation_sensitivity_path)
     compatibility = read_csv(compatibility_path)
 
@@ -216,16 +223,15 @@ def build_workbook() -> None:
         source_key="minimum central_top1_overlap across 45 rows",
     )
 
-    matched_central = exactly_one(matched, weight_scheme="equal", gamma="1.0")
     for key, value, setting in (
-        ("matched_central", matched_central["matched_concordance"], "Equal weights; gamma=1.0"),
-        ("matched_min", min(float(row["matched_concordance"]) for row in matched), "Minimum across 15 combinations"),
-        ("matched_max", max(float(row["matched_concordance"]) for row in matched), "Maximum across 15 combinations"),
+        ("matched_central", matched_central["Episode-Weighted Concordance"], "Specification=equal__g1.00"),
+        ("matched_min", min(float(row["Episode-Weighted Concordance"]) for row in matched), "Minimum across 15 combinations"),
+        ("matched_max", max(float(row["Episode-Weighted Concordance"]) for row in matched), "Maximum across 15 combinations"),
     ):
         evidence_rows[key] = add_evidence(
             evidence,
             analysis="Rainfall parameters",
-            outcome="Matched road-evidence concordance",
+            outcome="Episode-weighted road-restriction correspondence",
             setting=setting,
             value=float(value),
             unit="concordance",
@@ -330,12 +336,12 @@ def build_workbook() -> None:
             ],
             [
                 "Rainfall parameters",
-                "Matched road-evidence concordance",
+                "Episode-weighted road-restriction correspondence",
                 ref("matched_central"),
                 f'=TEXT({ref("matched_min")[1:]},\"0.000\")&\"–\"&TEXT({ref("matched_max")[1:]},\"0.000\")',
                 "Range across 15 combinations",
-                "93 matched road sections",
-                "Validation signal is stable",
+                "10 physical episodes",
+                "Supplementary dry-event correspondence; not rainfall-trigger validation",
             ],
             [
                 "Rainfall parameters",
@@ -517,7 +523,7 @@ def add_comments(summary, evidence_rows: dict[str, int]) -> None:
         author,
     )
     summary["C12"].comment = Comment(
-        f"Linked to {EVIDENCE_SHEET}!D{evidence_rows['matched_central']}; the displayed range spans all 15 prespecified parameter combinations.",
+        f"Linked to {EVIDENCE_SHEET}!D{evidence_rows['matched_central']}; episode-weighted concordance across 10 physical episodes. The range spans 15 parameter combinations, not a bootstrap confidence interval.",
         author,
     )
     summary["C13"].comment = Comment(
@@ -532,6 +538,14 @@ def verify_workbook() -> None:
         raise RuntimeError(f"Unexpected sheet order: {workbook.sheetnames}")
     summary = workbook[SUMMARY_SHEET]
     evidence = workbook[EVIDENCE_SHEET]
+    if summary["B12"].value != "Episode-weighted road-restriction correspondence" or summary["F12"].value != "10 physical episodes":
+        raise RuntimeError("Obsolete road-correspondence unit or label.")
+    expected = read_csv(COMMENT7 / "rainfall_parameter_event_clustered_validation.csv")
+    vals = [float(row["Episode-Weighted Concordance"]) for row in expected]
+    target = [float(exactly_one(expected, Specification="equal__g1.00")["Episode-Weighted Concordance"]), min(vals), max(vals)]
+    for row_number, value in zip((21, 22, 23), target):
+        if abs(evidence.cell(row_number, 4).value - value) > 1e-12:
+            raise RuntimeError("B5 episode-weighted numerical regression.")
     if summary["A1"].value != TITLE or tuple(cell.value for cell in summary[2]) != HEADERS:
         raise RuntimeError("The title/header contract is not satisfied.")
     if summary.max_column != 7 or summary.max_row != 20:

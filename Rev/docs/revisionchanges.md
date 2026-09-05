@@ -5986,3 +5986,140 @@ The main contribution is therefore an evidence-bounded decision chain that trans
      - Before: "probability"
      - After: "integration is unprecedented"
 
+
+## reviewer-2/comment-10#part-01
+
+- Approval: KILA-D-20260905-020; exact five-part proposal.
+- target: Rev/revision/Highlights.docx
+
+### Before
+
+Heavy rainfall isolated 12,000 residents, including 3,000 elderly.
+
+### After
+
+Heavy-scenario mean disconnection is 1,064 residents, including 577 aged 65+.
+- before_sha256: d0b913a10b2c9286cc84fed1bf60e31c24b10b9fcdce9b716feab2f8ed5c3cb9
+- after_sha256: 3e2026d60110ee44c5146411690d064860b5d3dace7191355f091c7696545e3e
+- backup: Rev/revision/.kila-backups/Highlights.before-r2c10-part01.20260905T140929788956.docx
+- verification: Only approved w:t text changed; other XML structure/styles and all other package members byte-preserved; direct edit, no markup touched
+- part: 1
+- decision: KILA-D-20260905-020
+
+## reviewer-2/comment-10#part-02
+
+- Approval: KILA-D-20260905-020; exact five-part proposal.
+- target: Rev/revision/Highlights.docx
+
+### Before
+
+Road disruption scores showed strong concordance with observed data.
+
+### After
+
+Ten dry-window restriction episodes provide supplementary ranking evidence.
+- before_sha256: 3e2026d60110ee44c5146411690d064860b5d3dace7191355f091c7696545e3e
+- after_sha256: a2e0f5b4bfb5618002b2b7bcd144fdf456a5591211862cec55e7275524e87d93
+- backup: Rev/revision/.kila-backups/Highlights.before-r2c10-part02.20260905T140929968254.docx
+- verification: Only approved w:t text changed; other XML structure/styles and all other package members byte-preserved; direct edit, no markup touched
+- part: 2
+- decision: KILA-D-20260905-020
+
+## reviewer-2/comment-10#part-03
+
+- Approval: KILA-D-20260905-020; exact five-part proposal.
+- target: data/results/tables/Table_threshold_baseline_and_rainfall_parameter_sensitivity.xlsx
+
+### Before
+
+Legacy section-weighted B5 correspondence row and provenance
+
+### After
+
+["Rainfall parameters", "Episode-weighted road-restriction correspondence", "0.723", "0.711–0.726", "Range across 15 combinations", "10 physical episodes", "Supplementary dry-event correspondence; not rainfall-trigger validation"]
+- changed_cells: [['Evidence', 'B21', 'Matched road-evidence concordance', 'Episode-weighted road-restriction correspondence'], ['Evidence', 'B22', 'Matched road-evidence concordance', 'Episode-weighted road-restriction correspondence'], ['Evidence', 'B23', 'Matched road-evidence concordance', 'Episode-weighted road-restriction correspondence'], ['Evidence', 'C21', 'Equal weights; gamma=1.0', 'Specification=equal__g1.00'], ['Evidence', 'D21', 0.6458653353814643, 0.7229263337306817], ['Evidence', 'D22', 0.6315284178187405, 0.7112857247422466], ['Evidence', 'D23', 0.6523169482846902, 0.7257963381224253], ['Evidence', 'F21', 'data/exp/revision/reviewer-2-comment-4/matched_validation_and_ordering.csv', 'data/exp/revision/reviewer-2-comment-7/rainfall_parameter_event_clustered_validation.csv'], ['Evidence', 'F22', 'data/exp/revision/reviewer-2-comment-4/matched_validation_and_ordering.csv', 'data/exp/revision/reviewer-2-comment-7/rainfall_parameter_event_clustered_validation.csv'], ['Evidence', 'F23', 'data/exp/revision/reviewer-2-comment-4/matched_validation_and_ordering.csv', 'data/exp/revision/reviewer-2-comment-7/rainfall_parameter_event_clustered_validation.csv'], ['Evidence', 'G21', 'Equal weights; gamma=1.0', 'Specification=equal__g1.00'], ['Evidence', 'H21', '249af8c7c5e917e40f55389aeb7ad5502c3c4746c7e91899a7a8d18b3a3ce3f9', '5258fb162724218775847c1f8c1a78bf1bc079e447f4a8d1544301a848d73d8d'], ['Evidence', 'H22', '249af8c7c5e917e40f55389aeb7ad5502c3c4746c7e91899a7a8d18b3a3ce3f9', '5258fb162724218775847c1f8c1a78bf1bc079e447f4a8d1544301a848d73d8d'], ['Evidence', 'H23', '249af8c7c5e917e40f55389aeb7ad5502c3c4746c7e91899a7a8d18b3a3ce3f9', '5258fb162724218775847c1f8c1a78bf1bc079e447f4a8d1544301a848d73d8d'], ['Table B5', 'B12', 'Matched road-evidence concordance', 'Episode-weighted road-restriction correspondence'], ['Table B5', 'F12', '93 matched road sections', '10 physical episodes'], ['Table B5', 'G12', 'Validation signal is stable', 'Supplementary dry-event correspondence; not rainfall-trigger validation']]
+- before_sha256: 60b299b1c94d3e383004c75b54c437292b60786c43045ad92390701370b19c27
+- after_sha256: edd3227b319075f8d47e1b1abdca80c3bf8f98b6aadc44f28249e706853d0740
+- backup: Rev/revision/.kila-backups/B5.before-r2c10.20260905T140941090803.xlsx
+- verification: Every unrelated value/formula and every cell style preserved; current producer agrees with current workbook outside approved cells; preview pending
+- part: 3
+- decision: KILA-D-20260905-020
+
+## reviewer-2/comment-10#part-04
+
+- Approval: KILA-D-20260905-020; exact five-part proposal.
+- target: Rev/revision/Appendix.docx
+
+### Before
+
+["Rainfall parameters", "Matched road-evidence concordance", "0.646", "0.632–0.652", "Range across 15 combinations", "93 matched road sections", "Validation signal is stable"]
+
+### After
+
+["Rainfall parameters", "Episode-weighted road-restriction correspondence", "0.723", "0.711–0.726", "Range across 15 combinations", "10 physical episodes", "Supplementary dry-event correspondence; not rainfall-trigger validation"]
+- before_sha256: 87d28965abc0ec681c810d3a18904ddad2d9de9c0b4738e3f6a96eb7e10b8ff8
+- after_sha256: b84abf1be4bbabe02eae821b2eb53d60ff88af7ec89e2626d2730e2990174369
+- backup: Rev/revision/.kila-backups/Appendix.before-r2c10-part04.20260905T140958057216.docx
+- verification: Only approved w:t text changed; other XML structure/styles and all other package members byte-preserved; direct edit, no markup touched
+- part: 4
+- decision: KILA-D-20260905-020
+
+## reviewer-2/comment-10#part-05
+
+- Approval: KILA-D-20260905-020; exact five-part proposal.
+- target: Rev/revision/Appendix.docx
+
+### Before
+
+The geographic summary is descriptive and does not replace the community-level network unit.
+
+### After
+
+The geographic summary is descriptive and does not replace the community-level network unit. Prefecture-wide totals are calculated from unrounded values; sums of the displayed municipality-level values can differ slightly because of rounding.
+- before_sha256: b84abf1be4bbabe02eae821b2eb53d60ff88af7ec89e2626d2730e2990174369
+- after_sha256: 9f3fca5b7c0f90fa3d7aad1fca89d15a351ae5638a17a8d89872e031ecd55f10
+- backup: Rev/revision/.kila-backups/Appendix.before-r2c10-part05.20260905T140958427559.docx
+- verification: Only approved w:t text changed; other XML structure/styles and all other package members byte-preserved; direct edit, no markup touched
+- part: 5
+- decision: KILA-D-20260905-020
+
+## reviewer-2/comment-10#part-06-age-wording
+
+- Target: Rev/revision/Highlights.docx, research item2.
+- Current user directly requests replacing the 65+ shorthand. Wording-only; age group and all numbers unchanged.
+- Prior overlap: reviewer-2/comment-10#part-01; current user explicitly requests this local follow-up.
+
+### Before
+
+Heavy-scenario mean disconnection is 1,064 residents, including 577 aged 65+.
+
+### After
+
+Heavy-scenario mean disconnection is 1,064 residents, including 577 aged 65 or older.
+
+- Minimal replacement: 65+ → 65 or older.
+- Before SHA-256: a2e0f5b4bfb5618002b2b7bcd144fdf456a5591211862cec55e7275524e87d93
+- After SHA-256: cda472b7e47979206cd0d0f704ef35f07a48ee7dffba5501a61422c860add9e4
+- Backup: Rev/revision/.kila-backups/Highlights.before-age-wording.20260905T144559550751.docx
+- Verification: exact single text-node edit; every other XML node and ZIP part preserved. No main markup or response write.
+
+## reviewer-2/comment-10#part-07
+
+- part: reviewer-2/comment-10#part-07
+- decision: KILA-D-20260905-021
+- target: Rev/revision/Appendix.docx
+
+### Before
+
+Across five window-weight schemes and three γ values, the minimum road-ranking correlation was 0.989, minimum top-1% overlap was 0.879, and matched road-evidence concordance ranged from 0.632 to 0.652.
+
+
+### After
+
+Across five window-weight schemes and three γ values, the minimum road-ranking correlation was 0.989, minimum top-1% overlap was 0.879, and episode-weighted road-restriction correspondence ranged from 0.711 to 0.726.
+
+- before_sha256: 9f3fca5b7c0f90fa3d7aad1fca89d15a351ae5638a17a8d89872e031ecd55f10
+- after_sha256: 00514ce95f219c67840d73584344b67706ab0ea5710105d71128712f2deefb95
+- backup: Rev/revision/.kila-backups/Appendix.before-r2c10-part07.20260905T153331577759.docx
+- prior_overlap: R3C6 approved proposal Part14 ActionA item4; authorized direct supplementary re-edit
+- verification: One text-node local replacement only; all other XML and ZIP members preserved; no markup edit
