@@ -326,10 +326,9 @@ Finally, the Appendix clarifies why summing rounded municipality-level displays 
 Reviewer 3: Major revision is recommended. The manuscript presents a relevant and potentially useful framework linking post-earthquake rainfall-threshold adjustment, landslide disruption, road-network failure, community isolation, service accessibility, and intervention priorities; however, several methodological issues must be addressed before the results can be considered reliable.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for recognizing the relevance of the framework and for specifying the methodological changes needed to strengthen its interpretation. The revised manuscript explicitly defines the post-earthquake component as an operational rainfall-warning threshold scenario, rather than a physical model of earthquake damage. Additional sensitivity analyses examine terrain weights, rainfall parameters, slope-to-road transfer, spatially dependent closures, and intervention assumptions. We distinguish these staged stress tests from comprehensive probabilistic uncertainty propagation and report where assumptions materially affect consequence magnitudes and local priorities.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+The revised network analysis replaces the administrative-boundary proxy with connection to the Primary Emergency Road backbone and recalculates the downstream consequences. Service loss explicitly permits rerouting to alternative facilities of the same class, and the corrected Highlights agree with the revised population estimates. We also clarify that rainfall severity mainly changes simulated burdens, that the historical slope and dry-window road evidence have limited validation scope, and that the intervention screen has not demonstrated an optimization advantage over the equal-cost consequence benchmark. The contribution remains a traceable comparison linking slope disruption and network dependence to differentiated road and community preparedness needs. The revised manuscript makes the assumptions and conditions governing those comparisons explicit, so the outputs can inform regional screening without being mistaken for calibrated forecasts or locally validated engineering returns. The responses below explain the individual revisions.
 
 ## Comment 1
 
