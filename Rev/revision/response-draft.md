@@ -666,7 +666,11 @@ Thank you for this important comment. We agree that the Kumamoto retention value
 7. The Highlights state that "Heavy rainfall isolated 12,000 residents, including 3,000 elderly," but the abstract and results sections report 1,107 people (including 603 aged 65 and above) under heavy rainfall. There is nearly an 11-fold discrepancy between 12,000 and 1,107. Please verify and reconcile this data inconsistency.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for identifying this error. The submitted Highlights values of 12,000 and 3,000 were incorrect; the discrepancy is not attributable to rounding. We apologize and have corrected the numerical highlight to agree with the revised Abstract and Results.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+The revised analysis defines disconnection relative to the Primary Emergency Road backbone. Under the central Heavy scenario, the mean expected disconnected population is 1,063.6, including 576.6 residents aged 65 or older, across five seeds with 1,000 simulation draws per seed. The Abstract and Highlights report the corresponding rounded means of 1,064 and 577. These values reflect the revised analysis and supersede the earlier 1,107 and 603; they are not a rounding adjustment to those earlier estimates. The corrected highlight states:
+
+"Heavy-scenario mean disconnection is 1,064 residents, including 577 aged 65 or older."
+(Highlights, Page 1, Item 2)
+
+We also checked the main population and service-loss aggregates against the municipality-level results and their repeated numerical displays in the manuscript and supplementary tables. Prefecture-wide totals are calculated before rounding individual municipality entries. The wording now identifies the reported population as a scenario-dependent simulation mean, rather than implying that these residents were observed to become isolated during a rainfall event.
