@@ -361,10 +361,17 @@ Recalculation from the unchanged road-score arrays gives Moderate–Heavy and Ex
 The landslide validation performance is only moderate (AUC = 0.665), while the road validation contains only 94 evidence cases and does not clearly demonstrate statistically significant improvement over the road-length comparator.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for this comment. We agree that the current road evidence does not establish statistically significant improvement over the road-length comparator. This comparison evaluates road-ranking correspondence, whereas the study’s principal contribution is to connect scenario-based disruption screening with community isolation, service accessibility, and budget-constrained intervention comparisons. The revised Introduction describes historical slope-ranking alignment and supplementary road-ranking correspondence, while the Discussion explicitly acknowledges moderate terrain discrimination, the small number of physical road-restriction episodes, and the distinction between unproven superiority and equivalence.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+The revised historical evaluation restricts pseudo-background sampling to the GSI interpretation footprint and warning-zone exposure to polygons designated before the 2016 earthquake sequence. Under this corrected support, the frozen terrain score has a mean spatial AUC of 0.705, a fold range of 0.550–0.787, and held-out top-quartile capture of 46.5%. The change from the earlier 0.665 reflects the evaluation-support correction, not refitting of the propagated score. We retain a moderate, spatially variable interpretation; this historical alignment does not validate the 2026 rainfall scenarios or calibrated failure probabilities.
+
+The revised road audit distinguishes 10 physical restriction episodes from their 94 linked sections, of which 93 have eligible matched controls. Matching accounts for municipality or ward, road category, emergency-route membership, and section-length decile. Equal episode weighting and episode-cluster bootstrapping avoid treating multiple sections from one episode as independent events. Heavy-score concordance is 0.723 (95% CI 0.598–0.840), compared with 0.698 (0.554–0.845) for road length. The paired Heavy-minus-length contrast is 0.025 (−0.073 to 0.116); the Heavy-minus-warning contrast is 0.178 (−0.011 to 0.353). Both intervals include zero, so neither comparison demonstrates superiority. Nor do these wide intervals establish equivalence. Because the retained episodes occur in a dry earthquake-proximate window, the comparison remains supplementary terrain-to-road correspondence rather than validation of rainfall-triggered disruption. The revised passages state:
+
+"The framework evaluates historical slope-ranking alignment and supplementary road-ranking correspondence, converts road scores into bounded closure propensities, simulates network consequences, and compares consequence-aware interventions under planning budgets."
+(Page 4, Lines 78–81)
+
+"The main limitations arise from incomplete inventories and simplified process representation. The historical terrain score shows moderate, spatially variable discrimination, while the road comparison has only 10 physical episodes and wide paired confidence intervals. Failure to establish superiority over a comparator is not evidence of equivalence."
+(Page 45, Lines 997–1001)
 
 ## Comment 5
 

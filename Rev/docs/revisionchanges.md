@@ -5517,3 +5517,91 @@ Their purpose is comparative planning, not reconstruction of the physical state 
      - Before: ""
      - After: " Within the fixed threshold geography, the rainfall scenarios combine unchanged terrain and transfer structure with station-supported quantile loading rather than event-specific storm footprints. Their principal role is to stress-test disruption and network-consequence magnitudes; the larger simulated burdens do not demonstrate improved spatial road prioritization."
 
+## reviewer-3/comment-4
+
+### part-01
+
+- Location: Introduction > Research Gap and Contribution
+- Reason: Limit the contribution claim to historical slope-ranking alignment and supplementary road-ranking correspondence.
+- Kila decisions: KILA-D-20260905-009
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-05T00:01:42Z
+- Author: Mike Li
+- Markup SHA-256 before: `74dc675d80d449f08391c996e8e50336223704877e442c1507b11c27414f6e57`
+- Markup SHA-256 after: `337f8083af2f5a6278b939b851aaf73296009e0ee25e4e769a8053c42e5240fb`
+- Revision IDs: `545, 546, 547, 548, 549, 550, 551, 552, 553, 554`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T090142402986.reviewer-3-comment-4.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The framework validates relative slope and road rankings, converts road scores into bounded closure propensities, simulates network consequences, and compares consequence-aware interventions under planning budgets.
+~~~~
+
+- After:
+
+~~~~text
+The framework evaluates historical slope-ranking alignment and supplementary road-ranking correspondence, converts road scores into bounded closure propensities, simulates network consequences, and compares consequence-aware interventions under planning budgets.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "validates"
+     - After: "evaluates"
+  2. `replace`
+     - Before: "relative"
+     - After: "historical"
+  3. `replace`
+     - Before: "slope"
+     - After: "slope-ranking alignment"
+  4. `replace`
+     - Before: "road"
+     - After: "supplementary"
+  5. `replace`
+     - Before: "rankings"
+     - After: "road-ranking correspondence"
+
+### part-02
+
+- Location: Discussion > Strengths, Limitations, and Future Research; opening of limitations paragraph
+- Reason: State moderate terrain discrimination, limited independent road evidence and the distinction between unproven superiority and equivalence.
+- Kila decisions: KILA-D-20260905-009
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-05T00:01:52Z
+- Author: Mike Li
+- Markup SHA-256 before: `337f8083af2f5a6278b939b851aaf73296009e0ee25e4e769a8053c42e5240fb`
+- Markup SHA-256 after: `d4e6b1448c2e3af007c92ed0809e25635c242dfc3028526c3cada87a922f200c`
+- Revision IDs: `555`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T090152709177.reviewer-3-comment-4.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The main limitations arise from incomplete inventories and simplified process representation.
+~~~~
+
+- After:
+
+~~~~text
+The main limitations arise from incomplete inventories and simplified process representation. The historical terrain score shows moderate, spatially variable discrimination, while the road comparison has only 10 physical episodes and wide paired confidence intervals. Failure to establish superiority over a comparator is not evidence of equivalence.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert`
+     - Before: ""
+     - After: " The historical terrain score shows moderate, spatially variable discrimination, while the road comparison has only 10 physical episodes and wide paired confidence intervals. Failure to establish superiority over a comparator is not evidence of equivalence."
+
