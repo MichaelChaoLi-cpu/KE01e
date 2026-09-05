@@ -504,10 +504,19 @@ The Methods describe a greedy rank-and-pack screening procedure, not an explicit
 Finally, the Highlights report 12,000 isolated residents and 3,000 elderly residents, whereas the abstract and main text report approximately 1,107 and 603, respectively; all numerical results must therefore be comprehensively checked. These issues require substantial methodological clarification, additional sensitivity analyses, possible recalculation of the network and service-access results, and more cautious interpretation of the operational implications.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for identifying this serious inconsistency. The submitted Highlights values of 12,000 and 3,000 were incorrect, and we apologize for the error. We have corrected the Highlights and checked the main outcome aggregates and their repeated displays in the Abstract, Results, figures and supplementary tables against the underlying calculations.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+The revised results also reflect the change to a Primary Emergency Road backbone definition of disconnection, described in our response to Comment 6. The central Heavy-scenario mean is now 1,063.6 disconnected residents, including 576.6 aged 65 or older, calculated from five seeds with 1,000 draws per seed. The Abstract and Highlights round these means to 1,064 and 577. Thus, the revised numbers are not simply rounded versions of the earlier 1,107 and 603. They are conditional simulation outputs under the revised network definition, not observed counts of isolated residents. The corrected highlight reads:
+
+"Heavy-scenario mean disconnection is 1,064 residents, including 577 aged 65 or older."
+(Highlights, Page 1, Item 2)
+
+The numerical checks include reconciliation of the eight principal population and service-loss aggregates across all 49 municipality and ward entries in Appendix Table C1, as well as the reported intervention and comparator population benefits. The Appendix now explains the small differences that can arise when readers sum individually rounded entries:
+
+"Prefecture-wide totals are calculated from unrounded values; sums of the displayed municipality-level values can differ slightly because of rounding."
+(Appendix, Page 12, Lines 237–239)
+
+The accompanying methodological revisions and sensitivity analyses are detailed in our responses to Comments 1–7. The revised manuscript retains the distinction between scenario-conditional screening and validated forecasts: simulated service loss is not observed response failure, and the intervention ranking does not establish superiority over the equal-cost consequence benchmark.
 
 # Reviewer 4
 
