@@ -67,10 +67,10 @@ Thank you for this comment. We evaluated municipality-wide Yatsushiro assignment
 3. The directional slope-to-road transfer approximates runout using basic terrain characteristics rather than a physical model. A sentence discussing the feasibility of integrating physical models in future iterations would add useful context.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for this suggestion. The revised Discussion, under “Strengths, Limitations, and Future Research,” explains how a physically based runout model could replace the directional transfer approximation when event-specific source and deposit mapping, material parameters, and independent observations support calibration and validation. It also identifies blockage-duration and repair-time modeling as a subsequent extension. These are future developments, not capabilities demonstrated by the current screening model. The revised sentence states:
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"A physically based runout model could replace the directional transfer approximation once event-specific source and deposit polygons, material or rheological parameters, and independent footprint or road-impact observations are available for calibration and validation; blockage-duration and repair-time models could then distinguish short interruption from prolonged isolation."
+(Page 49, Lines 1083–1087)
 
 ## Comment 4
 
