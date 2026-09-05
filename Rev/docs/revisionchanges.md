@@ -5827,3 +5827,162 @@ Notes: Ranges summarize five-seed means under the declared family-specific setti
 - Appendix SHA-256 after: `87d28965abc0ec681c810d3a18904ddad2d9de9c0b4738e3f6a96eb7e10b8ff8`
 - Backup: `/Users/lichao/Research/KE01e/Rev/revision/.kila-backups/Appendix.before-r3c2-layout.20260905T102402283219.docx`
 - Verification: every remaining body element byte-identical; all other package members byte-identical; rerender required
+
+## reviewer-2/comment-1
+
+### part-01
+
+- Location: Introduction > Research Gap and Contribution, new comparison paragraph
+- Reason: Compare five existing integrated-study precedents and specify the joint application scope.
+- Kila decisions: KILA-D-20260905-017, KILA-D-20260905-018
+- Mode: `insert-paragraph`
+- Revises prior parts: none
+- Timestamp: 2026-09-05T02:38:23Z
+- Author: Mike Li
+- Markup SHA-256 before: `c1afea6b8b08e3f5d02c9b21051f83fd8086b0c96f7e059c5df2c3f9d9e2ad09`
+- Markup SHA-256 after: `3a50796b5dbed44c12db759fcb448f443741eedc02d977b2b6f168feecc26398`
+- Revision IDs: `560, 561`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T113823499657.reviewer-2-comment-1.part-01.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+
+~~~~
+
+- After:
+
+~~~~text
+Existing studies already connect several of these stages. Lashgari et al. (2025) integrate sequential seismic and precipitation effects in a compound slope-hazard framework, while Donnini et al. (2017) connect rainfall-landslide inventories to road damage and restoration costs. Mager Pozo et al. (2025) combine hazard maps and network analysis to quantify loss of access roads to critical facilities. From a population-centered perspective, Tariverdi et al. (2023) link disaster scenarios, including compound shocks, to service-provider choices, infrastructure criticality, and targeted resilience measures. Hu et al. (2021) extend integration to budget-constrained retrofit decisions through a chain of cyclone hazard, roadside-tree fragility, economic and network consequences, and investment optimization. Thus, neither hazard-to-accessibility integration nor consequence-based intervention planning is new in itself. Building on these precedents, our application combines official post-earthquake rainfall-warning settings with directional slope-to-road screening, community disconnection from an emergency-road backbone, age-structured exposure and separate service-access outcomes. It carries these conditional consequences into budget-feasible road screening and a separate assessment of residual community preparedness needs, while distinguishing ranking evidence from assumptions about closure and intervention effects.
+~~~~
+
+- Minimal tracked fragments:
+  1. `insert-paragraph`
+     - Before: ""
+     - After: "Existing studies already connect several of these stages. Lashgari et al. (2025) integrate sequential seismic and precipitation effects in a compound slope-hazard framework, while Donnini et al. (2017) connect rainfall-landslide inventories to road damage and restoration costs. Mager Pozo et al. (2025) combine hazard maps and network analysis to quantify loss of access roads to critical facilities. From a population-centered perspective, Tariverdi et al. (2023) link disaster scenarios, including compound shocks, to service-provider choices, infrastructure criticality, and targeted resilience measures. Hu et al. (2021) extend integration to budget-constrained retrofit decisions through a chain of cyclone hazard, roadside-tree fragility, economic and network consequences, and investment optimization. Thus, neither hazard-to-accessibility integration nor consequence-based intervention planning is new in itself. Building on these precedents, our application combines official post-earthquake rainfall-warning settings with directional slope-to-road screening, community disconnection from an emergency-road backbone, age-structured exposure and separate service-access outcomes. It carries these conditional consequences into budget-feasible road screening and a separate assessment of residual community preparedness needs, while distinguishing ranking evidence from assumptions about closure and intervention effects."
+
+### part-02
+
+- Location: Introduction > Research Gap and Contribution, final contribution sentence
+- Reason: Specify the approved applied contribution rather than generic integration.
+- Kila decisions: KILA-D-20260905-017, KILA-D-20260905-018
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-05T02:38:37Z
+- Author: Mike Li
+- Markup SHA-256 before: `3a50796b5dbed44c12db759fcb448f443741eedc02d977b2b6f168feecc26398`
+- Markup SHA-256 after: `56dc235574719c1bf07f59e7a84012e07bad68fc3c1ad51c109fd405e7f5fe35`
+- Revision IDs: `562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T113837633971.reviewer-2-comment-1.part-02.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The contribution is thus the integration of hazard screening with decision-relevant outcomes while retaining explicit limits on probability, causality, and engineering interpretation.
+~~~~
+
+- After:
+
+~~~~text
+The contribution is thus the joint translation of official post-earthquake warning settings into community isolation, distinct service-access outcomes, and complementary road and community preparedness priorities, while retaining explicit limits on probability, causality, and engineering interpretation.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "integration"
+     - After: "joint translation"
+  2. `replace`
+     - Before: "hazard"
+     - After: "official"
+  3. `replace`
+     - Before: "screening"
+     - After: "post-earthquake"
+  4. `replace`
+     - Before: "with"
+     - After: "warning"
+  5. `replace`
+     - Before: "decision-relevant"
+     - After: "settings into community isolation, distinct service-access"
+  6. `insert`
+     - Before: ""
+     - After: ", and complementary road and community preparedness priorities,"
+
+### part-03
+
+- Location: Discussion > Main Findings and Urban-Resilience Contribution
+- Reason: Align the Discussion with the concrete contribution and existing precedents.
+- Kila decisions: KILA-D-20260905-017, KILA-D-20260905-018
+- Mode: `replace`
+- Revises prior parts: none
+- Timestamp: 2026-09-05T02:39:02Z
+- Author: Mike Li
+- Markup SHA-256 before: `56dc235574719c1bf07f59e7a84012e07bad68fc3c1ad51c109fd405e7f5fe35`
+- Markup SHA-256 after: `c438f0bd77d0dc7fe6cf1d6e18bac48866c028b6a21ec8da8680ece6580d78d8`
+- Revision IDs: `573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592`
+- Backup: `Rev/revision/.kila-backups/KE01e.rev.markup.20260905T113902823821.reviewer-2-comment-1.part-03.docx`
+- Paragraph properties preserved: `true`
+- Run style source SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Formula verification: not applicable
+- Endnote hyperlinks preserved: `true`
+- Endnote hyperlink count: `0`
+- Endnote hyperlink XML SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Endnote relationships SHA-256: `absent`
+- Before:
+
+~~~~text
+The main contribution is therefore the complete decision chain and its evidence boundaries, not a new claim of landslide probability.
+~~~~
+
+- After:
+
+~~~~text
+The main contribution is therefore an evidence-bounded decision chain that translates official warning scenarios into differentiated road and community preparedness priorities, rather than a new landslide-probability model or a claim that hazard-to-intervention integration is unprecedented.
+~~~~
+
+- Minimal tracked fragments:
+  1. `replace`
+     - Before: "the"
+     - After: "an"
+  2. `replace`
+     - Before: "complete"
+     - After: "evidence-bounded"
+  3. `insert`
+     - Before: ""
+     - After: "that translates official warning scenarios into differentiated road "
+  4. `replace`
+     - Before: "its"
+     - After: "community"
+  5. `replace`
+     - Before: "evidence"
+     - After: "preparedness"
+  6. `replace`
+     - Before: "boundaries"
+     - After: "priorities"
+  7. `replace`
+     - Before: "not"
+     - After: "rather than"
+  8. `insert`
+     - Before: ""
+     - After: "landslide-probability model or a "
+  9. `replace`
+     - Before: "of"
+     - After: "that"
+  10. `replace`
+     - Before: "landslide"
+     - After: "hazard-to-intervention"
+  11. `replace`
+     - Before: "probability"
+     - After: "integration is unprecedented"
+

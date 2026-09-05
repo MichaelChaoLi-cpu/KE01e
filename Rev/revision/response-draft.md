@@ -108,10 +108,16 @@ Reviewer 2: This paper presents an integrated framework for assessing post-earth
 1. The literature review does not sufficiently establish the novelty of the proposed framework. Although previous studies are cited for individual analytical components, the manuscript does not clearly compare the proposed complete decision chain with existing integrated studies on landslide or hazard-induced road disruption, network accessibility, community isolation, and intervention prioritization. Please expand the literature review and clearly identify which elements of the proposed framework have not been addressed in previous studies.
 
 **Response:**
-[Response to be completed after the revision is verified.]
+Thank you for requesting a clearer comparison with existing integrated studies. The revised Introduction compares five precedents spanning compound slope hazards, landslide-related road damage, critical-facility accessibility, population-centered service access, and budget-constrained intervention planning, and the Discussion states the resulting contribution consistently. We explicitly acknowledge that hazard-to-accessibility integration and consequence-based intervention planning already exist. Our contribution is the joint application of official post-earthquake warning settings, directional slope-to-road screening, emergency-road-backbone disconnection, age-structured exposure, and distinct service-access outcomes to complementary road and community preparedness priorities. We therefore identify the specific combination and decision context of this application rather than claim that each component, or hazard-to-intervention integration itself, is unprecedented.
 
-"[Exact revised manuscript text]"
-(Page XX, Lines XX–XX)
+"Existing studies already connect several of these stages. Lashgari et al. (2025) integrate sequential seismic and precipitation effects in a compound slope-hazard framework, while Donnini et al. (2017) connect rainfall-landslide inventories to road damage and restoration costs. Mager Pozo et al. (2025) combine hazard maps and network analysis to quantify loss of access roads to critical facilities. From a population-centered perspective, Tariverdi et al. (2023) link disaster scenarios, including compound shocks, to service-provider choices, infrastructure criticality, and targeted resilience measures. Hu et al. (2021) extend integration to budget-constrained retrofit decisions through a chain of cyclone hazard, roadside-tree fragility, economic and network consequences, and investment optimization. Thus, neither hazard-to-accessibility integration nor consequence-based intervention planning is new in itself. Building on these precedents, our application combines official post-earthquake rainfall-warning settings with directional slope-to-road screening, community disconnection from an emergency-road backbone, age-structured exposure and separate service-access outcomes. It carries these conditional consequences into budget-feasible road screening and a separate assessment of residual community preparedness needs, while distinguishing ranking evidence from assumptions about closure and intervention effects."
+(Pages 4–5, Lines 77–93)
+
+"The contribution is thus the joint translation of official post-earthquake warning settings into community isolation, distinct service-access outcomes, and complementary road and community preparedness priorities, while retaining explicit limits on probability, causality, and engineering interpretation."
+(Pages 5–6, Lines 104–107)
+
+"The main contribution is therefore an evidence-bounded decision chain that translates official warning scenarios into differentiated road and community preparedness priorities, rather than a new landslide-probability model or a claim that hazard-to-intervention integration is unprecedented."
+(Page 40, Lines 867–870)
 
 ## Comment 2
 
